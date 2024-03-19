@@ -48,7 +48,7 @@ A batalha acaba quando pelo menos uma das três condições abaixo for alcançad
 
 ## Equipe
 
-- [Leandro de Oliveira](https://github.com/losouto)
+- [Leandro de Oliveira](https://github.com/losout0)
 - [Lucas Khalil](https://github.com/LucasKhalil)
 - [José Willian](https://github.com/JWillianSl)
 - [Sérgio Gustavo](https://github.com/sergio-gustavo-andrade-grilo)
