@@ -62,7 +62,8 @@ executable Carta-Ninja
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
-    -- other-modules:
+    other-modules:
+        Deck
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
@@ -72,7 +73,9 @@ executable Carta-Ninja
         base ^>=4.17.2.1
 
     -- Directories containing source files.
-    hs-source-dirs:   app
+    hs-source-dirs:   
+        app
+        app/core
 
     -- Base language which the package is written in.
     default-language: Haskell2010
