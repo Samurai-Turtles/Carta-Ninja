@@ -1,0 +1,13 @@
+{
+    "player_score" : 0,
+    "player_vitorias" : 0,
+    "player_vitoriasElementos" : [false, false, false, false, false],
+    "player_deck" : [""],
+
+    "cpu_score" : 0,
+    "cpu_vitorias" : 0,
+    "cpu_vitoriasElementos" : [false, false, false, false, false],
+    "cpu_deck" : [""],
+
+    "rodada" : 0
+}
