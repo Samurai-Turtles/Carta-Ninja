@@ -76,7 +76,10 @@ executable Carta-Ninja
         bytestring
 
     -- Directories containing source files.
-    hs-source-dirs:   app
+    hs-source-dirs:   
+        app,
+        app/UI
+        app/Utils
 
     -- Base language which the package is written in.
     default-language: Haskell2010
