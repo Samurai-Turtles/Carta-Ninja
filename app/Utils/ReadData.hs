@@ -45,7 +45,9 @@ standardGeneral = GeneralState "" []
 standardCampaign = CampaignState (-7) (-7) (-7)
 standardGameplay = GameplayState (-7) (-7) [] [] (-7) (-7) [] [] (-1)
 
-toPath = ["general", "campaing", "gameplay"]
+toPath = ["app/core/GameState/GeneralState.json", 
+        "app/core/GameState/CampaignState.json", 
+        "app/core/GameState/GameplayState.json"]
 
 getGeneralData :: GeneralState
 getGeneralData = do
