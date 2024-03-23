@@ -74,8 +74,7 @@ executable Carta-Ninja
         base ^>=4.17.2.1,
         aeson,
         directory,
-        bytestring,
-        process,
+        bytestring
         
 
     -- Directories containing source files.
