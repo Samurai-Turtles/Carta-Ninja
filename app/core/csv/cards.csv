@@ -1,0 +1,16 @@
+id, element, power
+01, Fogo,     1
+02, Fogo,     2
+03, Fogo,     3
+04, Metal,    1
+05, Metal,    2
+06, Metal,    3
+07, Natureza, 1
+08, Natureza, 2
+09, Natureza, 3
+10, Terra,    1
+11, Terra,    2
+12, Terra,    3
+13, Água,     1
+14, Água,     2
+15, Água,     3
