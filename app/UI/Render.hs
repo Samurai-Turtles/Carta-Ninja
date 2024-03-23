@@ -7,7 +7,7 @@ import SpritesBase
 action :: IO()
 action 
     |choice == "menu" = drawMenu
-    |choice == "batalha" = drawGame 
+    |choice == "batalha" = drawBatalha 
     |otherwise = putStrLn ("ERR.: Status : " ++ choice ++ "doesn't exist")
     where choice = screen getGeneralData
 
@@ -16,8 +16,8 @@ drawMenu :: IO()
 drawMenu = putStrLn (unlines (scMenu))
 
 -- | Esta função imprime a tela de batalha.
-drawGame :: IO() 
-drawGame = putStrLn (unlines (scBatalha))
+drawBatalha :: IO() 
+drawBatalha = putStrLn (unlines (scBatalha))
 
 
 -- Funções que preparam as informações de replace de placeholder:

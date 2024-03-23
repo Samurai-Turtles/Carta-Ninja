@@ -11,5 +11,5 @@ import Render (action)
 
 main :: IO()
 main = do
-  -- mudança de estado 
-  action --
+  -- mudança de estado
+  action 
