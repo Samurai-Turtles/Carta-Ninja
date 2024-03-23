@@ -63,7 +63,7 @@ executable Carta-Ninja
 
     -- Modules included in this executable, other than Main.
     other-modules:
-        UI.TemplateData.LeitorData
+        ReadData
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
@@ -78,7 +78,7 @@ executable Carta-Ninja
     -- Directories containing source files.
     hs-source-dirs:   
         app,
-        app/UI
+        app/UI,
         app/Utils
 
     -- Base language which the package is written in.

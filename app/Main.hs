@@ -6,8 +6,9 @@
 -- main = putStrLn "Hello, Haskell!"
 module Main where
 
-import qualified UI.TemplateData.LeitorData as LD
+import ReadData
 
 main :: IO()
 main = do
-  print (LD.getGameplayData)
+
+  putStrLn (show getGameplayData)
