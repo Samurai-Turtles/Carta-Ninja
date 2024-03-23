@@ -7,8 +7,9 @@
 module Main where
 
 import ReadData
+import Render (action)
 
 main :: IO()
 main = do
-
-  putStrLn (show getGameplayData)
+  -- mudança de estado 
+  action --
