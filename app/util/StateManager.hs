@@ -1,9 +1,10 @@
+{-
+    Módulo referente à manipulação de estados do jogo
+-}
+
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Use head" #-}
-{-# HLINT ignore "Redundant bracket" #-}
-{-# HLINT ignore "Replace case with fromMaybe" #-}
 
 module StateManager where
 
@@ -14,81 +15,75 @@ import qualified Data.ByteString.Lazy as B
 
 -- | Este tipo representa o estado global do jogo, incluindo
 -- a tela atual e o ranking das seis melhores campanhas em ordem decrescente
-data GeneralState = GeneralState {
-    screen :: String,
+data GlobalState = GlobalState {
+    screen  :: String,
     ranking :: [String]
 } deriving (Generic, Show)
 
 -- | Este tipo representa o estado da campanha atual, incluindo
 -- o total de pontos da campanha, o número de vidas e o nível atual
 data CampaignState = CampaignState {
-    pontosGerais :: Int,
-    vidas :: Int,
-    nivel :: Int
+    totalScore :: Int,
+    lifes      :: Int,
+    beltLevel  :: Int
 } deriving (Generic, Show)
 
 -- | Este tipo representa o estado da partida atual, incluindo
--- a pountação, vitórias e Deck de cada jogador, bem como a rodada atual
-data GameplayState = GameplayState {
-    player_score :: Int,
-    player_vitorias :: Int,
-    player_vitoriasElementos :: [Bool],
-    player_deck :: [String],
+-- a pountação, vitórias e Deck de cada jogador, bem como a rodada atual.
+data BattleState = BattleState {
+    -- TODO: adicionar propriedade `streak` para jogador e bot
+    currentRound        :: Int,
 
-    cpu_score :: Int,
-    cpu_vitorias :: Int,
-    cpu_vitoriasElementos :: [Bool],
-    cpu_deck :: [String],
+    playerScore         :: Int,      -- Pontuação do Jogador
+    playerWins          :: Int,      -- Vitórias do Jogador
+    playerWinsByElement :: [Bool],   -- Vitórias do Jogador por elemento
+    playerDeck          :: [String], -- Deck de cartas do Jogador
 
-    rodada :: Int
+    cpuScore            :: Int,      -- Pontuação do Bot
+    cpuWins             :: Int,      -- Vitórias do Bot
+    cpuWinsByElement    :: [Bool],   -- Vitórias do Bot por elemento
+    cpuDeck             :: [String]  -- Deck de cartas do Bot
 } deriving (Generic, Show)
 
 -- Define que os estados serão extraídos de arquivos JSON
-instance FromJSON GeneralState
-instance FromJSON GameplayState
+instance FromJSON GlobalState
+instance FromJSON BattleState
 instance FromJSON CampaignState
-
--- Estas funções geram estados de fallback caso os arquivos sejam inacessíveis
-fallbackGeneral :: GeneralState
-fallbackGeneral = GeneralState "" []
-
-fallbackCampaign :: CampaignState
-fallbackCampaign = CampaignState (-7) (-7) (-7)
-
-fallbackGameplay :: GameplayState
-fallbackGameplay = GameplayState (-7) (-7) [] [] (-7) (-7) [] [] (-1)
 
 -- | Essa função retorna os caminhos para os arquivos de estado do jogo
 toPath :: [FilePath]
 toPath = [
-        "app/core/states/globals.json", 
-        "app/core/states/campaign.json", 
+        "app/core/states/globals.json",
+        "app/core/states/campaign.json",
         "app/core/states/battle.json"
     ]
 
--- | Esta função lê o arquivo de estado global
-getGeneralData :: GeneralState
-getGeneralData = do
-    let file = unsafePerformIO( B.readFile (toPath !! 0))
-    let decodeData = decode file :: Maybe (GeneralState)
+-- | Esta função lê o arquivo de estado global e retorna seu conteúdo
+-- ou um estado padrão (caso o arquivo seja inacessível)
+getGlobalState :: GlobalState
+getGlobalState = do
+    let file = unsafePerformIO ( B.readFile (head toPath))
+    let decodeData = decode file :: Maybe GlobalState
     case decodeData of
-        Nothing -> fallbackGeneral
+        Nothing -> GlobalState "" []
         Just out -> out
 
--- | Esta função lê o arquivo de estado da campanha
-getCampaignData :: CampaignState
-getCampaignData = do
-    let file = unsafePerformIO( B.readFile (toPath !! 1))
-    let decodeData = decode file :: Maybe (CampaignState) 
+-- | Esta função lê o arquivo de estado da campanha e retorna seu conteúdo
+-- ou um estado padrão (caso o arquivo seja inacessível)
+getCampaignState :: CampaignState
+getCampaignState = do
+    let file = unsafePerformIO ( B.readFile (toPath !! 1))
+    let decodeData = decode file :: Maybe CampaignState
     case decodeData of
-        Nothing -> fallbackCampaign
+        Nothing -> CampaignState (-7) (-7) (-7)
         Just out -> out
 
--- | Esta função lê o arquivo de estado da partida
-getGameplayData :: GameplayState
-getGameplayData = do
-    let file = unsafePerformIO( B.readFile (toPath !! 2))
-    let decodeData = decode file :: Maybe (GameplayState)
+-- | Esta função lê o arquivo de estado da partida e retorna seu conteúdo
+-- ou um estado padrão (caso o arquivo seja inacessível)
+getBattleState :: BattleState
+getBattleState = do
+    let file = unsafePerformIO ( B.readFile (toPath !! 2))
+    let decodeData = decode file :: Maybe BattleState
     case decodeData of
-        Nothing -> fallbackGameplay
+        Nothing -> BattleState (-1) (-7) (-7) [] [] (-7) (-7) [] []
         Just out -> out

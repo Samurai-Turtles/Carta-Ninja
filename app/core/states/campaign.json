@@ -1,5 +1,5 @@
 {
-    "pontosGerais" : 0,
-    "vidas" : 0,
-    "nivel" : 0
+    "totalScore" : 0,
+    "lifes" : 0,
+    "beltLevel" : 0
 }

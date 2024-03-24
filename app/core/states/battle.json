@@ -1,13 +1,13 @@
 {
-    "player_score" : 0,
-    "player_vitorias" : 0,
-    "player_vitoriasElementos" : [false, false, false, false, false],
-    "player_deck" : [""],
+    "currentRound" : 0,
 
-    "cpu_score" : 0,
-    "cpu_vitorias" : 0,
-    "cpu_vitoriasElementos" : [false, false, false, false, false],
-    "cpu_deck" : [""],
+    "playerScore" : 0,
+    "playerWins" : 0,
+    "playerWinsByElement" : [false, false, false, false, false],
+    "playerDeck" : [],
 
-    "rodada" : 0
+    "cpuScore" : 0,
+    "cpuWins" : 0,
+    "cpuWinsByElement" : [false, false, false, false, false],
+    "cpuDeck" : []
 }

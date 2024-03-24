@@ -17,17 +17,17 @@ getWinner playerCard cpuCard
 
 -- | Esta função incrementa o nível de faixa do jogador em +1
 levelUpPlayer :: Int
-levelUpPlayer = nivel getCampaignData + 1
+levelUpPlayer = beltLevel getCampaignState + 1
 
 -- | Esta função recebe um valor a ser somado ao número total de 
 -- vidas (Life Points) do jogador
 updatePlayerLife :: Int -> Int
-updatePlayerLife value = vidas getCampaignData + value
+updatePlayerLife value = lifes getCampaignState + value
 
 -- | Esta função recebe a pontuação obtida pelo jogador na partida
 -- e retorna soma com a pontuação atual da campanha
 updatePlayerCP :: Int -> Int
-updatePlayerCP points = pontosGerais getCampaignData + points
+updatePlayerCP points = totalScore getCampaignState + points
 
 -- | Esta função recebe um caractere indicando o vencedor da rodada, 
 -- a carta vencedora e retorna a soma da pontuação atual com o poder da carta
@@ -35,5 +35,5 @@ updateScoreOf :: Char -> Card -> Int
 updateScoreOf player card = power card + currentScore
     where 
         currentScore = if player == 'p' 
-            then player_score getGameplayData 
-            else cpu_score getGameplayData
+            then playerScore getBattleState 
+            else cpuScore getBattleState
