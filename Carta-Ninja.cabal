@@ -65,7 +65,8 @@ executable Carta-Ninja
     other-modules:
         ReadData,
         Render,
-        SpritesBase
+        SpritesBase,
+        Hammer
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
