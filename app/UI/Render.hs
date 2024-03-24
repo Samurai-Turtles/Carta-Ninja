@@ -11,6 +11,7 @@ module Render where
 -- somente as funções necessárias.
 import ReadData
 import SpritesBase
+import Hammer (forgeScreen)
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
@@ -26,7 +27,12 @@ drawMenu = putStrLn (unlines scMenu)
 
 -- | Esta função imprime a tela de batalha.
 drawBatalha :: IO()
-drawBatalha = putStrLn (unlines scBatalha)
+drawBatalha = do--putStrLn (unlines scBatalha)
+    let contentChar = (take 2 scoreInfo) ++ 
+                    (usedElements (h_vitoriasElementos getGameplayData) ["FOGO","ÁGUA","NATUREZA","METAL","TERRA"]) 
+                    ++ (drop 2 scoreInfo) ++ qtLifeInfo
+
+    putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
 
 -- Funções que preparam as informações de replace de placeholder:
@@ -44,12 +50,8 @@ qtLifeInfo :: String
 qtLifeInfo = if vidas getCampaignData <= 9 then "0" ++ show (vidas getCampaignData) else show (vidas getCampaignData)
 
 -- | Esta função prepara as entradas de substituição para cada place holder dos elementos vitoriosos.
-usedElements :: String
-usedElements = fogo ++ agua ++ natureza ++ metal ++ terra
-    where
-        fogo = if winningElements !! 0 then "FOGO" else " "
-        agua = if winningElements !! 1 then "ÁGUA" else " "
-        natureza = if winningElements !! 2 then "NATUREZA" else " "
-        metal = if winningElements !! 3 then "METAL" else " "
-        terra = if winningElements !! 4 then "FOGO" else " "
-        winningElements = h_vitoriasElementos getGameplayData
+usedElements :: [Bool] -> [String] -> String
+usedElements [] [] = ""
+usedElements [] _ = ""
+usedElements _ [] = ""
+usedElements (h:t) (x:xs) = if h then x ++ usedElements t xs else " " ++ usedElements t xs
