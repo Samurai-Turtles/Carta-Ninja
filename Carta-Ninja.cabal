@@ -65,6 +65,7 @@ executable Carta-Ninja
     other-modules:
         Card,
         Deck,
+        Ranking,
         Gameplay,
         StateManager
 
