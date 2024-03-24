@@ -4,15 +4,23 @@
 
 {-# LANGUAGE InstanceSigs #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Card where
+
+import Data.Aeson
+import GHC.Generics
 
 -- | Este tipo representa uma carta, incluindo seu ID, elemento e nível de poder
 data Card = Card {
     id :: Int,
     element :: String,
     power :: Int
-}
+} deriving (Generic)
+
+-- Define que uma carta pode ser extraída e codificada em JSON
+instance FromJSON Card
+instance ToJSON Card
 
 -- Exibe os dados da carta conforme o exemplo: `{id} [<Elemento> (<Poder>)]`
 instance Show Card where

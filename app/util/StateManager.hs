@@ -13,6 +13,8 @@ import GHC.Generics
 import System.IO.Unsafe
 import qualified Data.ByteString.Lazy as B
 
+import Card
+
 -- | Este tipo representa o estado global do jogo, incluindo
 -- a tela atual e o ranking das seis melhores campanhas em ordem decrescente
 data GlobalState = GlobalState {
@@ -37,12 +39,12 @@ data BattleState = BattleState {
     playerScore         :: Int,      -- Pontuação do Jogador
     playerWins          :: Int,      -- Vitórias do Jogador
     playerWinsByElement :: [Bool],   -- Vitórias do Jogador por elemento
-    playerDeck          :: [String], -- Deck de cartas do Jogador
+    playerDeck          :: [Card],   -- Deck de cartas do Jogador
 
     cpuScore            :: Int,      -- Pontuação do Bot
     cpuWins             :: Int,      -- Vitórias do Bot
     cpuWinsByElement    :: [Bool],   -- Vitórias do Bot por elemento
-    cpuDeck             :: [String]  -- Deck de cartas do Bot
+    cpuDeck             :: [Card]    -- Deck de cartas do Bot
 } deriving (Generic, Show)
 
 -- Define que os estados serão extraídos de arquivos JSON
