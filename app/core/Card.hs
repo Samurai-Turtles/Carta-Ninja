@@ -7,13 +7,10 @@
 
 module Card where
 
--- | `Element` é uma String que indica o elemento da carta
-type Element = String
-
 -- | Este tipo representa uma carta, incluindo seu ID, elemento e nível de poder
 data Card = Card {
     id :: Int,
-    element :: Element,
+    element :: String,
     power :: Int
 }
 
@@ -38,13 +35,13 @@ instance Ord Card where
         | element a == element b = power a `compare` power b
         | otherwise = element a `winsAgainst` element b
 
--- | Dados dois elementos, determina qual deles é superior ao outro
-winsAgainst :: Element -> Element -> Ordering
+-- | Dados dois elementos, determina qual deles é dominante sobre o outro
+winsAgainst :: String -> String -> Ordering
 winsAgainst a b
     | a == b = EQ
-    | a == "Fogo"     = if b == "Metal"    || b == "Natureza" then GT else LT
-    | a == "Metal"    = if b == "Natureza" || b == "Terra"    then GT else LT
-    | a == "Natureza" = if b == "Terra"    || b == "Água"     then GT else LT
-    | a == "Terra"    = if b == "Água"     || b == "Fogo"     then GT else LT
-    | a == "Água"     = if b == "Fogo"     || b == "Metal"    then GT else LT
+    | a == "fire"   = if b == "metal"  || b == "nature" then GT else LT
+    | a == "metal"  = if b == "nature" || b == "earth"  then GT else LT
+    | a == "nature" = if b == "earth"  || b == "water"  then GT else LT
+    | a == "earth"  = if b == "water"  || b == "fire"   then GT else LT
+    | a == "water"  = if b == "fire"   || b == "metal"  then GT else LT
     | otherwise = EQ

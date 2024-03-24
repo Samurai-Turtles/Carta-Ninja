@@ -61,9 +61,9 @@ fallbackGameplay = GameplayState (-7) (-7) [] [] (-7) (-7) [] [] (-1)
 -- | Essa função retorna os caminhos para os arquivos de estado do jogo
 toPath :: [FilePath]
 toPath = [
-        "app/core/states/GeneralState.json", 
-        "app/core/states/CampaignState.json", 
-        "app/core/states/GameplayState.json"
+        "app/core/states/globals.json", 
+        "app/core/states/campaign.json", 
+        "app/core/states/battle.json"
     ]
 
 -- | Esta função lê o arquivo de estado global
