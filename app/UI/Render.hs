@@ -37,6 +37,18 @@ drawBatalha = do--putStrLn (unlines scBatalha)
 
 -- Funções que preparam as informações de replace de placeholder:
 
+-- | Esta função seleciona a representação das cartas para 
+-- forjar os espaços da mão do jogador.
+currentCards :: [[String]]
+currentCards = do 
+    let hand = take 5 (h_deck getGameplayData)
+    [scCards !! ((identifier (hand !! 0))-1), 
+     scCards !! ((identifier (hand !! 1))-1),
+     scCards !! ((identifier (hand !! 2))-1),
+     scCards !! ((identifier (hand !! 3))-1),
+     scCards !! ((identifier (hand !! 4))-1)
+     ]
+
 -- | Esta função prepara as entradas de substituição de cada place holder de score.
 scoreInfo :: String
 scoreInfo = do

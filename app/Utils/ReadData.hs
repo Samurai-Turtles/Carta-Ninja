@@ -19,6 +19,12 @@ import System.Directory
 import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Lazy.Char8 as BC
 
+data Card = Card {
+    identifier :: Int,
+    element :: String,
+    power :: Int
+} deriving (Generic, Show)
+
 -- | Este tipo representa o estado geral do jogo. Ele inclui
 -- a representação atual da tela e o ranking de pontuações.
 data GeneralState = GeneralState {
@@ -67,7 +73,7 @@ data GameplayState = GameplayState {
 
     -- | Uma lista de Strings que representa o deck do jogador. Os
     -- primeiros 5 elementos representam a sua mão.
-    h_deck :: [String],
+    h_deck :: [Card],
 
 
     -- | A pontuação do bot na batalha atual. Quando o
@@ -87,7 +93,7 @@ data GameplayState = GameplayState {
 
     -- | Uma lista de Strings que representa o deck do bot. Os
     -- primeiros 5 elementos representam a sua mão.    
-    c_deck :: [String],
+    c_deck :: [Card],
 
 
     -- | A rodada atual em que a batalha se encontra. Ela é incrementada
@@ -100,6 +106,7 @@ data GameplayState = GameplayState {
 instance FromJSON GeneralState
 instance FromJSON GameplayState
 instance FromJSON CampaignState
+instance FromJSON Card
 
 
 -- | Esta função representa o estado geral padrão. Ela pode ser
