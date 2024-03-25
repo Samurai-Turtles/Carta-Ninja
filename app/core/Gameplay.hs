@@ -5,7 +5,7 @@
 module Gameplay where
 
 import Card
-import StateData
+import State
 import StateReader
 
 -- | Esta função recebe duas cartas (do jogador e do Bot, respectivamente) e

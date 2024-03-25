@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module StateData where
+module State where
 
 import Data.Aeson
 import GHC.Generics

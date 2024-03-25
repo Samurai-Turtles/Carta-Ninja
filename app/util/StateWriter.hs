@@ -5,8 +5,8 @@ module StateWriter where
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import Data.ByteString.Lazy.Char8 as C
+import State
 import StateReader
-import StateData
 import System.Directory
 import System.FilePath.Posix (takeDirectory)
 

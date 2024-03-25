@@ -11,7 +11,7 @@ module StateReader where
 import Data.Aeson
 import System.IO.Unsafe
 import qualified Data.ByteString.Lazy as B
-import StateData
+import State
 
 -- | Esta função lê o arquivo de estado global e retorna seu conteúdo
 -- ou um estado padrão (caso o arquivo seja inacessível)

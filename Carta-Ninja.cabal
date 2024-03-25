@@ -68,7 +68,7 @@ executable Carta-Ninja
         Ranking,
         Gameplay,
         CSVManager,
-        StateData,
+        State,
         StateReader,
         StateWriter
 
@@ -90,6 +90,7 @@ executable Carta-Ninja
         app
         app/core
         app/util
+        app/models
 
     -- Base language which the package is written in.
     default-language: Haskell2010

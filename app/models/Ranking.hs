@@ -31,5 +31,3 @@ instance Eq Ranking where
 instance Ord Ranking where
     compare :: Ranking -> Ranking -> Ordering
     compare a b = points a `compare` points b
-
--- TODO: Implementar funções de leitura e escrita de CSV
