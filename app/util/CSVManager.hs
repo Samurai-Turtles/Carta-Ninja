@@ -13,8 +13,8 @@ import System.IO.Unsafe (unsafePerformIO)
 import System.IO
 
 paths :: [FilePath]
-paths = ["app/core/csv/cards.csv",
-         "app/core/csv/ranking.csv"]
+paths = ["app/data/csv/cards.csv",
+         "app/data/csv/ranking.csv"]
 
 csvParseError :: p -> [a]
 csvParseError csvFile = []

@@ -48,7 +48,7 @@ instance ToJSON CampaignState
 -- | Essa função retorna os caminhos para os arquivos de estado do jogo
 toPath :: [FilePath]
 toPath = [
-        "app/core/states/globals.json",
-        "app/core/states/campaign.json",
-        "app/core/states/battle.json"
+        "app/data/states/globals.json",
+        "app/data/states/campaign.json",
+        "app/data/states/battle.json"
     ]
