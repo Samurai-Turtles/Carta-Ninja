@@ -4,42 +4,33 @@ module StateWriter where
 
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
-import Data.ByteString.Lazy.Char8 as C
 import State
 import StateReader
 import System.Directory
 import System.FilePath.Posix (takeDirectory)
 import Card
+import GHC.Num.BigNat (BigNat)
 
 writeBattleRound :: Int -> IO ()
 writeBattleRound newCurRound = do
     let newBattleState = BattleState newCurRound (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePScore :: Int -> IO ()
 writeBattlePScore newCurScore = do
     let newBattleState = BattleState (currentRound getBattleState) newCurScore (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePWins :: Int -> IO ()
 writeBattlePWins newCurWins = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) newCurWins (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePWinFire :: Bool -> IO ()
 writeBattlePWinFire bool = do
@@ -47,10 +38,7 @@ writeBattlePWinFire bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePWinWater :: Bool -> IO ()
 writeBattlePWinWater bool = do
@@ -58,11 +46,7 @@ writeBattlePWinWater bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
-
+    writeOnJsonBattle newBattleState
 
 writeBattlePWinNature :: Bool -> IO ()
 writeBattlePWinNature bool = do
@@ -70,10 +54,7 @@ writeBattlePWinNature bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePWinMetal :: Bool -> IO ()
 writeBattlePWinMetal bool = do
@@ -81,10 +62,7 @@ writeBattlePWinMetal bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePWinEarth :: Bool -> IO ()
 writeBattlePWinEarth bool = do
@@ -92,40 +70,28 @@ writeBattlePWinEarth bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattlePDeck :: [Card] -> IO ()
 writeBattlePDeck newDeck = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          newDeck (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCScore :: Int -> IO ()
 writeBattleCScore newCurScore = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) newCurScore (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCWins :: Int -> IO ()
 writeBattleCWins newCurWins = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) newCurWins (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCWinFire :: Bool -> IO ()
 writeBattleCWinFire bool = do
@@ -133,10 +99,7 @@ writeBattleCWinFire bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCWinWater :: Bool -> IO ()
 writeBattleCWinWater bool = do
@@ -144,11 +107,7 @@ writeBattleCWinWater bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
-
+    writeOnJsonBattle newBattleState
 
 writeBattleCWinNature :: Bool -> IO ()
 writeBattleCWinNature bool = do
@@ -156,10 +115,7 @@ writeBattleCWinNature bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCWinMetal :: Bool -> IO ()
 writeBattleCWinMetal bool = do
@@ -167,10 +123,7 @@ writeBattleCWinMetal bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCWinEarth :: Bool -> IO ()
 writeBattleCWinEarth bool = do
@@ -178,57 +131,60 @@ writeBattleCWinEarth bool = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    writeOnJsonBattle newBattleState
 
 writeBattleCDeck :: [Card] -> IO ()
 writeBattleCDeck newDeck = do
     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) newDeck
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
-
-writeGlobalsScreen :: String -> IO ()
-writeGlobalsScreen newScreen = do
-    let newGlobalState = GlobalState newScreen
-
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newGlobalState)
-    removeFile (toPath !! 0)
-    renameFile "../core/states/Temp.json" (toPath !! 0)
+    writeOnJsonBattle newBattleState
 
 writeCampaignScore :: Int -> IO ()
 writeCampaignScore newScore = do
     let newCampaignState = CampaignState newScore (lifes getCampaignState) (beltLevel getCampaignState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newCampaignState)
-    removeFile (toPath !! 1)
-    renameFile "../core/states/Temp.json" (toPath !! 1)
+    writeOnJsonCampaign newCampaignState
 
 writeCampaignLifes :: Int -> IO ()
 writeCampaignLifes newLifes = do
     let newCampaignState = CampaignState (totalScore getCampaignState) newLifes (beltLevel getCampaignState)
 
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newCampaignState)
-    removeFile (toPath !! 1)
-    renameFile "../core/states/Temp.json" (toPath !! 1)
+    writeOnJsonCampaign newCampaignState
 
 writeCampaignBeltLvl :: Int -> IO ()
 writeCampaignBeltLvl newBeltLvl = do
     let newCampaignState = CampaignState (totalScore getCampaignState) (lifes getCampaignState) newBeltLvl
 
+    writeOnJsonCampaign newCampaignState
+
+writeGlobalsScreen :: String -> IO ()
+writeGlobalsScreen newScreen = do
+    let newGlobalState = GlobalState newScreen
+
+    writeOnJsonGlobals newGlobalState
+
+writeOnJsonBattle :: BattleState -> IO ()
+writeOnJsonBattle newBattleState = do
+    createFile "../core/states/Temp.json"
+    B.writeFile "../core/states/Temp.json" (encode newBattleState)
+    removeFile (toPath !! 2)
+    renameFile "../core/states/Temp.json" (toPath !! 2)
+
+writeOnJsonCampaign :: CampaignState -> IO ()
+writeOnJsonCampaign newCampaignState = do
     createFile "../core/states/Temp.json"
     B.writeFile "../core/states/Temp.json" (encode newCampaignState)
     removeFile (toPath !! 1)
     renameFile "../core/states/Temp.json" (toPath !! 1)
 
+writeOnJsonGlobals :: GlobalState -> IO ()
+writeOnJsonGlobals newGlobalState = do
+    createFile "../core/states/Temp.json"
+    B.writeFile "../core/states/Temp.json" (encode newGlobalState)
+    removeFile (toPath !! 0)
+    renameFile "../core/states/Temp.json" (toPath !! 0)
+    
 createFile :: FilePath -> IO ()
 createFile path = do
     createDirectoryIfMissing True (takeDirectory path)
