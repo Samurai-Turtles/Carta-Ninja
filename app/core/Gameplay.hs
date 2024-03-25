@@ -5,7 +5,8 @@
 module Gameplay where
 
 import Card
-import StateManager
+import StateData
+import StateReader
 
 -- | Esta função recebe duas cartas (do jogador e do Bot, respectivamente) e
 -- retorna um valor determinando o vencedor da rodada

@@ -67,8 +67,10 @@ executable Carta-Ninja
         Deck,
         Ranking,
         Gameplay,
-        StateManager,
-        CSVManager
+        CSVManager,
+        StateData,
+        StateReader,
+        StateWriter
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
