@@ -1,25 +1,15 @@
-{-
-    Módulo referente à manipulação de estados do jogo
--}
-
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module StateManager where
+module StateData where
 
 import Data.Aeson
 import GHC.Generics
-import System.IO.Unsafe
-import qualified Data.ByteString.Lazy as B
-
 import Card
 
 -- | Este tipo representa o estado global do jogo, incluindo
 -- a tela atual e o ranking das seis melhores campanhas em ordem decrescente
 data GlobalState = GlobalState {
-    screen  :: String,
-    ranking :: [String]
+    screen  :: String
 } deriving (Generic, Show)
 
 -- | Este tipo representa o estado da campanha atual, incluindo
@@ -47,10 +37,13 @@ data BattleState = BattleState {
     cpuDeck             :: [Card]    -- Deck de cartas do Bot
 } deriving (Generic, Show)
 
--- Define que os estados serão extraídos de arquivos JSON
+-- Define que os estados serão tratam de arquivos JSON
 instance FromJSON GlobalState
+instance ToJSON GlobalState
 instance FromJSON BattleState
+instance ToJSON BattleState
 instance FromJSON CampaignState
+instance ToJSON CampaignState
 
 -- | Essa função retorna os caminhos para os arquivos de estado do jogo
 toPath :: [FilePath]
@@ -59,33 +52,3 @@ toPath = [
         "app/core/states/campaign.json",
         "app/core/states/battle.json"
     ]
-
--- | Esta função lê o arquivo de estado global e retorna seu conteúdo
--- ou um estado padrão (caso o arquivo seja inacessível)
-getGlobalState :: GlobalState
-getGlobalState = do
-    let file = unsafePerformIO ( B.readFile (head toPath))
-    let decodeData = decode file :: Maybe GlobalState
-    case decodeData of
-        Nothing -> GlobalState "" []
-        Just out -> out
-
--- | Esta função lê o arquivo de estado da campanha e retorna seu conteúdo
--- ou um estado padrão (caso o arquivo seja inacessível)
-getCampaignState :: CampaignState
-getCampaignState = do
-    let file = unsafePerformIO ( B.readFile (toPath !! 1))
-    let decodeData = decode file :: Maybe CampaignState
-    case decodeData of
-        Nothing -> CampaignState (-7) (-7) (-7)
-        Just out -> out
-
--- | Esta função lê o arquivo de estado da partida e retorna seu conteúdo
--- ou um estado padrão (caso o arquivo seja inacessível)
-getBattleState :: BattleState
-getBattleState = do
-    let file = unsafePerformIO ( B.readFile (toPath !! 2))
-    let decodeData = decode file :: Maybe BattleState
-    case decodeData of
-        Nothing -> BattleState (-1) (-7) (-7) [] [] (-7) (-7) [] []
-        Just out -> out

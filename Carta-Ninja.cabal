@@ -79,7 +79,8 @@ executable Carta-Ninja
         aeson,
         directory,
         bytestring,
-        csv
+        csv,
+        filepath
         
 
     -- Directories containing source files.
