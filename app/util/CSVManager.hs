@@ -10,6 +10,7 @@ import Card
 import Ranking
 import Text.CSV
 import System.IO.Unsafe (unsafePerformIO)
+import System.IO
 
 paths :: [FilePath]
 paths = ["app/core/csv/cards.csv",
@@ -47,3 +48,23 @@ getCards = recordToCards (getCSV 0)
 
 getRanking :: [Ranking]
 getRanking = recordToRanking (getCSV 1)
+
+cardToCSV :: Int -> String -> Int -> String
+cardToCSV cardID cardName cardPower = "\n" ++ show cardID ++ "," ++ cardName ++ "," ++ show cardPower
+
+rankingToCSV :: String -> Int -> String
+rankingToCSV rankName rankPoints = "\n" ++ rankName ++ "," ++ show rankPoints
+
+saveCardCSV :: Int -> String -> Int -> IO()
+saveCardCSV cardID cardName cardPower = do
+    let card = cardToCSV cardID cardName cardPower
+    file <- openFile (head paths) AppendMode
+    hPutStr file card
+    hClose file
+
+saveRankingCSV :: String -> Int -> IO()
+saveRankingCSV rankName rankPoints = do
+    let rank = rankingToCSV rankName rankPoints
+    file <- openFile (paths !! 1) AppendMode
+    hPutStr file rank
+    hClose file
