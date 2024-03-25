@@ -17,13 +17,25 @@ import Hammer (forgeScreen, concatanateCards)
 action :: IO()
 action
     | choice == "menu" = drawMenu
+    | choice == "ranking" = drawRank
+    | choice == "creditos" = drawCreditos
     | choice == "batalha" = drawBatalha
-    | otherwise = putStrLn ("ERR.: Status : " ++ choice ++ "doesn't exist")
+    | choice == "venceu" = drawVenceu
+    | choice == "derrota" = drawDerrota
+    | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ choice ++ "' doesn't exist\ESC[0m")
       where choice = screen getGeneralData
 
--- | Esta função imprime a tela de Menu.
+-- | Esta função imprime a tela de menu.
 drawMenu :: IO()
 drawMenu = putStrLn (unlines scMenu)
+
+-- | Esta função imprime a tela de ranking.
+drawRank :: IO()
+drawRank = putStrLn (unlines scRanking)
+
+-- | Esta função imprime a tela de créditos.
+drawCreditos :: IO()
+drawCreditos = putStrLn (unlines scCreditos)
 
 -- | Esta função imprime a tela de batalha.
 drawBatalha :: IO()
@@ -34,6 +46,13 @@ drawBatalha = do
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
+-- | Esta função imprime a tela de vitória.
+drawVenceu :: IO()
+drawVenceu = putStrLn (unlines scVitoria)
+
+-- | Esta função imprime a tela de derrota.
+drawDerrota :: IO()
+drawDerrota = putStrLn (unlines scDerrota)
 
 -- Funções que preparam as informações de replace de placeholder:
 
