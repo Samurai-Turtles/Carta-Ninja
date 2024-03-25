@@ -8,10 +8,10 @@ module Main where
 
 import ReadData
 import Render (action)
+import SpritesBase
 
 main :: IO()
 main = do
-  
   -- mudança de estado
   action 
   --putStrLn $ show getGameplayData

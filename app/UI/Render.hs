@@ -11,7 +11,7 @@ module Render where
 -- somente as funções necessárias.
 import ReadData
 import SpritesBase
-import Hammer (forgeScreen)
+import Hammer (forgeScreen, concatanateCards)
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
@@ -27,10 +27,10 @@ drawMenu = putStrLn (unlines scMenu)
 
 -- | Esta função imprime a tela de batalha.
 drawBatalha :: IO()
-drawBatalha = do--putStrLn (unlines scBatalha)
+drawBatalha = do
     let contentChar = (take 2 scoreInfo) ++ 
                     (usedElements (h_vitoriasElementos getGameplayData) ["FOGO","ÁGUA","NATUREZA","METAL","TERRA"]) 
-                    ++ (drop 2 scoreInfo) ++ qtLifeInfo
+                    ++ (drop 2 scoreInfo) ++ qtLifeInfo ++ concatanateCards 7 currentCards
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
@@ -42,11 +42,11 @@ drawBatalha = do--putStrLn (unlines scBatalha)
 currentCards :: [[String]]
 currentCards = do 
     let hand = take 5 (h_deck getGameplayData)
-    [scCards !! ((identifier (hand !! 0))-1), 
-     scCards !! ((identifier (hand !! 1))-1),
-     scCards !! ((identifier (hand !! 2))-1),
-     scCards !! ((identifier (hand !! 3))-1),
-     scCards !! ((identifier (hand !! 4))-1)
+    [scCardsKanji !! (0),--((identifier (hand !! 0))-1), 
+     scCardsKanji !! (1),--((identifier (hand !! 1))-1),
+     scCardsKanji !! (2),--((identifier (hand !! 2))-1),
+     scCardsKanji !! (3),--((identifier (hand !! 3))-1),
+     scCardsKanji !! (4)--((identifier (hand !! 4))-1)
      ]
 
 -- | Esta função prepara as entradas de substituição de cada place holder de score.
@@ -66,4 +66,6 @@ usedElements :: [Bool] -> [String] -> String
 usedElements [] [] = ""
 usedElements [] _ = ""
 usedElements _ [] = ""
-usedElements (h:t) (x:xs) = if h then x ++ usedElements t xs else " " ++ usedElements t xs
+usedElements (h:t) (x:xs) = do 
+    let blankElement = take (length x) (cycle " ")
+    if h then x ++ usedElements t xs else blankElement ++ usedElements t xs
