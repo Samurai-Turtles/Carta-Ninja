@@ -68,7 +68,7 @@ executable Carta-Ninja
         Ranking,
         Gameplay,
         StateManager,
-        CardLoader
+        CSVManager
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:

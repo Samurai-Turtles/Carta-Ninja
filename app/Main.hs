@@ -4,6 +4,7 @@ module Main where
 
 import Card
 import Gameplay
+import CSVManager
 
 testGetWinner :: IO ()
 testGetWinner = do
@@ -33,7 +34,22 @@ testUpdatePlayerCP = do
 
 main :: IO ()
 main = do
-    testGetWinner
-    testLevelUp
-    testUpdatePlayerLife
-    testUpdatePlayerCP
+    let c1 = Card 01 "fire" 1
+    let c2 = Card 02 "water" 2
+    let list = [c1, c2]
+    print list
+
+    let list2 = getRanking
+    print list2
+
+    let list3 = returnLiterallyTheSameList getCards
+    print list3
+    -- testGetWinner
+    -- testLevelUp
+    -- testUpdatePlayerLife
+    -- testUpdatePlayerCP
+
+returnLiterallyTheSameList :: [Card] -> [Card]
+returnLiterallyTheSameList [] = []
+returnLiterallyTheSameList [x] = [x]
+returnLiterallyTheSameList (x:xs) = x : returnLiterallyTheSameList xs
