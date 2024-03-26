@@ -6,8 +6,7 @@ import Card
 import Gameplay
 import State
 import CSVManager
-import StateReader (getGlobalState, getBattleState)
-import StateWriter (writeOnJsonGlobals)
+import StateManager
 
 -- testGetWinner :: IO ()
 -- testGetWinner = do
@@ -62,19 +61,19 @@ main = do
     print x
 
 
-    writeOnJsonGlobals $ GlobalState {screen = "abaco"}
+    writeGlobalState $ GlobalState {screen = "abaco"}
     aaa <- getGlobalState
     print $ screen aaa
 
     getLine
 
-    writeOnJsonGlobals $ GlobalState {screen = "babaco"}
+    writeGlobalState $ GlobalState {screen = "babaco"}
     bbb <- getGlobalState
     print $ screen bbb
 
     getLine
 
-    writeOnJsonGlobals $ GlobalState {screen = "cabaco"}
+    writeGlobalState $ GlobalState {screen = "cabaco"}
     ccc <- getGlobalState
     print $ screen ccc
 

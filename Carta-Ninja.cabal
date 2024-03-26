@@ -65,12 +65,11 @@ executable Carta-Ninja
     other-modules:
         Card,
         Deck,
+        State,
         Ranking,
         Gameplay,
         CSVManager,
-        State,
-        StateReader,
-        StateWriter
+        StateManager
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:

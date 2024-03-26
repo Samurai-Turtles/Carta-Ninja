@@ -6,8 +6,7 @@ module Gameplay where
 
 import Card
 import State
-import StateReader
-import StateWriter (writeOnJsonCampaign, writeOnJsonBattle)
+import StateManager
 
 -- | Esta função recebe duas cartas (do jogador e do Bot, respectivamente) e
 -- retorna um valor determinando o vencedor da rodada
@@ -21,30 +20,42 @@ getWinner playerCard cpuCard
 levelUpPlayer :: IO()
 levelUpPlayer = do
     currentData <- getCampaignState
-    let modifiedData = CampaignState { totalScore = totalScore currentData, 
-                                       lifes = lifes currentData, 
-                                       beltLevel = beltLevel currentData + 1 }
-    writeOnJsonCampaign modifiedData
+    let modifiedData = 
+            CampaignState { 
+                totalScore = totalScore currentData,                        
+                lifes = lifes currentData,                        
+                beltLevel = beltLevel currentData + 1 
+            }
+    
+    writeCampaignState modifiedData
 
 -- | Esta função recebe um valor a ser somado ao número total de 
 -- vidas (Life Points) do jogador
 updatePlayerLife :: Int -> IO()
 updatePlayerLife lifeAmount = do
     currentData <- getCampaignState
-    let modifiedData = CampaignState { totalScore = totalScore currentData, 
-                                       lifes = lifes currentData + lifeAmount, 
-                                       beltLevel = beltLevel currentData }
-    writeOnJsonCampaign modifiedData
+    let modifiedData = 
+            CampaignState {
+                totalScore = totalScore currentData, 
+                lifes = lifes currentData + lifeAmount, 
+                beltLevel = beltLevel currentData
+            }
+    
+    writeCampaignState modifiedData
 
 -- | Esta função recebe a pontuação obtida pelo jogador na partida
 -- e retorna soma com a pontuação atual da campanha
 udpatePlayerCampaignScore :: Int -> IO()
 udpatePlayerCampaignScore points = do
     currentData <- getCampaignState
-    let modifiedData = CampaignState { totalScore = totalScore currentData + points, 
-                                       lifes = lifes currentData, 
-                                       beltLevel = beltLevel currentData }
-    writeOnJsonCampaign modifiedData
+    let modifiedData = 
+            CampaignState { 
+                totalScore = totalScore currentData + points, 
+                lifes = lifes currentData, 
+                beltLevel = beltLevel currentData
+            }
+            
+    writeCampaignState modifiedData
 
 -- | Esta função recebe um valor inteiro indicando o vencedor da rodada, 
 -- a carta vencedora e retorna a soma da pontuação atual com o poder da carta
@@ -60,16 +71,19 @@ updateScoreOf winner card = do
     let modifiedCPUWins = if winner == -1 then 1 else 0
     
     currentData <- getBattleState
-    let modifiedData = BattleState { currentRound = currentRound currentData,
+    let modifiedData = 
+            BattleState { 
+                currentRound = currentRound currentData,
 
-                          playerScore = playerScore currentData + modifiedPlayerScore,
-                          playerWins = playerWins currentData + modifiedPlayerWins, 
-                          playerWinsByElement = playerWinsByElement currentData,
-                          playerDeck = playerDeck currentData,
+                playerScore = playerScore currentData + modifiedPlayerScore,
+                playerWins = playerWins currentData + modifiedPlayerWins, 
+                playerWinsByElement = playerWinsByElement currentData,
+                playerDeck = playerDeck currentData,
 
-                          cpuScore = cpuScore currentData + modifiedCPUScore,
-                          cpuWins = cpuWins currentData + modifiedCPUWins, 
-                          cpuWinsByElement = cpuWinsByElement currentData,
-                          cpuDeck = cpuDeck currentData }
+                cpuScore = cpuScore currentData + modifiedCPUScore,
+                cpuWins = cpuWins currentData + modifiedCPUWins, 
+                cpuWinsByElement = cpuWinsByElement currentData,
+                cpuDeck = cpuDeck currentData
+            }
                           
-    writeOnJsonBattle modifiedData
+    writeBattleState modifiedData
