@@ -3,6 +3,7 @@
 -}
 
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module CSVManager where
 

@@ -13,9 +13,9 @@ import GHC.Generics
 
 -- | Este tipo representa uma carta, incluindo seu ID, elemento e nível de poder
 data Card = Card {
-    id :: Int,
+    cardID  :: Int,
     element :: String,
-    power :: Int
+    power   :: Int
 } deriving (Generic)
 
 -- Define que uma carta pode ser extraída e codificada em JSON
