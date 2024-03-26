@@ -23,7 +23,7 @@ import Hammer (forgeScreen, concatanateCards)
 action :: IO()
 action = do
     callCommand "clear"
-    
+
     global <- getGlobalState
     let state = screen global
 
@@ -37,7 +37,7 @@ selectDraw state
     | state == "ranking" = drawRank
     | state == "creditos" = drawCreditos
     | state == "batalha" = drawBatalha
-    | state == "venceu" = drawVenceu
+    | state == "vitoria" = drawVenceu
     | state == "derrota" = drawDerrota
     | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ state ++ "' doesn't exist\ESC[0m")
 

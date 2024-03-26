@@ -89,6 +89,30 @@ main = do
     
     if c /= "fim" then do
         writeGlobalState $ GlobalState {screen = c}
+        defineDeck
         action
         main
         else print "fim"
+
+defineDeck :: IO()
+defineDeck = do
+    let deck = getCards
+    currentData <- getBattleState
+
+    let modifiedData = 
+            BattleState { 
+                currentRound = currentRound currentData,
+
+                playerScore = 25,
+                playerWins = playerWins currentData, 
+                playerWinsByElement = [True, False, True, False, True],
+                playerDeck = deck,
+
+                cpuScore = 98,
+                cpuWins = cpuWins currentData, 
+                cpuWinsByElement = cpuWinsByElement currentData,
+                cpuDeck = cpuDeck currentData
+            }
+
+    writeBattleState modifiedData
+
