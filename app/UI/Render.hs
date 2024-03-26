@@ -9,7 +9,6 @@ module Render where
 
 -- TODO lembrar de mudar os imports para que importem
 -- somente as funções necessárias.
-import ReadData
 import SpritesBase
 import Hammer (forgeScreen, concatanateCards)
 
