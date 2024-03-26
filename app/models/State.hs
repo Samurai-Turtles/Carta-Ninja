@@ -27,12 +27,12 @@ data BattleState = BattleState {
     currentRound        :: Int,
 
     playerScore         :: Int,      -- Pontuação do Jogador
-    playerWins          :: Int,      -- Vitórias do Jogador
+    playerStreak         :: Int,      -- Vitórias do Jogador
     playerWinsByElement :: [Bool],   -- Vitórias do Jogador por elemento
     playerDeck          :: [Card],   -- Deck de cartas do Jogador
 
     cpuScore            :: Int,      -- Pontuação do Bot
-    cpuWins             :: Int,      -- Vitórias do Bot
+    cpuStreak             :: Int,      -- Vitórias do Bot
     cpuWinsByElement    :: [Bool],   -- Vitórias do Bot por elemento
     cpuDeck             :: [Card]    -- Deck de cartas do Bot
 } deriving (Generic, Show)
