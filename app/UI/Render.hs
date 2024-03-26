@@ -61,11 +61,11 @@ drawDerrota = putStrLn (unlines scDerrota)
 currentCards :: [[String]]
 currentCards = do 
     let hand = take 5 (h_deck getGameplayData)
-    [scCardsKanji !! (0),--((identifier (hand !! 0))-1), 
-     scCardsKanji !! (1),--((identifier (hand !! 1))-1),
-     scCardsKanji !! (2),--((identifier (hand !! 2))-1),
-     scCardsKanji !! (3),--((identifier (hand !! 3))-1),
-     scCardsKanji !! (4)--((identifier (hand !! 4))-1)
+    [scCardsKanji !! ((identifier (hand !! 0))-1), 
+     scCardsKanji !! ((identifier (hand !! 1))-1),
+     scCardsKanji !! ((identifier (hand !! 2))-1),
+     scCardsKanji !! ((identifier (hand !! 3))-1),
+     scCardsKanji !! ((identifier (hand !! 4))-1)
      ]
 
 -- | Esta função prepara as entradas de substituição de cada place holder de score.

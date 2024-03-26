@@ -1,1 +1,0 @@
-Lembrar de remover a pasta core na branch UI quando for fazer o merge das branches
