@@ -7,6 +7,7 @@ import Gameplay
 import State
 import CSVManager
 import StateManager
+import Render (action)
 
 -- testGetWinner :: IO ()
 -- testGetWinner = do
@@ -57,25 +58,25 @@ main = do
 
     -- print getRanking
 
-    x <- getBattleState
-    print x
+    -- x <- getBattleState
+    -- print x
 
 
-    writeGlobalState $ GlobalState {screen = "abaco"}
-    aaa <- getGlobalState
-    print $ screen aaa
+    -- writeGlobalState $ GlobalState {screen = "abaco"}
+    -- aaa <- getGlobalState
+    -- print $ screen aaa
 
-    getLine
+    -- getLine
 
-    writeGlobalState $ GlobalState {screen = "babaco"}
-    bbb <- getGlobalState
-    print $ screen bbb
+    -- writeGlobalState $ GlobalState {screen = "babaco"}
+    -- bbb <- getGlobalState
+    -- print $ screen bbb
 
-    getLine
+    -- getLine
 
-    writeGlobalState $ GlobalState {screen = "cabaco"}
-    ccc <- getGlobalState
-    print $ screen ccc
+    -- writeGlobalState $ GlobalState {screen = "cabaco"}
+    -- ccc <- getGlobalState
+    -- print $ screen ccc
 
 
     -- testGetWinner
@@ -83,7 +84,11 @@ main = do
     -- testUpdatePlayerLife
     -- testUpdatePlayerCP
 
-returnLiterallyTheSameList :: [Card] -> [Card]
-returnLiterallyTheSameList [] = []
-returnLiterallyTheSameList [x] = [x]
-returnLiterallyTheSameList (x:xs) = x : returnLiterallyTheSameList xs
+    -- UI TESTS::::::::
+    c <- getLine
+    
+    if c /= "fim" then do
+        writeGlobalState $ GlobalState {screen = c}
+        action
+        main
+        else print "fim"

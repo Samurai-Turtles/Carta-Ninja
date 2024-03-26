@@ -87,7 +87,8 @@ executable Carta-Ninja
         directory,
         bytestring,
         csv,
-        filepath
+        filepath,
+        process
 
     -- Directories containing source files.
     hs-source-dirs:   

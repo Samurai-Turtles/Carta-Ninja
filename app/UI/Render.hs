@@ -1,3 +1,6 @@
+{-
+    Módulo referente a impressão da tela atual.
+-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 -- Essas extensões de linguagem estão aqui para que o linter
@@ -9,20 +12,34 @@ module Render where
 
 -- TODO lembrar de mudar os imports para que importem
 -- somente as funções necessárias.
+import Card
+import State 
 import SpritesBase
+import StateManager
+import System.Process
 import Hammer (forgeScreen, concatanateCards)
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
-action
-    | choice == "menu" = drawMenu
-    | choice == "ranking" = drawRank
-    | choice == "creditos" = drawCreditos
-    | choice == "batalha" = drawBatalha
-    | choice == "venceu" = drawVenceu
-    | choice == "derrota" = drawDerrota
-    | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ choice ++ "' doesn't exist\ESC[0m")
-      where choice = screen getGeneralData
+action = do
+    callCommand "clear"
+    
+    global <- getGlobalState
+    let state = screen global
+
+    selectDraw state
+    
+-- | Esta função seleciona a função `draw` responsável pela impressão da tela, 
+-- tomado por base o estado atual.
+selectDraw :: String -> IO()
+selectDraw state
+    | state == "menu" = drawMenu
+    | state == "ranking" = drawRank
+    | state == "creditos" = drawCreditos
+    | state == "batalha" = drawBatalha
+    | state == "venceu" = drawVenceu
+    | state == "derrota" = drawDerrota
+    | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ state ++ "' doesn't exist\ESC[0m")
 
 -- | Esta função imprime a tela de menu.
 drawMenu :: IO()
@@ -39,9 +56,14 @@ drawCreditos = putStrLn (unlines scCreditos)
 -- | Esta função imprime a tela de batalha.
 drawBatalha :: IO()
 drawBatalha = do
-    let contentChar = (take 2 scoreInfo) ++ 
-                    (usedElements (h_vitoriasElementos getGameplayData) ["FOGO","ÁGUA","NATUREZA","METAL","TERRA"]) 
-                    ++ (drop 2 scoreInfo) ++ qtLifeInfo ++ concatanateCards 7 currentCards
+    battle <- getBattleState
+    campaign <- getCampaignState
+    let handRepresentation = currentCards (playerDeck battle)
+
+    let contentChar = 
+            (scoreInfo (playerScore battle)) ++ 
+            (usedElements (playerWinsByElement battle) ["FOGO","ÁGUA","NATUREZA","METAL","TERRA"]) ++
+            (scoreInfo (cpuScore battle)) ++ (qtLifeInfo (lifes campaign)) ++ concatanateCards 7 handRepresentation
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
@@ -53,31 +75,27 @@ drawVenceu = putStrLn (unlines scVitoria)
 drawDerrota :: IO()
 drawDerrota = putStrLn (unlines scDerrota)
 
--- Funções que preparam as informações de replace de placeholder:
+------------------------------ Funções Auxiliares ------------------------------
 
 -- | Esta função seleciona a representação das cartas para 
 -- forjar os espaços da mão do jogador.
-currentCards :: [[String]]
-currentCards = do 
-    let hand = take 5 (h_deck getGameplayData)
-    [scCardsKanji !! ((identifier (hand !! 0))-1), 
-     scCardsKanji !! ((identifier (hand !! 1))-1),
-     scCardsKanji !! ((identifier (hand !! 2))-1),
-     scCardsKanji !! ((identifier (hand !! 3))-1),
-     scCardsKanji !! ((identifier (hand !! 4))-1)
-     ]
+currentCards :: [Card] -> [[String]]
+currentCards cards = do 
+    let hand = take 5 cards
+
+    [scCardsKanji !! ((cardID (hand !! 0))-1), 
+     scCardsKanji !! ((cardID (hand !! 1))-1),
+     scCardsKanji !! ((cardID (hand !! 2))-1),
+     scCardsKanji !! ((cardID (hand !! 3))-1),
+     scCardsKanji !! ((cardID (hand !! 4))-1)]
 
 -- | Esta função prepara as entradas de substituição de cada place holder de score.
-scoreInfo :: String
-scoreInfo = do
-    let scorePlayer = if h_score getGameplayData <= 9 then "0" ++ show (h_score getGameplayData) else show (h_score getGameplayData)
-    let scoreComputador = if c_score getGameplayData <= 9 then "0" ++ show (c_score getGameplayData) else show (h_score getGameplayData)
-
-    scorePlayer ++ scoreComputador
+scoreInfo :: Int -> String
+scoreInfo score = if score <= 9 then "0" ++ show score else show score
 
 -- | Esta função prepara as entradas de substituição para cada place holder da quantidade de vida.
-qtLifeInfo :: String
-qtLifeInfo = if vidas getCampaignData <= 9 then "0" ++ show (vidas getCampaignData) else show (vidas getCampaignData)
+qtLifeInfo :: Int -> String
+qtLifeInfo vidas = if vidas <= 9 then "0" ++ (show vidas) else show vidas
 
 -- | Esta função prepara as entradas de substituição para cada place holder dos elementos vitoriosos.
 usedElements :: [Bool] -> [String] -> String
