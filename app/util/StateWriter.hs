@@ -11,152 +11,155 @@ import System.FilePath.Posix (takeDirectory)
 import Card
 import GHC.Num.BigNat (BigNat)
 
-writeBattleRound :: Int -> IO ()
-writeBattleRound newCurRound = do
-    let newBattleState = BattleState newCurRound (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+-- TODO reduzir a quantidade de funções.
+-- TODO adaptar as funções à nova estratégia de trabalhar com JSONs.
 
-    writeOnJsonBattle newBattleState
+-- writeBattleRound :: Int -> IO ()
+-- writeBattleRound newCurRound = do
+--     let newBattleState = BattleState newCurRound (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePScore :: Int -> IO ()
-writeBattlePScore newCurScore = do
-    let newBattleState = BattleState (currentRound getBattleState) newCurScore (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePScore :: Int -> IO ()
+-- writeBattlePScore newCurScore = do
+--     let newBattleState = BattleState (currentRound getBattleState) newCurScore (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePWins :: Int -> IO ()
-writeBattlePWins newCurWins = do
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) newCurWins (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePWins :: Int -> IO ()
+-- writeBattlePWins newCurWins = do
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) newCurWins (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePWinFire :: Bool -> IO ()
-writeBattlePWinFire bool = do
-    let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 0
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePWinFire :: Bool -> IO ()
+-- writeBattlePWinFire bool = do
+--     let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 0
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePWinWater :: Bool -> IO ()
-writeBattlePWinWater bool = do
-    let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 1
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePWinWater :: Bool -> IO ()
+-- writeBattlePWinWater bool = do
+--     let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 1
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePWinNature :: Bool -> IO ()
-writeBattlePWinNature bool = do
-    let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 2
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePWinNature :: Bool -> IO ()
+-- writeBattlePWinNature bool = do
+--     let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 2
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePWinMetal :: Bool -> IO ()
-writeBattlePWinMetal bool = do
-    let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 3
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePWinMetal :: Bool -> IO ()
+-- writeBattlePWinMetal bool = do
+--     let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 3
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePWinEarth :: Bool -> IO ()
-writeBattlePWinEarth bool = do
-    let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 4
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePWinEarth :: Bool -> IO ()
+-- writeBattlePWinEarth bool = do
+--     let newWinArray = replaceAtIndex (playerWinsByElement getBattleState) bool 4
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) newWinArray
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattlePDeck :: [Card] -> IO ()
-writeBattlePDeck newDeck = do
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         newDeck (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattlePDeck :: [Card] -> IO ()
+-- writeBattlePDeck newDeck = do
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          newDeck (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattleCScore :: Int -> IO ()
-writeBattleCScore newCurScore = do
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) newCurScore (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCScore :: Int -> IO ()
+-- writeBattleCScore newCurScore = do
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) newCurScore (cpuWins getBattleState) (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattleCWins :: Int -> IO ()
-writeBattleCWins newCurWins = do
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) newCurWins (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCWins :: Int -> IO ()
+-- writeBattleCWins newCurWins = do
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) newCurWins (cpuWinsByElement getBattleState) (cpuDeck getBattleState)
 
-writeBattleCWinFire :: Bool -> IO ()
-writeBattleCWinFire bool = do
-    let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 0
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCWinFire :: Bool -> IO ()
+-- writeBattleCWinFire bool = do
+--     let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 0
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-writeBattleCWinWater :: Bool -> IO ()
-writeBattleCWinWater bool = do
-    let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 1
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCWinWater :: Bool -> IO ()
+-- writeBattleCWinWater bool = do
+--     let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 1
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-writeBattleCWinNature :: Bool -> IO ()
-writeBattleCWinNature bool = do
-    let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 2
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCWinNature :: Bool -> IO ()
+-- writeBattleCWinNature bool = do
+--     let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 2
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-writeBattleCWinMetal :: Bool -> IO ()
-writeBattleCWinMetal bool = do
-    let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 3
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCWinMetal :: Bool -> IO ()
+-- writeBattleCWinMetal bool = do
+--     let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 3
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-writeBattleCWinEarth :: Bool -> IO ()
-writeBattleCWinEarth bool = do
-    let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 4
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCWinEarth :: Bool -> IO ()
+-- writeBattleCWinEarth bool = do
+--     let newWinArray = replaceAtIndex (cpuWinsByElement getBattleState) bool 4
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) newWinArray (cpuDeck getBattleState)
 
-writeBattleCDeck :: [Card] -> IO ()
-writeBattleCDeck newDeck = do
-    let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState) 
-                         (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) newDeck
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonBattle newBattleState
+-- writeBattleCDeck :: [Card] -> IO ()
+-- writeBattleCDeck newDeck = do
+--     let newBattleState = BattleState (currentRound getBattleState) (playerScore getBattleState) (playerWins getBattleState) (playerWinsByElement getBattleState)
+--                          (playerDeck getBattleState) (cpuScore getBattleState) (cpuWins getBattleState) (cpuWinsByElement getBattleState) newDeck
 
-writeCampaignScore :: Int -> IO ()
-writeCampaignScore newScore = do
-    let newCampaignState = CampaignState newScore (lifes getCampaignState) (beltLevel getCampaignState)
+--     writeOnJsonBattle newBattleState
 
-    writeOnJsonCampaign newCampaignState
+-- writeCampaignScore :: Int -> IO ()
+-- writeCampaignScore newScore = do
+--     let newCampaignState = CampaignState newScore (lifes getCampaignState) (beltLevel getCampaignState)
 
-writeCampaignLifes :: Int -> IO ()
-writeCampaignLifes newLifes = do
-    let newCampaignState = CampaignState (totalScore getCampaignState) newLifes (beltLevel getCampaignState)
+--     writeOnJsonCampaign newCampaignState
 
-    writeOnJsonCampaign newCampaignState
+-- writeCampaignLifes :: Int -> IO ()
+-- writeCampaignLifes newLifes = do
+--     let newCampaignState = CampaignState (totalScore getCampaignState) newLifes (beltLevel getCampaignState)
 
-writeCampaignBeltLvl :: Int -> IO ()
-writeCampaignBeltLvl newBeltLvl = do
-    let newCampaignState = CampaignState (totalScore getCampaignState) (lifes getCampaignState) newBeltLvl
+--     writeOnJsonCampaign newCampaignState
 
-    writeOnJsonCampaign newCampaignState
+-- writeCampaignBeltLvl :: Int -> IO ()
+-- writeCampaignBeltLvl newBeltLvl = do
+--     let newCampaignState = CampaignState (totalScore getCampaignState) (lifes getCampaignState) newBeltLvl
+
+--     writeOnJsonCampaign newCampaignState
 
 writeGlobalsScreen :: String -> IO ()
 writeGlobalsScreen newScreen = do
@@ -166,25 +169,16 @@ writeGlobalsScreen newScreen = do
 
 writeOnJsonBattle :: BattleState -> IO ()
 writeOnJsonBattle newBattleState = do
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newBattleState)
-    removeFile (toPath !! 2)
-    renameFile "../core/states/Temp.json" (toPath !! 2)
+    B.writeFile (toPath !! 2) (encode newBattleState)
 
 writeOnJsonCampaign :: CampaignState -> IO ()
 writeOnJsonCampaign newCampaignState = do
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newCampaignState)
-    removeFile (toPath !! 1)
-    renameFile "../core/states/Temp.json" (toPath !! 1)
+    B.writeFile (toPath !! 1) (encode newCampaignState)
 
 writeOnJsonGlobals :: GlobalState -> IO ()
 writeOnJsonGlobals newGlobalState = do
-    createFile "../core/states/Temp.json"
-    B.writeFile "../core/states/Temp.json" (encode newGlobalState)
-    removeFile (toPath !! 0)
-    renameFile "../core/states/Temp.json" (toPath !! 0)
-    
+    B.writeFile (head toPath) (encode newGlobalState)
+
 createFile :: FilePath -> IO ()
 createFile path = do
     createDirectoryIfMissing True (takeDirectory path)

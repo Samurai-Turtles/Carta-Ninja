@@ -7,6 +7,7 @@ module Gameplay where
 import Card
 import State
 import StateReader
+import StateWriter (writeOnJsonCampaign, writeOnJsonBattle)
 
 -- | Esta função recebe duas cartas (do jogador e do Bot, respectivamente) e
 -- retorna um valor determinando o vencedor da rodada
@@ -17,24 +18,58 @@ getWinner playerCard cpuCard
     | otherwise            =  0 -- Empate
 
 -- | Esta função incrementa o nível de faixa do jogador em +1
-levelUpPlayer :: Int
-levelUpPlayer = beltLevel getCampaignState + 1
+levelUpPlayer :: IO()
+levelUpPlayer = do
+    currentData <- getCampaignState
+    let modifiedData = CampaignState { totalScore = totalScore currentData, 
+                                       lifes = lifes currentData, 
+                                       beltLevel = beltLevel currentData + 1 }
+    writeOnJsonCampaign modifiedData
 
 -- | Esta função recebe um valor a ser somado ao número total de 
 -- vidas (Life Points) do jogador
-updatePlayerLife :: Int -> Int
-updatePlayerLife value = lifes getCampaignState + value
+updatePlayerLife :: Int -> IO()
+updatePlayerLife lifeAmount = do
+    currentData <- getCampaignState
+    let modifiedData = CampaignState { totalScore = totalScore currentData, 
+                                       lifes = lifes currentData + lifeAmount, 
+                                       beltLevel = beltLevel currentData }
+    writeOnJsonCampaign modifiedData
 
 -- | Esta função recebe a pontuação obtida pelo jogador na partida
 -- e retorna soma com a pontuação atual da campanha
-updatePlayerCP :: Int -> Int
-updatePlayerCP points = totalScore getCampaignState + points
+udpatePlayerCampaignScore :: Int -> IO()
+udpatePlayerCampaignScore points = do
+    currentData <- getCampaignState
+    let modifiedData = CampaignState { totalScore = totalScore currentData + points, 
+                                       lifes = lifes currentData, 
+                                       beltLevel = beltLevel currentData }
+    writeOnJsonCampaign modifiedData
 
--- | Esta função recebe um caractere indicando o vencedor da rodada, 
+-- | Esta função recebe um valor inteiro indicando o vencedor da rodada, 
 -- a carta vencedora e retorna a soma da pontuação atual com o poder da carta
-updateScoreOf :: Char -> Card -> Int
-updateScoreOf player card = power card + currentScore
-    where 
-        currentScore = if player == 'p' 
-            then playerScore getBattleState 
-            else cpuScore getBattleState
+updateScoreOf :: Int -> Card -> IO()
+updateScoreOf winner card = do
+    -- TODO utilização: ao executar (no main?), chamar com a função getWinner,
+    --      definida mais acima no módulo.
+
+    let modifiedPlayerScore = if winner == 1 then power card else 0
+    let modifiedCPUScore = if winner == -1 then power card else 0
+    
+    let modifiedPlayerWins = if winner == 1 then 1 else 0
+    let modifiedCPUWins = if winner == -1 then 1 else 0
+    
+    currentData <- getBattleState
+    let modifiedData = BattleState { currentRound = currentRound currentData,
+
+                          playerScore = playerScore currentData + modifiedPlayerScore,
+                          playerWins = playerWins currentData + modifiedPlayerWins, 
+                          playerWinsByElement = playerWinsByElement currentData,
+                          playerDeck = playerDeck currentData,
+
+                          cpuScore = cpuScore currentData + modifiedCPUScore,
+                          cpuWins = cpuWins currentData + modifiedCPUWins, 
+                          cpuWinsByElement = cpuWinsByElement currentData,
+                          cpuDeck = cpuDeck currentData }
+                          
+    writeOnJsonBattle modifiedData
