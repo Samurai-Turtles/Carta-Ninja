@@ -2,12 +2,12 @@
     "currentRound" : 0,
 
     "playerScore" : 0,
-    "playerWins" : 0,
+    "playerStreak" : 0,
     "playerWinsByElement" : [false, false, false, false, false],
     "playerDeck" : [],
 
     "cpuScore" : 0,
-    "cpuWins" : 0,
+    "cpuStreak" : 0,
     "cpuWinsByElement" : [false, false, false, false, false],
     "cpuDeck" : []
 }
