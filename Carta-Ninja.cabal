@@ -75,7 +75,10 @@ executable Carta-Ninja
         Ranking,
         Gameplay,
         CSVManager,
-        StateManager
+        StateManager,
+
+        -- Bot related
+        Bot
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
@@ -88,7 +91,9 @@ executable Carta-Ninja
         bytestring,
         csv,
         filepath,
-        process
+        process,
+        random,
+        IO
 
     -- Directories containing source files.
     hs-source-dirs:   
