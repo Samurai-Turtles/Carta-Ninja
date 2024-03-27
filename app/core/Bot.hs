@@ -25,9 +25,9 @@ wHand (x:xs) (y:ys) = replicate y x ++ wHand xs ys
 
 makeChoice :: [a] -> [Int] -> a
 makeChoice cards weight = do
-    hand <- wHand cards weight
-    let len = length hand
-    choice = nRandom len
+    let hand = wHand cards weight
+    let len = length (wHand cards weight)
+    hand !! nRandom (len -1)
 
 
 -- Faz a seleção da carta
