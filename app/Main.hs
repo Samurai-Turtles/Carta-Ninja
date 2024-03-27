@@ -96,16 +96,16 @@ main = do
 
 defineDeck :: IO()
 defineDeck = do
-    let deck = getCards
+    let deck = drop 5 getCards
     currentData <- getBattleState
 
     let modifiedData = 
             BattleState { 
                 currentRound = currentRound currentData,
 
-                playerScore = 25,
+                playerScore = 5,
                 playerWins = playerWins currentData, 
-                playerWinsByElement = [True, False, True, False, True],
+                playerWinsByElement = [True, True, True, True, True],
                 playerDeck = deck,
 
                 cpuScore = 98,

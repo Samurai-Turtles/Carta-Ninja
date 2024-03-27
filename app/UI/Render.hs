@@ -61,9 +61,9 @@ drawBatalha = do
     let handRepresentation = currentCards (playerDeck battle)
 
     let contentChar = 
-            (scoreInfo (playerScore battle)) ++ 
-            (usedElements (playerWinsByElement battle) ["FOGO","ÁGUA","NATUREZA","METAL","TERRA"]) ++
-            (scoreInfo (cpuScore battle)) ++ (qtLifeInfo (lifes campaign)) ++ concatanateCards 7 handRepresentation
+            (fillNum (playerScore battle)) ++ 
+            (usedElements (playerWinsByElement battle) ["FOGO","NATUREZA","ÁGUA","METAL","TERRA"]) ++
+            (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ concatanateCards 7 handRepresentation
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
@@ -89,13 +89,11 @@ currentCards cards = do
      scCardsKanji !! ((cardID (hand !! 3))-1),
      scCardsKanji !! ((cardID (hand !! 4))-1)]
 
--- | Esta função prepara as entradas de substituição de cada place holder de score.
-scoreInfo :: Int -> String
-scoreInfo score = if score <= 9 then "0" ++ show score else show score
-
--- | Esta função prepara as entradas de substituição para cada place holder da quantidade de vida.
-qtLifeInfo :: Int -> String
-qtLifeInfo vidas = if vidas <= 9 then "0" ++ (show vidas) else show vidas
+-- | Esta função prepara o número para uma representação de dois digitos.
+-- Preenche com um dígito zero após o primeiro número, complementando o espaço
+-- restante, isso caso ele seja um número menor que 10. 
+fillNum :: Int -> String
+fillNum number = if number <= 9 then "0" ++ (show number) else show number
 
 -- | Esta função prepara as entradas de substituição para cada place holder dos elementos vitoriosos.
 usedElements :: [Bool] -> [String] -> String
