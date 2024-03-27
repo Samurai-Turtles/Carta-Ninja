@@ -37,18 +37,7 @@ shuffle xs = do randomPosition <- getStdRandom (randomR (0, length xs - 1))
                 let (left, (a:right)) = splitAt randomPosition xs
                 fmap (a:) (shuffle (left ++ right))
 
-
--- -- Retorna um deck com os mesmos elementos do deck passado, mas em uma ordem aleatória
--- shuffle :: [a] -> IO [a]
--- shuffle [] = []
--- shuffle xs = do
---     let len = length xs
-
---     idx <- randomRIO (0, len - 1)
---     let val = xs !! idx
---     return ([val] ++ shuffle (removeFirstEqualTo val xs))
-
--- -- Remove a primeira aparição do elemento passado do deck
+-- Remove a primeira aparição do elemento passado do deck
 -- removeFirstEqualTo :: Eq a => a -> [a] -> [a]
 -- removeFirstEqualTo  [] = []
 -- removeFirstEqualTo x (y:ys)
