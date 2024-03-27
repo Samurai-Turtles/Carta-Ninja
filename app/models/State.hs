@@ -5,11 +5,13 @@ module State where
 import Data.Aeson
 import GHC.Generics
 import Card
+import Ranking
 
 -- | Este tipo representa o estado global do jogo, incluindo
 -- a tela atual e o ranking das seis melhores campanhas em ordem decrescente
 data GlobalState = GlobalState {
-    screen  :: String
+    screen  :: String,
+    rankings :: [Ranking]
 } deriving (Generic, Show)
 
 -- | Este tipo representa o estado da campanha atual, incluindo

@@ -3,16 +3,22 @@
 -}
 
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Ranking where
+import GHC.Generics ( Generic )
+import Data.Aeson ( FromJSON, ToJSON )
 
 -- | Este tipo representa um Ranking, incluindo nome da campanha e a 
 -- pontuação obtida nela
 data Ranking = Ranking {
     name :: String,
     points :: Int
-}
+} deriving (Generic)
+
+instance FromJSON Ranking
+instance ToJSON Ranking
 
 -- Exibe os dados do Ranking conforme o exemplo: `<name> - <points> pts.`
 instance Show Ranking where

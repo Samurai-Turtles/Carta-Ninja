@@ -4,6 +4,9 @@
 
 module Helpers where
 
+import Ranking
+import Data.List
+
 -- | Essa função verifica se um índice está dentro de um intervalo
 validateIndex :: Int -> (Int, Int) -> Bool
 validateIndex index range = index >= fst range && index <= snd range
@@ -25,3 +28,17 @@ replaceAtIndex (h : t) item index
     | not (validateIndex index (0, length (h:t) - 1)) = h : t
     | index == 0 = item : t
     | otherwise = h : replaceAtIndex t item (index - 1)
+
+-- | Esta função remove duplicatas de uma lista de Rankings.
+removeDuplicateRankings :: [Ranking] -> [Ranking]
+-- Utilizar apenas numa lista ordenada ao contrário de rankings.
+removeDuplicateRankings = nubBy (\x y -> name x == name y)
+
+-- | Esta função ordena uma lista ao contrário
+sortReverse :: (Ord a) => [a] -> [a]
+sortReverse = sortBy (flip compare)
+
+-- | Esta função aplica a função de ordenamento reverso, seguida da função de
+-- remover duplicatas numa lista de Rankings. 
+organizeRankings :: [Ranking] -> [Ranking]
+organizeRankings = removeDuplicateRankings . sortReverse

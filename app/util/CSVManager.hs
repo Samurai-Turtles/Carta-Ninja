@@ -7,11 +7,9 @@
 
 module CSVManager where
 
-import Card
-import Ranking
-import Text.CSV
+import Card ( Card(Card) )
+import Text.CSV ( Record, parseCSV )
 import System.IO.Unsafe (unsafePerformIO)
-import System.IO
 
 -- | Esta função retorna uma lista de caminhos para arquivos JSON.
 paths :: [FilePath]
@@ -38,33 +36,7 @@ recordToCards (x:xs) = do
     let c = Card (toInt $ head x) (x!!1) (toInt $ x!!2)
     c : recordToCards xs
 
--- | Esta função converte uma lista de Records em uma lista de rankings.
-recordToRanking :: [Record] -> [Ranking]
-recordToRanking [] = []
-recordToRanking (x:xs) = do
-    let r = Ranking (head x) (toInt $ x !! 1)
-    r : recordToRanking xs
-
 -- | Esta função retorna o conteúdo do arquivo CSV que contém as cartas como 
 -- uma lista de cartas.
 getCards :: [Card]
 getCards = recordToCards (getCSV 0)
-
--- | Esta função retorna o conteúdo do arquivo CSV que contém os rankings como 
--- uma lista de rankings.
-getRanking :: [Ranking]
-getRanking = recordToRanking (getCSV 1)
-
--- | Essa função recebe um nome e uma quantidade de pontos e converte esses 
--- argumentos em uma String em formato CSV.
-rankingToCSV :: String -> Int -> String
-rankingToCSV rankName rankPoints = "\n" ++ rankName ++ "," ++ show rankPoints
-
--- | Essa função salva um ranking selecionado no arquivo CSV que contém os 
--- rankings.
-saveRankingCSV :: String -> Int -> IO()
-saveRankingCSV rankName rankPoints = do
-    let rank = rankingToCSV rankName rankPoints
-    file <- openFile (paths !! 1) AppendMode
-    hPutStr file rank
-    hClose file

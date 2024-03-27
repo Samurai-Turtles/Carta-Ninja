@@ -1,4 +1,5 @@
 -- Uncomment this section and run "cabal build && cabal run" to check if its working
+{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module Main where
 
@@ -7,6 +8,8 @@ import Gameplay
 import State
 import CSVManager
 import StateManager
+import Helpers
+import Ranking
 
 -- testGetWinner :: IO ()
 -- testGetWinner = do
@@ -57,33 +60,36 @@ main = do
 
     -- print getRanking
 
-    x <- getBattleState
-    print x
+    -- x <- getBattleState
+    -- print x
 
 
-    writeGlobalState $ GlobalState {screen = "abaco"}
-    aaa <- getGlobalState
-    print $ screen aaa
+    -- writeGlobalState $ GlobalState {screen = "abaco"}
+    -- aaa <- getGlobalState
+    -- print $ screen aaa
 
-    getLine
+    -- getLine
 
-    writeGlobalState $ GlobalState {screen = "babaco"}
-    bbb <- getGlobalState
-    print $ screen bbb
+    -- writeGlobalState $ GlobalState {screen = "babaco"}
+    -- bbb <- getGlobalState
+    -- print $ screen bbb
 
-    getLine
+    -- getLine
 
-    writeGlobalState $ GlobalState {screen = "cabaco"}
-    ccc <- getGlobalState
-    print $ screen ccc
+    -- writeGlobalState $ GlobalState {screen = "cabaco"}
+    -- ccc <- getGlobalState
+    -- print $ screen ccc
+
+    print $ organizeRankings [
+        Ranking {name="Ruivas", points=30},
+        Ranking {name="Loiras", points=3423423423423423434},
+        Ranking {name="Ruivas", points=234},
+        Ranking {name="Ruivas", points=32532},
+        Ranking {name="Loiras", points=3423}
+        ]
 
 
     -- testGetWinner
     -- testLevelUp
     -- testUpdatePlayerLife
     -- testUpdatePlayerCP
-
-returnLiterallyTheSameList :: [Card] -> [Card]
-returnLiterallyTheSameList [] = []
-returnLiterallyTheSameList [x] = [x]
-returnLiterallyTheSameList (x:xs) = x : returnLiterallyTheSameList xs
