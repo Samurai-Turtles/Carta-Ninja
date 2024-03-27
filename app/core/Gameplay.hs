@@ -46,8 +46,8 @@ updatePlayerLife lifeAmount = do
 
 -- | Esta função recebe a pontuação obtida pelo jogador na partida
 -- e retorna soma com a pontuação atual da campanha
-udpatePlayerCampaignScore :: Int -> IO()
-udpatePlayerCampaignScore points = do
+updatePlayerCampaignScore :: Int -> IO()
+updatePlayerCampaignScore points = do
     currentData <- getCampaignState
     let modifiedData = 
             CampaignState { 
@@ -109,14 +109,48 @@ verifyVictory battleState
     | currentRound battleState == 11 && playerScore battleState < cpuScore battleState = -1
     | otherwise = 0
 
+-- | Esta função reseta os dados do campaign.json para os seus respectivos valores padrão
+-- do início de uma campanha.
+resetCampaignState :: IO()
+resetCampaignState = do
+    let modifiedData = CampaignState { 
+                totalScore = 0,
+                lifes = 0,
+                beltLevel = 0                 
+            }
+    
+    writeCampaignState modifiedData
+
+-- | Esta função reseta os dados do battle.json para os seus respectivos valores padrão 
+-- do início de uma batalha.
+resetBattleState :: IO()
+resetBattleState = do
+    currentData <- getBattleState
+
+    let modifiedData = BattleState { 
+                currentRound = 0,
+
+                playerScore = 0,
+                playerStreak = 0, 
+                playerWinsByElement = [False, False, False, False, False],
+                playerDeck = playerDeck currentData,
+
+                cpuScore = 0,
+                cpuStreak = 0, 
+                cpuWinsByElement = [False, False, False, False, False],
+                cpuDeck = cpuDeck currentData
+            }
+    
+    writeBattleState modifiedData
+
 -- | Esta função recebe uma Carta e um array de booleanos que significa as vitórias
 -- de elementos na luta em questão e modifica esse array, atualizando esses valores
 -- booleanos para o estado correto.
 modifyElemWinArray :: Card -> [Bool] -> [Bool]
 modifyElemWinArray card winArray
     | element card == "fire" = replaceAtIndex winArray True 0
-    | element card == "water" = replaceAtIndex winArray True 1
-    | element card == "nature" = replaceAtIndex winArray True 2
+    | element card == "nature" = replaceAtIndex winArray True 1
+    | element card == "water" = replaceAtIndex winArray True 2
     | element card == "metal" = replaceAtIndex winArray True 3
     | element card == "earth" = replaceAtIndex winArray True 4
 
