@@ -47,9 +47,9 @@ instance Ord Card where
 winsAgainst :: String -> String -> Ordering
 winsAgainst a b
     | a == b = EQ
-    | a == "fire"   = if b == "metal"  || b == "nature" then GT else LT
-    | a == "metal"  = if b == "nature" || b == "earth"  then GT else LT
-    | a == "nature" = if b == "earth"  || b == "water"  then GT else LT
-    | a == "earth"  = if b == "water"  || b == "fire"   then GT else LT
-    | a == "water"  = if b == "fire"   || b == "metal"  then GT else LT
+    | a == "fire"   = if b == "nature" || b == "metal"  then GT else LT
+    | a == "nature" = if b == "water"  || b == "earth"  then GT else LT
+    | a == "water"  = if b == "metal"  || b == "fire"   then GT else LT
+    | a == "metal"  = if b == "earth"  || b == "nature" then GT else LT
+    | a == "earth"  = if b == "fire"   || b == "water"  then GT else LT
     | otherwise = EQ
