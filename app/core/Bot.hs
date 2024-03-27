@@ -30,6 +30,14 @@ makeChoice cards weight = do
     let len = length (wHand cards weight)
     hand !! nRandom (len -1)
 
+-- Função para fazer o shuffle de um array 
+shuffle :: [a] -> IO [a]
+shuffle [] = return []
+shuffle xs = do randomPosition <- getStdRandom (randomR (0, length xs - 1))
+                let (left, (a:right)) = splitAt randomPosition xs
+                fmap (a:) (shuffle (left ++ right))
+
+
 -- -- Retorna um deck com os mesmos elementos do deck passado, mas em uma ordem aleatória
 -- shuffle :: [a] -> IO [a]
 -- shuffle [] = []
