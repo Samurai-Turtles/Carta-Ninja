@@ -92,8 +92,7 @@ executable Carta-Ninja
         csv,
         filepath,
         process,
-        random,
-        IO
+        random
 
     -- Directories containing source files.
     hs-source-dirs:   
