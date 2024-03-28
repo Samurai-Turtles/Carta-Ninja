@@ -6,6 +6,8 @@ module Helpers where
 
 import Ranking
 import Data.List
+import GHC.IO (unsafePerformIO)
+import System.Random
 
 -- | Essa função verifica se um índice está dentro de um intervalo
 validateIndex :: Int -> (Int, Int) -> Bool
@@ -42,3 +44,8 @@ sortReverse = sortBy (flip compare)
 -- remover duplicatas numa lista de Rankings. 
 organizeRankings :: [Ranking] -> [Ranking]
 organizeRankings = removeDuplicateRankings . sortReverse
+
+-- | Esta função usa 2 parâmetros, em que o primeiro é o limite inferior e o segundo,
+-- o limite superior, retornando um número randômico nesse intervalo fechado dado.
+generateRandom :: Int -> Int -> Int
+generateRandom a b = unsafePerformIO (getStdRandom (randomR(a, b)))
