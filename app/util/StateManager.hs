@@ -63,3 +63,4 @@ writeCampaignState newCampaignState = do
 writeBattleState :: BattleState -> IO ()
 writeBattleState newBattleState = do
     B.writeFile (toPath !! 2) (encode newBattleState)
+

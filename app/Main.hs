@@ -47,47 +47,34 @@ main = do
     -- let list2 = getRanking
     -- print list2
 
-    -- let list3 = returnLiterallyTheSameList getCards
-    -- print list3
-
-    -- print getRanking
-
-    -- saveRankingCSV "Fulano" 999
-
-    -- print getRanking
-
-    -- saveRankingCSV "Fulano" 333
-
-    -- print getRanking
-
     -- x <- getBattleState
     -- print x
 
 
     -- writeGlobalState $ GlobalState {screen = "abaco"}
-    -- aaa <- getGlobalState
-    -- print $ screen aaa
+    -- a <- getGlobalState
+    -- print $ screen a
 
     -- getLine
 
     -- writeGlobalState $ GlobalState {screen = "babaco"}
-    -- bbb <- getGlobalState
-    -- print $ screen bbb
+    -- b <- getGlobalState
+    -- print $ screen b
 
-    -- getLine
+    curr <- getGlobalState 
+    let r = Ranking "ABC" 246
+    writeGlobalState  $ GlobalState {
+        screen = screen curr, 
+        rankings = organizeRankings $ r : rankings curr
+        }
 
-    -- writeGlobalState $ GlobalState {screen = "cabaco"}
-    -- ccc <- getGlobalState
-    -- print $ screen ccc
-
-    print $ organizeRankings [
-        Ranking {name="Ruivas", points=30},
-        Ranking {name="Loiras", points=3423423423423423434},
-        Ranking {name="Ruivas", points=234},
-        Ranking {name="Ruivas", points=32532},
-        Ranking {name="Loiras", points=3423}
-        ]
-
+    _ <- getLine
+    
+    let s = Ranking "ABC" 369
+    writeGlobalState  $ GlobalState {
+        screen = screen curr, 
+        rankings = organizeRankings $ s : rankings curr
+        }
 
     -- testGetWinner
     -- testLevelUp
