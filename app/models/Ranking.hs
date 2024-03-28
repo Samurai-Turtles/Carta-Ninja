@@ -31,3 +31,8 @@ instance Eq Ranking where
 instance Ord Ranking where
     compare :: Ranking -> Ranking -> Ordering
     compare a b = points a `compare` points b
+
+formatRankingToScreen :: Ranking -> String
+formatRankingToScreen r =
+    if length (name r) < 20 then name r ++ take (20 - length (name r)) (cycle " ") ++ show (points r)
+    else take 20 (name r) ++ show (points r)
