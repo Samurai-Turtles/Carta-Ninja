@@ -39,6 +39,7 @@ selectDraw state
     | state == "batalha" = drawBatalha
     | state == "vitoria" = drawVenceu
     | state == "derrota" = drawDerrota
+    | state == "gameOver" = drawGameOver
     | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ state ++ "' doesn't exist\ESC[0m")
 
 -- | Esta função imprime a tela de menu.
@@ -74,6 +75,9 @@ drawVenceu = putStrLn (unlines scVitoria)
 -- | Esta função imprime a tela de derrota.
 drawDerrota :: IO()
 drawDerrota = putStrLn (unlines scDerrota)
+
+drawGameOver :: IO()
+drawGameOver = putStrLn (unlines scGameOver)
 
 ------------------------------ Funções Auxiliares ------------------------------
 
