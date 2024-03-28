@@ -8,6 +8,7 @@ module Gameplay where
 import Card
 import State
 import StateManager
+import Helpers
 
 -- | Esta função recebe duas cartas (do jogador e do Bot, respectivamente) e
 -- retorna um valor determinando o vencedor da rodada
@@ -153,13 +154,3 @@ modifyElemWinArray card winArray
     | element card == "water" = replaceAtIndex winArray True 2
     | element card == "metal" = replaceAtIndex winArray True 3
     | element card == "earth" = replaceAtIndex winArray True 4
-
--- | Função que recebe um array de um certo tipo e modifica o valor do índice dado
--- por um inteiro, pelo valor dado na chamada logo após o array original, retornando
--- essa cópia modificada do array original.
-replaceAtIndex :: [a] -> a -> Int -> [a]
-replaceAtIndex [] _ _ = []
-replaceAtIndex (h:t) item indx
-    | indx == 0 = item : t
-    | indx <= 0 = (h:t)
-    | otherwise = h : replaceAtIndex t item (indx - 1)
