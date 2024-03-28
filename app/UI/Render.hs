@@ -17,7 +17,7 @@ import State
 import SpritesBase
 import StateManager
 import System.Process
-import Hammer (forgeScreen, concatanateCards)
+import Hammer (forgeScreen, mergeControll)
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
@@ -64,7 +64,7 @@ drawBatalha = do
     let contentChar = 
             (fillNum (playerScore battle)) ++ 
             (usedElements (playerWinsByElement battle) ["FOGO","NATUREZA","ÁGUA","METAL","TERRA"]) ++
-            (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ concatanateCards 7 handRepresentation
+            (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ mergeControll 7 handRepresentation
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 

@@ -1,3 +1,6 @@
+{-
+    Módulo que forja telas que contém placeholder.
+-}
 module Hammer where
 
 -- | Função que faz o replace dos elementos de place holders.
@@ -10,14 +13,17 @@ forgeScreen (h:t) especialChar
     | h == '#' = take 1 especialChar ++ forgeScreen t (drop 1 especialChar)
     | otherwise = h : forgeScreen t especialChar
 
+-- | Esta função faz o merge das representações contidas em uma matriz.
+--  A saída está normalizada para a função `forgeScreen`.
+--  Espera um inteiro que é o index da última linha das representações,
+--  além de uma matriz com as representações, com o mesmo length.
+mergeControll :: Int -> [[String]] -> String
+mergeControll (-1) _ = ""
+mergeControll lineIndex arr =  mergeControll (lineIndex - 1) arr ++ mergeLine lineIndex (length arr - 1) arr
 
--- | Função que concatena as representações das Cartas.
--- O valor esperado para o primeiro argumento é a quantidade 
--- de linhas das representações contidas na matriz.
-concatanateCards :: Int -> [[String]] -> String
-concatanateCards (-1) _ = ""
-concatanateCards idx cards = do
-    let currentLine = ((cards !! 0) !! idx) ++ ((cards !! 1) !! idx) 
-            ++ ((cards !! 2) !! idx ) ++ ((cards !! 3) !! idx ) ++ ((cards !! 4) !! idx ) 
-
-    concatanateCards (idx - 1) cards ++ currentLine 
+-- | Esta função faz o merge das linhas de cada elemento da matriza, faz isso
+-- utilizando como base um inteiro que representa a linha a ser olhada e que é
+-- passado como argumento.
+mergeLine :: Int -> Int -> [[String]] -> String
+mergeLine _ (-1) _ = ""
+mergeLine lineIndex idx arr = mergeLine lineIndex (idx - 1) arr ++ (arr !! idx) !! lineIndex
