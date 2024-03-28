@@ -117,6 +117,84 @@ scComparacao = [
         "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
         ]
 
+-- | A tela exibida quando o jogador vence a comparação entre cartas
+scVenceuComparacao :: [String]
+scVenceuComparacao = [
+        "╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                          ▄█    █▄     ▄████████ ███▄▄▄▄    ▄████████    ▄████████ ███    █▄                                        ║",
+        "║                                         ███    ███   ███    ███ ███▀▀▀██▄ ███    ███   ███    ███ ███    ███                                       ║",
+        "║                                         ███    ███   ███    █▀  ███   ███ ███    █▀    ███    █▀  ███    ███                                       ║",
+        "║                                         ███    ███  ▄███▄▄▄     ███   ███ ███         ▄███▄▄▄     ███    ███                                       ║",
+        "║                                         ███    ███ ▀▀███▀▀▀     ███   ███ ███        ▀▀███▀▀▀     ███    ███                                       ║",
+        "║                                         ███    ███   ███    █▄  ███   ███ ███    █▄    ███    █▄  ███    ███                                       ║",
+        "║                                         ███    ███   ███    ███ ███   ███ ███    ███   ███    ███ ███    ███                                       ║",
+        "║                                          ▀██████▀    ██████████  ▀█   █▀  ████████▀    ██████████ ████████▀                                        ║",
+        "║                  ╔═════════════════════╗                                                                                                           ║",
+        "║                  ║                     ║                                                                                                           ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                                                                    bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                                                                    bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                          /\\   /\\___                                bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                          \\ \\ / / __|                               bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                           \\ V /\\__ \\_                              bbbbbbbbbbbbbbbbbbb                    ║",                  
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                            \\_/ |___(_)                             bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                                                                    bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║ aaaaaaaaaaaaaaaaaaa ║                                                                    bbbbbbbbbbbbbbbbbbb                    ║",
+        "║                  ║       Player        ║                                                                                                           ║",
+        "║                  ╚═════════════════════╝                                                                                                           ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
+        ]
+
+-- | A tela exibida quando o jogador perde a comparação entre cartas
+scPerdeuComparacao :: [String]
+scPerdeuComparacao = [
+        "╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                        ▄███████▄    ▄████████    ▄████████ ████████▄     ▄████████ ███    █▄                                       ║",
+        "║                                       ███    ███   ███    ███   ███    ███ ███   ▀███   ███    ███ ███    ███                                      ║",
+        "║                                       ███    ███   ███    █▀    ███    ███ ███    ███   ███    █▀  ███    ███                                      ║",
+        "║                                       ███    ███  ▄███▄▄▄      ▄███▄▄▄▄██▀ ███    ███  ▄███▄▄▄     ███    ███                                      ║",
+        "║                                     ▀█████████▀  ▀▀███▀▀▀     ▀▀███▀▀▀▀▀   ███    ███ ▀▀███▀▀▀     ███    ███                                      ║",
+        "║                                       ███          ███    █▄  ▀███████████ ███    ███   ███    █▄  ███    ███                                      ║",
+        "║                                       ███          ███    ███   ███    ███ ███   ▄███   ███    ███ ███    ███                                      ║",
+        "║                                      ▄████▀        ██████████   ███    ███ ████████▀    ██████████ ████████▀                                       ║",
+        "║                                                                 ███    ███                                ╔═════════════════════╗                  ║",
+        "║                                                                                                           ║                     ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                                                                    ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                                                                    ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                            /\\   /\\___                              ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                            \\ \\ / / __|                             ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                             \\ V /\\__ \\_                            ║ bbbbbbbbbbbbbbbbbbb ║                  ║",                  
+        "║                    aaaaaaaaaaaaaaaaaaa                              \\_/ |___(_)                           ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                                                                    ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                    aaaaaaaaaaaaaaaaaaa                                                                    ║ bbbbbbbbbbbbbbbbbbb ║                  ║",
+        "║                                                                                                           ║         Bot         ║                  ║",
+        "║                                                                                                           ╚═════════════════════╝                  ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "║                                                                                                                                                    ║",
+        "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
+        ]                                                     
+
 -- | A tela exibida quando o jogador ganha uma partida contra o bot.
 scVitoria :: [String]
 scVitoria = [
@@ -488,6 +566,7 @@ scCards = [
 
 -- | Uma lista contendo uma representação alternativa das cartas do jogo,
 -- utilizando ideogramas asiáticos para representar os elementos.
+
 scCardsKanji :: [[String]]
 scCardsKanji = [
         [
