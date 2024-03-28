@@ -82,7 +82,8 @@ executable Carta-Ninja
         directory,
         bytestring,
         csv,
-        filepath
+        filepath,
+        random
         
 
     -- Directories containing source files.
