@@ -8,6 +8,7 @@ import State
 import CSVManager
 import StateManager
 import Render (action)
+import Bot
 
 -- testGetWinner :: IO ()
 -- testGetWinner = do
@@ -98,18 +99,17 @@ defineDeck :: IO()
 defineDeck = do
     let deck = getCards
     currentData <- getBattleState
-
     let modifiedData = 
             BattleState { 
                 currentRound = currentRound currentData,
 
                 playerScore = 25,
-                playerWins = playerWins currentData, 
+                playerStreak = playerStreak currentData, 
                 playerWinsByElement = [True, False, True, False, True],
                 playerDeck = deck,
 
                 cpuScore = 98,
-                cpuWins = cpuWins currentData, 
+                cpuStreak = cpuStreak currentData, 
                 cpuWinsByElement = cpuWinsByElement currentData,
                 cpuDeck = cpuDeck currentData
             }
