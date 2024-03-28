@@ -81,7 +81,12 @@ drawBatalha = do
 
 -- | Esta função imprime a tela de vitória.
 drawVenceu :: IO()
-drawVenceu = putStrLn (unlines scVitoria)
+drawVenceu = do 
+    campaign <- getCampaignState
+
+    let contentChar = fillNum (totalScore campaign)
+
+    putStrLn (forgeScreen (unlines scVitoria) contentChar)
 
 -- | Esta função imprime a tela de derrota.
 drawDerrota :: IO()
