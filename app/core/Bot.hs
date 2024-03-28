@@ -5,18 +5,11 @@
 module Bot where
 
 import Card
-import System.Random (randomRIO, Random (random))
-import GHC.IO (unsafeDupablePerformIO)
+import System.Random
 
--- Gera um número aleatório de 0 até b, recebido como parâmetro
-nRandom :: Int -> Int
-nRandom b = do
-    let rand = randomRIO (0,b) :: IO Int
-    typeConvert rand
-
--- Converte de tipo IO Int para tipo Int
-typeConvert :: IO Int -> Int
-typeConvert = unsafeDupablePerformIO
+-- Gera um número aleatório a partir da seed até o numero max, recebidos como parâmetro
+nRandom :: Int -> Int -> Int
+nRandom seed max =  mod (31237 * seed) max
 
 -- Recebe uma lista de cartas e uma lista de pesos e gera uma lista maior, onde cada carta é repetida de acordo com o peso
 wHand :: [a] -> [Int] -> [a]
@@ -24,11 +17,11 @@ wHand [] [] = []
 wHand (x:xs) (y:ys) = replicate y x ++ wHand xs ys
 
 -- Recebe uma lista de cartas e uma lista de pesos e consegue fazer a escolha da carta de acordo com os pesos
-makeChoice :: [a] -> [Int] -> a
-makeChoice cards weight = do
+makeChoice :: Int -> [a] -> [Int] -> a
+makeChoice points cards weight = do
     let hand = wHand cards weight
     let len = length (wHand cards weight)
-    hand !! nRandom (len -1)
+    hand !! nRandom points (len-1)
 
 -- Função para fazer o shuffle de um array 
 shuffle :: [a] -> IO [a]
