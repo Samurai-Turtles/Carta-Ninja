@@ -63,13 +63,22 @@ executable Carta-Ninja
 
     -- Modules included in this executable, other than Main.
     other-modules:
+        -- UI related
+        Render,
+        SpritesBase,
+        Hammer,
+
+        -- Core related
         Card,
         Deck,
         State,
         Ranking,
         Gameplay,
         CSVManager,
-        StateManager
+        StateManager,
+
+        -- Bot related
+        Bot
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
@@ -77,16 +86,18 @@ executable Carta-Ninja
     -- Other library packages from which modules are imported.
     build-depends:
         base ^>=4.17.2.1,
-        aeson,
+        aeson ^>=2.2.1.0,
         directory,
         bytestring,
         csv,
-        filepath
-        
+        filepath,
+        process,
+        random
 
     -- Directories containing source files.
     hs-source-dirs:   
         app
+        app/UI
         app/core
         app/util
         app/models
