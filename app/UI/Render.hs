@@ -13,22 +13,25 @@ module Render where
 -- TODO lembrar de mudar os imports para que importem
 -- somente as funções necessárias.
 import Card
-import State 
+import State
 import SpritesBase
 import StateManager
 import System.Process
+import System.Info ( os )
+import Ranking (formatRankingToScreen)
 import Hammer (forgeScreen, mergeControll)
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
 action = do
-    callCommand "clear"
+    let clear = if os == "mingw32" then "cls" else "clear"
+    callCommand clear
 
     global <- getGlobalState
     let state = screen global
 
     selectDraw state
-    
+
 -- | Esta função seleciona a função `draw` responsável pela impressão da tela, 
 -- tomado por base o estado atual.
 selectDraw :: String -> IO()
@@ -48,7 +51,15 @@ drawMenu = putStrLn (unlines scMenu)
 
 -- | Esta função imprime a tela de ranking.
 drawRank :: IO()
-drawRank = putStrLn (unlines scRanking)
+drawRank = do
+    global <- getGlobalState
+
+    let representation = map formatRankingToScreen (take 6 $ rankings global)
+    let complete = take (138 - 23 * length representation) (cycle "=")
+    
+    let contentChar = mergeControll (length representation) [representation ++ [complete]]
+
+    putStrLn (forgeScreen (unlines scRanking) (contentChar))
 
 -- | Esta função imprime a tela de créditos.
 drawCreditos :: IO()
@@ -61,8 +72,8 @@ drawBatalha = do
     campaign <- getCampaignState
     let handRepresentation = currentCards (playerDeck battle)
 
-    let contentChar = 
-            (fillNum (playerScore battle)) ++ 
+    let contentChar =
+            (fillNum (playerScore battle)) ++
             (usedElements (playerWinsByElement battle) ["FOGO","NATUREZA","ÁGUA","METAL","TERRA"]) ++
             (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ mergeControll 7 handRepresentation
 
@@ -84,10 +95,10 @@ drawGameOver = putStrLn (unlines scGameOver)
 -- | Esta função seleciona a representação das cartas para 
 -- forjar os espaços da mão do jogador.
 currentCards :: [Card] -> [[String]]
-currentCards cards = do 
+currentCards cards = do
     let hand = take 5 cards
 
-    [scCardsKanji !! ((cardID (hand !! 0))-1), 
+    [scCardsKanji !! ((cardID (hand !! 0))-1),
      scCardsKanji !! ((cardID (hand !! 1))-1),
      scCardsKanji !! ((cardID (hand !! 2))-1),
      scCardsKanji !! ((cardID (hand !! 3))-1),
@@ -104,6 +115,6 @@ usedElements :: [Bool] -> [String] -> String
 usedElements [] [] = ""
 usedElements [] _ = ""
 usedElements _ [] = ""
-usedElements (h:t) (x:xs) = do 
+usedElements (h:t) (x:xs) = do
     let blankElement = take (length x) (cycle " ")
     if h then x ++ usedElements t xs else blankElement ++ usedElements t xs

@@ -8,6 +8,7 @@ import State
 import CSVManager
 import StateManager
 import Render (action)
+import Ranking (Ranking(Ranking))
 
 -- testGetWinner :: IO ()
 -- testGetWinner = do
@@ -86,9 +87,11 @@ main = do
 
     -- UI TESTS::::::::
     c <- getLine
-    
+    --
     if c /= "fim" then do
-        writeGlobalState $ GlobalState {screen = c}
+        let b = Ranking "Zé da Burra" 87
+        let z = Ranking "Pedro Álvares Cabral Da Silva Dos Campos" 1
+        writeGlobalState $ GlobalState {screen = c, rankings = [b,z]}
         defineDeck
         action
         main
