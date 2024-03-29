@@ -86,14 +86,19 @@ main = do
     -- testUpdatePlayerCP
 
     -- UI TESTS::::::::
-    c <- getLine
+    -- c <- getLine
     
+    {-
     if c /= "fim" then do
         writeGlobalState $ GlobalState {screen = c}
         defineDeck
         action
         main
         else print "fim"
+    -}
+    defineDeck
+    battle <- getBattleState
+    putStrLn $ show makeChoice battle
 
 defineDeck :: IO()
 defineDeck = do
