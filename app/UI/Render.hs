@@ -20,6 +20,7 @@ import System.Process
 import System.Info ( os )
 import Ranking (formatRankingToScreen)
 import Hammer (forgeScreen, mergeControll)
+import Gameplay (getWinner)
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
@@ -40,6 +41,7 @@ selectDraw state
     | state == "ranking" = drawRank
     | state == "creditos" = drawCreditos
     | state == "batalha" = drawBatalha
+    | state == "comparacao" = drawCompare
     | state == "vitoria" = drawVenceu
     | state == "derrota" = drawDerrota
     | state == "gameOver" = drawGameOver
@@ -79,12 +81,29 @@ drawBatalha = do
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
+-- | Esta função imprime a tela de Comparação entre cartas.
+drawCompare :: IO()
+drawCompare = do
+    battle <- getBattleState
+
+    let usedCards =
+            [playerDeck battle !! (length (playerDeck battle) -1),
+             cpuDeck battle !! (length (cpuDeck battle) -1)]
+    let out
+          | cardWinner == 1 = forgeScreen (unlines scVenceuComparacao) mergeCards
+          | cardWinner == -1 = forgeScreen (unlines scPerdeuComparacao) mergeCards
+          | otherwise = ""
+          where cardWinner = getWinner (head usedCards) (usedCards !! 1)
+                mergeCards = mergeControll 7 [getCardStyle $ cardID (usedCards !! 0), getCardStyle $ cardID (usedCards !! 1)]
+
+    putStrLn out
+
 -- | Esta função imprime a tela de vitória.
 drawVenceu :: IO()
 drawVenceu = do
     campaign <- getCampaignState
 
-    let contentChar = 
+    let contentChar =
             take (3 - length (show $ totalScore campaign)) (cycle "0") ++
             show (totalScore campaign)
 
@@ -101,6 +120,7 @@ drawDerrota = do
 
     putStrLn (forgeScreen (unlines scDerrota) contentChar)
 
+-- | Esta função imprime a tela de gameOver.
 drawGameOver :: IO()
 drawGameOver = putStrLn (unlines scGameOver)
 
@@ -117,6 +137,10 @@ currentCards cards = do
      scCardsKanji !! ((cardID (hand !! 2))-1),
      scCardsKanji !! ((cardID (hand !! 3))-1),
      scCardsKanji !! ((cardID (hand !! 4))-1)]
+
+-- | Esta função seleciona a representação da carda, a partir de um dado id.
+getCardStyle :: Int -> [String]
+getCardStyle id = scCardsKanji !! (id - 1)
 
 -- | Esta função prepara o número para uma representação de dois digitos.
 -- Preenche com um dígito zero após o primeiro número, complementando o espaço

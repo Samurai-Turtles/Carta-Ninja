@@ -89,9 +89,7 @@ main = do
     c <- getLine
     --
     if c /= "fim" then do
-        let b = Ranking "Zé da Burra" 87
-        let z = Ranking "Pedro Álvares Cabral Da Silva Dos Campos" 1
-        writeGlobalState $ GlobalState {screen = c, rankings = [b,z]}
+        writeGlobalState $ GlobalState {screen = c, rankings = []}
         defineDeck
         action
         main
