@@ -56,7 +56,7 @@ drawRank = do
 
     let representation = map formatRankingToScreen (take 6 $ rankings global)
     let complete = take (138 - 23 * length representation) (cycle "=")
-    
+
     let contentChar = mergeControll (length representation) [representation ++ [complete]]
 
     putStrLn (forgeScreen (unlines scRanking) (contentChar))
@@ -81,16 +81,25 @@ drawBatalha = do
 
 -- | Esta função imprime a tela de vitória.
 drawVenceu :: IO()
-drawVenceu = do 
+drawVenceu = do
     campaign <- getCampaignState
 
-    let contentChar = fillNum (totalScore campaign)
+    let contentChar = 
+            take (3 - length (show $ totalScore campaign)) (cycle "0") ++
+            show (totalScore campaign)
 
     putStrLn (forgeScreen (unlines scVitoria) contentChar)
 
 -- | Esta função imprime a tela de derrota.
 drawDerrota :: IO()
-drawDerrota = putStrLn (unlines scDerrota)
+drawDerrota = do
+    campaign <- getCampaignState
+
+    let contentChar =
+            take (3 - length (show $ totalScore campaign)) (cycle "0") ++
+            show (totalScore campaign) ++ fillNum (lifes campaign)
+
+    putStrLn (forgeScreen (unlines scDerrota) contentChar)
 
 drawGameOver :: IO()
 drawGameOver = putStrLn (unlines scGameOver)
