@@ -179,6 +179,9 @@ useSpecialCard index = do
 
     let newSpecialDeck = modifySpecialCardArray currentData index
 
+    if index == 6 then swapInOwnDeck
+    else if index == 8 then swapHandsCards else return ()
+
     let modifiedData =
             BattleState {
                 currentRound = currentRound currentData,
@@ -200,14 +203,12 @@ useSpecialCard index = do
     writeBattleState modifiedData
 
 -- | Função que recebe o Battle State atual e retorna um inteiro que verifica se uma 
--- carta especial está em uso, com os usos associados aos inteiros de chamada das cartas
--- e -1 afirmando que não tem uma carta especial em uso. (em teoria, vai ser usado depois do jogador jogar a carta)
-verifySpecialCardUse :: BattleState -> Int
-verifySpecialCardUse battleState
-    | notElem "swapInDeck" (specialDeck battleState) && specialCardInUse battleState == True = 6
-    | notElem "nullifyElement" (specialDeck battleState) && specialCardInUse battleState == True = 7
-    | notElem "swapBetweenDecks" (specialDeck battleState) && specialCardInUse battleState == True = 8
-    | otherwise = -1
+-- carta especial está em uso, com o retorno sendo True se a carta de anulação está
+-- sendo usada e False se não estiver sendo usada (em teoria, vai ser usado depois do jogador jogar a carta)
+verifyNullifyElemSpecialCardUse :: BattleState -> Bool
+verifyNullifyElemSpecialCardUse battleState
+    | notElem "nullifyElement" (specialDeck battleState) && specialCardInUse battleState == True = True
+    | otherwise = False
 
 -- | Função que representa a primeira carta especial em que uma carta da mão do jogador é
 -- trocada aleatoriamente com uma carta selecionada de maneira randômica também do deck do jogador.
