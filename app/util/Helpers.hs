@@ -31,6 +31,15 @@ replaceAtIndex (h : t) item index
     | index == 0 = item : t
     | otherwise = h : replaceAtIndex t item (index - 1)
 
+-- | Essa função pega uma lista e um elemento e retorna uma cópia da lista
+-- original sem esse elemento se ele existir nela, caso contrário, só retorna
+-- a lista original sem mudanças.
+removeElementList :: Eq a => [a] -> a -> [a]
+removeElementList [] _ = []
+removeElementList (h:t) item
+    | item == h = t
+    | otherwise = h : removeElementList t item
+
 -- | Esta função remove duplicatas de uma lista de Rankings.
 removeDuplicateRankings :: [Ranking] -> [Ranking]
 -- Utilizar apenas numa lista ordenada ao contrário de rankings.

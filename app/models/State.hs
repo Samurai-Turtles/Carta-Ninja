@@ -29,14 +29,17 @@ data BattleState = BattleState {
     currentRound        :: Int,
 
     playerScore         :: Int,      -- Pontuação do Jogador
-    playerStreak         :: Int,      -- Vitórias do Jogador
+    playerStreak        :: Int,      -- Vitórias do Jogador
     playerWinsByElement :: [Bool],   -- Vitórias do Jogador por elemento
     playerDeck          :: [Card],   -- Deck de cartas do Jogador
 
     cpuScore            :: Int,      -- Pontuação do Bot
-    cpuStreak             :: Int,      -- Vitórias do Bot
+    cpuStreak           :: Int,      -- Vitórias do Bot
     cpuWinsByElement    :: [Bool],   -- Vitórias do Bot por elemento
-    cpuDeck             :: [Card]    -- Deck de cartas do Bot
+    cpuDeck             :: [Card],   -- Deck de cartas do Bot
+
+    specialDeck         :: [String], -- Deck de cartas especiais
+    specialCardInUse    :: Bool      -- Verifica se há uma carta especial em uso
 } deriving (Generic, Show)
 
 -- Define que os estados serão tratam de arquivos JSON
