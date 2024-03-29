@@ -40,6 +40,7 @@ selectDraw state
     | state == "menu" = drawMenu
     | state == "ranking" = drawRank
     | state == "creditos" = drawCreditos
+    | state == "desafiante" = drawDesafiante
     | state == "batalha" = drawBatalha
     | state == "comparacao" = drawCompare
     | state == "vitoria" = drawVenceu
@@ -66,6 +67,9 @@ drawRank = do
 -- | Esta função imprime a tela de créditos.
 drawCreditos :: IO()
 drawCreditos = putStrLn (unlines scCreditos)
+
+drawDesafiante :: IO()
+drawDesafiante = putStrLn (unlines scDesafiante)
 
 -- | Esta função imprime a tela de batalha.
 drawBatalha :: IO()
