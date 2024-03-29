@@ -74,6 +74,8 @@ updateScoreOf winner card = do
     let modifiedData = 
             BattleState { 
                 currentRound = currentRound currentData,
+                specialDeck = [],
+                specialCardInUse = False,
 
                 playerScore = playerScore currentData + modifiedPlayerScore,
                 playerWins = playerWins currentData + modifiedPlayerWins, 

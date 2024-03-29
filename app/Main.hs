@@ -90,7 +90,7 @@ main = do
     --
     if c /= "fim" then do
         writeGlobalState $ GlobalState {screen = c, rankings = []}
-        defineDeck
+        --defineDeck
         action
         main
         else print "fim"
@@ -103,6 +103,8 @@ defineDeck = do
     let modifiedData = 
             BattleState { 
                 currentRound = currentRound currentData,
+                specialDeck = ["swapInDeck", "swapBetweenDecks"],
+                specialCardInUse = True,
 
                 playerScore = 5,
                 playerWins = playerWins currentData, 

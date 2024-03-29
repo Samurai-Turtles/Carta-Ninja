@@ -68,6 +68,8 @@ drawRank = do
 drawCreditos :: IO()
 drawCreditos = putStrLn (unlines scCreditos)
 
+-- | Esta função imprime a tela do desafiante, destinada a pedir
+-- que o desafiante escrevra seu nome.
 drawDesafiante :: IO()
 drawDesafiante = putStrLn (unlines scDesafiante)
 
@@ -76,7 +78,7 @@ drawBatalha :: IO()
 drawBatalha = do
     battle <- getBattleState
     campaign <- getCampaignState
-    let handRepresentation = currentCards (playerDeck battle)
+    let handRepresentation = currentCards (playerDeck battle) ++ [specialArr (specialCardInUse battle) (specialDeck battle)]
 
     let contentChar =
             (fillNum (playerScore battle)) ++
@@ -151,6 +153,24 @@ getCardStyle id = scCardsKanji !! (id - 1)
 -- restante, isso caso ele seja um número menor que 10. 
 fillNum :: Int -> String
 fillNum number = if number <= 9 then "0" ++ (show number) else show number
+
+-- | Esta função prepara um array com a representação de qual das cartas especiais
+-- está disponível ou a que foi selecionada.
+specialArr :: Bool -> [String] -> [String]
+specialArr checkUse specials
+  | length specials == 3 = ["", "6", "", "7", "", "8", "", ""]
+  | checkUse && length specials == 2 = specialCheckUse specials
+  | otherwise = ["", "X", "", "X", "", "X", "", ""]
+
+-- | Esta função retorna um array contendo a representação de qual das cartas 
+-- especiais foi selecionada.
+specialCheckUse :: [String] -> [String]
+specialCheckUse specials =
+        ["",
+        if "swapInDeck" `elem` specials then "X" else ">", "",
+        if "nullifyElement" `elem` specials then "X" else ">", "",
+        if "swapBetweenDecks" `elem` specials then "X" else ">", "", ""]
+
 
 -- | Esta função prepara as entradas de substituição para cada place holder dos elementos vitoriosos.
 usedElements :: [Bool] -> [String] -> String

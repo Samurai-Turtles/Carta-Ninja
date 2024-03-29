@@ -27,6 +27,8 @@ data CampaignState = CampaignState {
 data BattleState = BattleState {
     -- TODO: adicionar propriedade `streak` para jogador e bot
     currentRound        :: Int,
+    specialDeck         :: [String],
+    specialCardInUse    :: Bool,
 
     playerScore         :: Int,      -- Pontuação do Jogador
     playerWins          :: Int,      -- Vitórias do Jogador
