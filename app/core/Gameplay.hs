@@ -24,6 +24,7 @@ levelUpPlayer = do
     currentData <- getCampaignState
     let modifiedData =
             CampaignState {
+                playerName = playerName currentData,
                 totalScore = totalScore currentData,
                 lifes = lifes currentData,
                 beltLevel = beltLevel currentData + 1
@@ -38,6 +39,7 @@ updatePlayerLife lifeAmount = do
     currentData <- getCampaignState
     let modifiedData =
             CampaignState {
+                playerName = playerName currentData,
                 totalScore = totalScore currentData,
                 lifes = lifes currentData + lifeAmount,
                 beltLevel = beltLevel currentData
@@ -52,10 +54,26 @@ updatePlayerCampaignScore points = do
     currentData <- getCampaignState
     let modifiedData =
             CampaignState {
+                playerName = playerName currentData,
                 totalScore = totalScore currentData + points,
                 lifes = lifes currentData,
                 beltLevel = beltLevel currentData
             }
+
+    writeCampaignState modifiedData
+
+-- | Esta função recebe nome do jogador no início da campanha
+-- e o registra adequadamente.
+updatePlayerName :: String -> IO()
+updatePlayerName name = do
+    currentData <- getCampaignState
+    let modifiedData = 
+            CampaignState {
+                    playerName = name,
+                    totalScore = totalScore currentData ,
+                    lifes = lifes currentData,
+                    beltLevel = beltLevel currentData
+                }
 
     writeCampaignState modifiedData
 
@@ -131,6 +149,7 @@ resetGlobalState = do
 resetCampaignState :: IO()
 resetCampaignState = do
     let modifiedData = CampaignState {
+                playerName = "",
                 totalScore = 0,
                 lifes = 2,
                 beltLevel = 0
