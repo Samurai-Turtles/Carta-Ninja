@@ -10,6 +10,8 @@ import CSVManager
 import StateManager
 import Helpers
 import Ranking
+import Render (action)
+import Ranking (Ranking(Ranking))
 
 -- testGetWinner :: IO ()
 -- testGetWinner = do
@@ -47,36 +49,76 @@ main = do
     -- let list2 = getRanking
     -- print list2
 
+    -- let list3 = returnLiterallyTheSameList getCards
+    -- print list3
+
+    -- print getRanking
+
+    -- saveRankingCSV "Fulano" 999
+
+    -- print getRanking
+
+    -- saveRankingCSV "Fulano" 333
+
+    -- print getRanking
+
     -- x <- getBattleState
     -- print x
 
 
     -- writeGlobalState $ GlobalState {screen = "abaco"}
-    -- a <- getGlobalState
-    -- print $ screen a
+    -- aaa <- getGlobalState
+    -- print $ screen aaa
 
     -- getLine
 
     -- writeGlobalState $ GlobalState {screen = "babaco"}
-    -- b <- getGlobalState
-    -- print $ screen b
+    -- bbb <- getGlobalState
+    -- print $ screen bbb
 
-    curr <- getGlobalState 
-    let r = Ranking "ABC" 246
-    writeGlobalState  $ GlobalState {
-        screen = screen curr, 
-        rankings = organizeRankings $ r : rankings curr
-        }
+    -- getLine
 
-    _ <- getLine
-    
-    let s = Ranking "ABC" 369
-    writeGlobalState  $ GlobalState {
-        screen = screen curr, 
-        rankings = organizeRankings $ s : rankings curr
-        }
+    -- writeGlobalState $ GlobalState {screen = "cabaco"}
+    -- ccc <- getGlobalState
+    -- print $ screen ccc
+
 
     -- testGetWinner
     -- testLevelUp
     -- testUpdatePlayerLife
     -- testUpdatePlayerCP
+
+    -- UI TESTS::::::::
+    c <- getLine
+    --
+    if c /= "fim" then do
+        writeGlobalState $ GlobalState {screen = c, rankings = []}
+        --defineDeck
+        action
+        main
+        else print "fim"
+
+defineDeck :: IO()
+defineDeck = do
+    let deck = drop 5 getCards
+    currentData <- getBattleState
+
+    let modifiedData = 
+            BattleState { 
+                currentRound = currentRound currentData,
+                specialDeck = ["swapInDeck", "swapBetweenDecks"],
+                specialCardInUse = True,
+
+                playerScore = 5,
+                playerWins = playerWins currentData, 
+                playerWinsByElement = [True, True, True, True, True],
+                playerDeck = deck,
+
+                cpuScore = 98,
+                cpuWins = cpuWins currentData, 
+                cpuWinsByElement = cpuWinsByElement currentData,
+                cpuDeck = cpuDeck currentData
+            }
+
+    writeBattleState modifiedData
+

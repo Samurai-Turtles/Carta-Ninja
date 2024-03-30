@@ -5,6 +5,7 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Ranking where
 import GHC.Generics ( Generic )

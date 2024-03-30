@@ -185,6 +185,8 @@ useSpecialCard index = do
     let modifiedData =
             BattleState {
                 currentRound = currentRound currentData,
+                specialDeck = [],
+                specialCardInUse = False,
 
                 playerScore = playerScore currentData,
                 playerStreak = playerStreak currentData,
