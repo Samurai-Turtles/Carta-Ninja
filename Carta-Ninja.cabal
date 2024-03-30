@@ -74,6 +74,7 @@ executable Carta-Ninja
         State,
         Ranking,
         Gameplay,
+        GameLoop,
         CSVManager,
         StateManager,
         Helpers
