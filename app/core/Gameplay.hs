@@ -113,6 +113,19 @@ verifyVictory battleState
     | currentRound battleState == 11 && playerScore battleState < cpuScore battleState = -1
     | otherwise = 0
 
+-- | Esta função reseta os dados do globals.json para os seus respectivos valores padrão
+-- do início da partida. Mantém os rankings previamente armazenados.
+resetGlobalState :: IO()
+resetGlobalState = do
+    previousGlobalState <- getGlobalState
+
+    let modifiedData = GlobalState {
+                screen = "menu",
+                rankings = rankings previousGlobalState
+            }
+
+    writeGlobalState modifiedData
+
 -- | Esta função reseta os dados do campaign.json para os seus respectivos valores padrão
 -- do início de uma campanha.
 resetCampaignState :: IO()
