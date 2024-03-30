@@ -110,12 +110,12 @@ defineDeck = do
                 specialCardInUse = True,
 
                 playerScore = 5,
-                playerWins = playerWins currentData, 
+                playerStreak = playerStreak currentData, 
                 playerWinsByElement = [True, True, True, True, True],
                 playerDeck = deck,
 
                 cpuScore = 98,
-                cpuWins = cpuWins currentData, 
+                cpuStreak = cpuStreak currentData, 
                 cpuWinsByElement = cpuWinsByElement currentData,
                 cpuDeck = cpuDeck currentData
             }
