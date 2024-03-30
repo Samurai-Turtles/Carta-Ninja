@@ -83,7 +83,8 @@ drawBatalha = do
     let contentChar =
             (fillNum (playerScore battle)) ++
             (usedElements (playerWinsByElement battle) ["FOGO","NATUREZA","ÁGUA","METAL","TERRA"]) ++
-            (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ mergeControll 7 handRepresentation
+            (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ (simpleMerge $ (scBotFace !! ((beltLevel campaign) -1) )) ++
+            mergeControll 7 handRepresentation
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
@@ -171,6 +172,9 @@ specialCheckUse specials =
         if "nullifyElement" `elem` specials then "X" else ">", "",
         if "swapBetweenDecks" `elem` specials then "X" else ">", "", ""]
 
+simpleMerge :: [String] -> String
+simpleMerge [] = ""
+simpleMerge (h:t) = h ++ simpleMerge t
 
 -- | Esta função prepara as entradas de substituição para cada place holder dos elementos vitoriosos.
 usedElements :: [Bool] -> [String] -> String
