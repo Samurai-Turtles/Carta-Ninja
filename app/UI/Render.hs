@@ -147,7 +147,7 @@ currentCards cards = do
 
 -- | Esta função seleciona a representação da carda, a partir de um dado id.
 getCardStyle :: Int -> [String]
-getCardStyle id = scCardsKanji !! (id - 1)
+getCardStyle idCard = scCardsKanji !! (idCard - 1)
 
 -- | Esta função prepara o número para uma representação de dois digitos.
 -- Preenche com um dígito zero após o primeiro número, complementando o espaço
