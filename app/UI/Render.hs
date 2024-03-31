@@ -128,7 +128,7 @@ drawDerrota = do
 
     let contentChar =
             take (3 - length (show $ totalScore campaign)) (cycle "0") ++
-            show (totalScore campaign) ++ fillNum (lifes campaign)
+            show (totalScore campaign) ++ fillNum ((lifes campaign) - 1)
 
     putStrLn (forgeScreen (unlines scDerrota) contentChar)
 

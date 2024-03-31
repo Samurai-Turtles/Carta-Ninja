@@ -211,27 +211,29 @@ useSpecialCard index = do
     let newSpecialDeck = modifySpecialCardArray currentData index
 
     if index == 6 then swapInOwnDeck
-    else if index == 8 then swapHandsCards else return ()
+    else 
+        if index == 8 then
+            swapHandsCards 
+        else do
+            let modifiedData =
+                    BattleState {
+                        currentRound = currentRound currentData,
 
-    let modifiedData =
-            BattleState {
-                currentRound = currentRound currentData,
+                        playerScore = playerScore currentData,
+                        playerStreak = playerStreak currentData,
+                        playerWinsByElement = playerWinsByElement currentData,
+                        playerDeck = playerDeck currentData,
 
-                playerScore = playerScore currentData,
-                playerStreak = playerStreak currentData,
-                playerWinsByElement = playerWinsByElement currentData,
-                playerDeck = playerDeck currentData,
+                        cpuScore = cpuScore currentData,
+                        cpuStreak = cpuStreak currentData,
+                        cpuWinsByElement = cpuWinsByElement currentData,
+                        cpuDeck = cpuDeck currentData,
 
-                cpuScore = cpuScore currentData,
-                cpuStreak = cpuStreak currentData,
-                cpuWinsByElement = cpuWinsByElement currentData,
-                cpuDeck = cpuDeck currentData,
+                        specialDeck = newSpecialDeck,
+                        specialCardInUse = True
+                    }
 
-                specialDeck = newSpecialDeck,
-                specialCardInUse = True
-            }
-
-    writeBattleState modifiedData
+            writeBattleState modifiedData
 
 -- | Função que recebe o Battle State atual e retorna um inteiro que verifica se uma 
 -- carta especial está em uso, com o retorno sendo True se a carta de anulação está
@@ -271,8 +273,8 @@ swapInOwnDeck = do
                 cpuWinsByElement = cpuWinsByElement currentData,
                 cpuDeck = cpuDeck currentData,
 
-                specialDeck = specialDeck currentData,
-                specialCardInUse = specialCardInUse currentData
+                specialDeck = ["nullifyElement","swapBetweenDecks"],
+                specialCardInUse = True
             }
 
     writeBattleState modifiedData
@@ -316,8 +318,8 @@ swapHandsCards = do
                 cpuWinsByElement = cpuWinsByElement currentData,
                 cpuDeck = modifiedCPUDeck,
 
-                specialDeck = specialDeck currentData,
-                specialCardInUse = specialCardInUse currentData
+                specialDeck = ["swapInDeck","nullifyElement"],
+                specialCardInUse = True
             }
 
     writeBattleState modifiedData

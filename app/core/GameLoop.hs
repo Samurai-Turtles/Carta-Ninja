@@ -102,21 +102,15 @@ battleLoop = do
                 getWinnerNullElement (last $ playerDeck newBattleStage) (last $ cpuDeck newBattleStage)
             else
                 getWinner (last $ playerDeck newBattleStage) (last $ cpuDeck newBattleStage)
-    
-    if winner == 1 then 
-        updateScoreOf winner (last $ playerDeck newBattleStage)
-    else
-        updateScoreOf winner (last $ cpuDeck newBattleStage)
 
-    
-    comparationLoop
+    comparationLoop winner
 
 -- | Esta função executa o loop sobre a escolha do player no estágio de batalha, permitindo
 -- a ação das cartas especiais, das cartas comuns ou da dica.
 battleResolve :: BattleState -> String -> IO()
---battleResolve battle "6" = if verifySpecialCardAvailability battle == 1 then useSpecialCard 6 else battleLoop
---battleResolve battle "7" = if verifySpecialCardAvailability battle == 1 then useSpecialCard 7 else battleLoop
---battleResolve battle "8" = if verifySpecialCardAvailability battle == 1 then useSpecialCard 8 else battleLoop
+battleResolve battle "6" = specialResolve battle 6
+battleResolve battle "7" = specialResolve battle 7
+battleResolve battle "8" = specialResolve battle 8
 battleResolve _ "D" = print ""
 battleResolve _ "" = battleLoop
 battleResolve battle choice = do
@@ -146,16 +140,29 @@ battleResolve battle choice = do
 
     writeBattleState modifiedData 
 
+-- | Esta função resolve a utilização de uma carta especial, quando disponível.
+specialResolve :: BattleState -> Int -> IO()
+specialResolve battle specialNum = 
+        if verifySpecialCardAvailability battle == 1 then do
+            useSpecialCard specialNum
+            battleLoop
+        else battleLoop
+
 -- | Esta função executa o loop sobre o estágio de comparação das cartas.
 -- Caso haja definição na batalha, o próximo estágio declarado será o de rosolução
 -- de uma comparação.
-comparationLoop :: IO()
-comparationLoop = do
+comparationLoop :: Int -> IO()
+comparationLoop winner = do
     battle <- getBattleState
     localUpdateScreen "comparacao"
     action
 
     _ <- getLine
+
+    if winner == 1 then 
+        updateScoreOf winner (last $ playerDeck battle)
+    else
+        updateScoreOf winner (last $ cpuDeck battle)
 
     let victoryCheck = verifyVictory battle
     if victoryCheck /= 0 then comparationResolve victoryCheck else battleLoop
@@ -228,7 +235,6 @@ battleVictoryLoop = do
         levelUpPlayer
         initBattleData
         battleLoop
-
 
 
 ------------------------------ Funções Auxiliares ------------------------------
