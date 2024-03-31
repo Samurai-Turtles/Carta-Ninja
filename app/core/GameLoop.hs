@@ -8,6 +8,7 @@ import State (GlobalState(GlobalState, screen, rankings))
 import System.Process
 import System.Info (os)
 import Data.Char (toUpper)
+import Gameplay (resetCampaignState, updatePlayerName)
 
 -- | Inicia o loop principal do jogo e estabelece os dados iniciais. Após 
 -- iniciado, chama a função que inicia o loop do menu.
@@ -31,7 +32,7 @@ menuLoop = do
 -- | Esta função chama o próximo loop a ser executado de acordo com a escolha do
 -- jogador. Caso não seja uma escolha válida, o loop atual é chamado mais uma vez.
 menuResolve :: String -> IO()
-menuResolve "I" = print ""
+menuResolve "I" = nameInput
 menuResolve "R" = rankingLoop
 menuResolve "C" = creditLoop
 menuResolve "S" = if os == "mingw32" then callCommand "cls" else callCommand "clear"
@@ -59,6 +60,29 @@ creditLoop = do
     let choice = validInput ["V"] input
     if choice /= "" then menuLoop else creditLoop
 
+
+nameInput :: IO()
+nameInput = do 
+    localUpdateScreen "desafiante"
+    resetCampaignState
+    action 
+    
+    input <- getLine
+    if input == "" 
+        then nameInput 
+        else do
+            updatePlayerName input
+    
+    battleLoop
+
+
+battleLoop :: IO()
+battleLoop = do
+    input <- getLine
+
+    let choice = validInput ["1", "2", "3", "4", "5", "6", "7", "8", "D"] input
+
+    print ""
 
 ------------------------------ Funções Auxiliares ------------------------------
 

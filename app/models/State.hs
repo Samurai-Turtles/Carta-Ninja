@@ -17,6 +17,7 @@ data GlobalState = GlobalState {
 -- | Este tipo representa o estado da campanha atual, incluindo
 -- o total de pontos da campanha, o número de vidas e o nível atual
 data CampaignState = CampaignState {
+    playerName :: String,
     totalScore :: Int,
     lifes      :: Int,
     beltLevel  :: Int
