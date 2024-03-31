@@ -20,7 +20,7 @@ import System.Process
 import System.Info ( os )
 import Ranking (formatRankingToScreen)
 import Hammer (forgeScreen, mergeControll)
-import Gameplay (getWinner)
+import Gameplay 
 
 -- | Esta função analisa o estado do jogo e realiza o print da respectiva tela.
 action :: IO()
@@ -100,7 +100,11 @@ drawCompare = do
           | cardWinner == 1 = forgeScreen (unlines scVenceuComparacao) mergeCards
           | cardWinner == -1 = forgeScreen (unlines scPerdeuComparacao) mergeCards
           | otherwise = ""
-          where cardWinner = getWinner (head usedCards) (usedCards !! 1)
+          where cardWinner = 
+                    if verifyNullifyElemSpecialCardUse battle then
+                        getWinnerNullElement (head usedCards) (usedCards !! 1)
+                    else
+                        getWinner (head usedCards) (usedCards !! 1)
                 mergeCards = mergeControll 7 [getCardStyle $ cardID (usedCards !! 0), getCardStyle $ cardID (usedCards !! 1)]
 
     putStrLn out

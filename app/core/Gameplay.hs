@@ -82,8 +82,6 @@ updatePlayerName name = do
 -- e retorna a soma da pontuação atual com o poder da carta
 updateScoreOf :: Int -> Card -> IO()
 updateScoreOf winner card = do
-    -- TODO utilização: ao executar (no main?), chamar com a função getWinner,
-    --      definida mais acima no módulo.
 
     let modifiedPlayerScore = if winner == 1 then power card else 0
     let modifiedCPUScore = if winner == -1 then power card else 0
@@ -119,8 +117,8 @@ updateScoreOf winner card = do
     writeBattleState modifiedData
 
 -- | Esta função verifica com os dados atuais do Battle State se algum lutador ganhou,
--- com o valor 1 definindo a vitória do jogador, valor -1 definindo a vitória do bot e
--- com o valor 0 dando a ideia de indefinição da vitória.
+-- com o valor 1 definindo a vitória do jogador, valor -1 definindo a vitória do bot, -2
+-- definindo o empate e o valor 0 representando de batalha em andamento.
 verifyVictory :: BattleState -> Int
 verifyVictory battleState
     | playerStreak battleState == 3 = 1
@@ -129,6 +127,7 @@ verifyVictory battleState
     | cpuWinsByElement battleState == [True, True, True, True, True] = -1
     | currentRound battleState == 11 && playerScore battleState > cpuScore battleState = 1
     | currentRound battleState == 11 && playerScore battleState < cpuScore battleState = -1
+    | currentRound battleState == 11 && playerScore battleState == cpuScore battleState = -2
     | otherwise = 0
 
 -- | Esta função reseta os dados do globals.json para os seus respectivos valores padrão
@@ -152,7 +151,7 @@ resetCampaignState = do
                 playerName = "",
                 totalScore = 0,
                 lifes = 2,
-                beltLevel = 0
+                beltLevel = 1
             }
 
     writeCampaignState modifiedData

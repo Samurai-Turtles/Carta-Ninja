@@ -71,6 +71,7 @@ executable Carta-Ninja
         -- Core related
         Card,
         Deck,
+        Bot,
         State,
         Ranking,
         Gameplay,
