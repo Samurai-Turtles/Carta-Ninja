@@ -100,7 +100,7 @@ drawCompare = do
     let out
           | cardWinner == 1 = forgeScreen (unlines scVenceuComparacao) mergeCards
           | cardWinner == -1 = forgeScreen (unlines scPerdeuComparacao) mergeCards
-          | otherwise = ""
+          | otherwise = forgeScreen (unlines scEmpatouComparacao) mergeCards
           where cardWinner = 
                     if verifyNullifyElemSpecialCardUse battle then
                         getWinnerNullElement (head usedCards) (usedCards !! 1)
@@ -136,7 +136,7 @@ drawDerrota = do
 drawGameOver :: IO()
 drawGameOver = putStrLn (unlines scGameOver)
 
---  Esta função imprime a tela de GameOver.
+--  Esta função imprime a tela de GameClear.
 drawGameClear :: IO()
 drawGameClear = do
     campaign <- getCampaignState
