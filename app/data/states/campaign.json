@@ -1,1 +1,5 @@
-{"beltLevel":0,"lifes":2,"playerName":"","totalScore":0}
+{
+  "totalScore": 0,
+  "lifes": 2,
+  "beltLevel": 0
+}
