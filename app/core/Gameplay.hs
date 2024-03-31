@@ -86,9 +86,6 @@ updateScoreOf winner card = do
     let modifiedPlayerScore = if winner == 1 then power card else 0
     let modifiedCPUScore = if winner == -1 then power card else 0
 
-    print $ show modifiedPlayerScore ++ (show card)
-    getLine
-
     currentData <- getBattleState
 
     let modifiedPlayerStreak = if winner == 1 then 1 + playerStreak currentData else 0

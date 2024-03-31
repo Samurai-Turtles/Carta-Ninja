@@ -10,6 +10,7 @@ import Ranking
 import Deck (playCard)
 
 import System.Process
+import System.Exit
 import System.Info (os)
 import Data.Char (toUpper)
 import CSVManager (getCards)
@@ -40,7 +41,9 @@ menuResolve :: String -> IO()
 menuResolve "I" = nameInput
 menuResolve "R" = rankingLoop
 menuResolve "C" = creditLoop
-menuResolve "S" = if os == "mingw32" then callCommand "cls" else callCommand "clear"
+menuResolve "S" = do
+    if os == "mingw32" then callCommand "cls" else callCommand "clear"
+    die "Carta-Ninja Encerrado"
 menuResolve _ = menuLoop
 
 -- | Esta função executa o loop sobre as possibilidades de escolha na tela de ranking.
@@ -108,11 +111,6 @@ battleLoop = do
                 else
                     getWinner (last $ playerDeck newBattleStage) (last $ cpuDeck newBattleStage)
 
-        if winner == 1 then 
-            updateScoreOf winner (last $ playerDeck newBattleStage)
-        else
-            updateScoreOf winner (last $ cpuDeck newBattleStage)
-
         comparationLoop winner
 
 -- | Esta função executa o loop sobre a escolha do player no estágio de batalha, permitindo
@@ -168,6 +166,11 @@ comparationLoop winner = do
     localUpdateScreen "comparacao"
     action
     
+    if winner == 1 then 
+        updateScoreOf winner (last $ playerDeck battle)
+    else
+        updateScoreOf winner (last $ cpuDeck battle)
+
     _ <- getLine
 
     battleLoop
