@@ -45,6 +45,7 @@ selectDraw state
     | state == "comparacao" = drawCompare
     | state == "vitoria" = drawVenceu
     | state == "derrota" = drawDerrota
+    | state == "empate" = drawEmpate
     | state == "gameOver" = drawGameOver
     | state == "gameClear" = drawGameClear
     | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ state ++ "' doesn't exist\ESC[0m")
@@ -131,6 +132,17 @@ drawDerrota = do
             show (totalScore campaign) ++ fillNum ((lifes campaign) - 1)
 
     putStrLn (forgeScreen (unlines scDerrota) contentChar)
+
+-- | Esta função imprime a tela de derrota.
+drawEmpate :: IO()
+drawEmpate = do
+    campaign <- getCampaignState
+
+    let contentChar =
+            take (3 - length (show $ totalScore campaign)) (cycle "0") ++
+            show (totalScore campaign)
+
+    putStrLn (forgeScreen (unlines scEmpate) contentChar)
 
 -- | Esta função imprime a tela de gameOver.
 drawGameOver :: IO()

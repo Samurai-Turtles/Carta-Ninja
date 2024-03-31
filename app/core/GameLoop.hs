@@ -229,10 +229,6 @@ battleVictoryLoop = do
     campaign <- getCampaignState
     updatePlayerCampaignScore $ playerScore battle
 
-    localUpdateScreen "vitoria"
-    action
-    _ <- getLine
-
     if beltLevel campaign >= 5 then do
         localUpdateScreen "gameClear"
         action
@@ -240,6 +236,9 @@ battleVictoryLoop = do
         updateRanking
         rankingLoop
     else do
+        localUpdateScreen "vitoria"
+        action
+        _ <- getLine
         levelUpPlayer
         initBattleData
         battleLoop
