@@ -111,7 +111,34 @@ updateScoreOf winner card = do
                 cpuDeck = cpuDeck currentData,
 
                 specialDeck = specialDeck currentData,
-                specialCardInUse = False
+                specialCardInUse = False,
+                tipAvailability = tipAvailability currentData
+            }
+
+    writeBattleState modifiedData
+
+-- | Esta função recebe a dica gerada pela máquina e registra no estágio atual.
+updateTipOf :: String -> IO()
+updateTipOf newTip = do
+    battle <- getBattleState
+
+    let modifiedData =
+            BattleState {
+                currentRound = currentRound battle,
+
+                playerScore = playerScore battle,
+                playerStreak = playerStreak battle,
+                playerWinsByElement = playerWinsByElement battle,
+                playerDeck = playerDeck battle,
+
+                cpuScore = cpuScore battle,
+                cpuStreak = cpuStreak battle,
+                cpuWinsByElement = cpuWinsByElement battle,
+                cpuDeck = cpuDeck battle,
+
+                specialDeck = specialDeck battle,
+                specialCardInUse = specialCardInUse battle,
+                tipAvailability = newTip
             }
 
     writeBattleState modifiedData
@@ -176,7 +203,8 @@ resetBattleState = do
                 cpuDeck = cpuDeck currentData,
 
                 specialDeck = ["swapInDeck", "nullifyElement", "swapBetweenDecks"],
-                specialCardInUse = False
+                specialCardInUse = False,
+                tipAvailability = tipAvailability currentData
             }
 
     writeBattleState modifiedData
@@ -230,7 +258,8 @@ useSpecialCard index = do
                         cpuDeck = cpuDeck currentData,
 
                         specialDeck = newSpecialDeck,
-                        specialCardInUse = True
+                        specialCardInUse = True,
+                        tipAvailability = tipAvailability currentData
                     }
 
             writeBattleState modifiedData
@@ -274,7 +303,8 @@ swapInOwnDeck = do
                 cpuDeck = cpuDeck currentData,
 
                 specialDeck = ["nullifyElement","swapBetweenDecks"],
-                specialCardInUse = True
+                specialCardInUse = True,
+                tipAvailability = tipAvailability currentData
             }
 
     writeBattleState modifiedData
@@ -319,7 +349,8 @@ swapHandsCards = do
                 cpuDeck = modifiedCPUDeck,
 
                 specialDeck = ["swapInDeck","nullifyElement"],
-                specialCardInUse = True
+                specialCardInUse = True,
+                tipAvailability = tipAvailability currentData
             }
 
     writeBattleState modifiedData

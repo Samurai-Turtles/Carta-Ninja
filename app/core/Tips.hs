@@ -1,8 +1,9 @@
-module Tip where
+module Tips (giveTip) where
 
 import Card
 import Bot
-import System.Random
+import State
+
 
 -- mão do jogador -> deck a IA
 giveTip :: BattleState -> String
@@ -13,12 +14,12 @@ giveTip battlestate
     where score = playerScore battlestate
 
 tipBotWillPlay :: BattleState -> String
-tipBotWillPlay battlestate = "o bot talvez jogue: " ++ tipBotAux battlestate
+tipBotWillPlay battlestate = "O bot talvez jogue: " ++ tipBotAux battlestate
 
 tipBotAux :: BattleState -> String
 tipBotAux battlestate = do
     let botDeck = cpuDeck battlestate
-    elemento (botDeck !! makeChoice battlestate 10)
+    auxTranslate $ element (botDeck !! makeChoice battlestate 10)
 
 
 tipToPlay :: BattleState -> String
@@ -29,17 +30,27 @@ tipToPlay battlestate = do
     let w_player_hand = wHand player_hand weight
     let len = length w_player_hand
 
-    "você deveria jogar: " ++ elemento (player_hand !! (w_player_hand !! nRandom seed (len - 1)))
+    "Você deveria jogar: " ++ auxTranslate (element (player_hand !! (w_player_hand !! nRandom seed (len - 1))))
 
 tipNotToPlay :: BattleState -> String
 tipNotToPlay battlestate = do 
-    let botplay = tipBotAux
+    let botplay = tipBotAux battlestate
     case botplay of
-        "fire" -> tipNotAux "nature"
-        "nature" -> tipNotAux "water"
-        "water" -> tipNotAux "metal"
-        "metal" -> tipNotAux "earth"
-        "earth" -> tipNotAux "fire"
-
+        "Fogo" -> tipNotAux "Natureza"
+        "Natureza" -> tipNotAux "Água"
+        "Água" -> tipNotAux "Metal"
+        "Metal" -> tipNotAux "Terra"
+        "Terra" -> tipNotAux "Fogo"
+        _ -> "Fogo"
+    
 tipNotAux :: String -> String
-tipNotAux elem = "você não deveria jogar: " ++ elem
+tipNotAux tipo = "Você não deveria jogar: " ++ tipo
+
+-- | Retorna o tipo de elemento correspondente ao tipo definido na carta.
+auxTranslate :: String -> String
+auxTranslate word
+    | word == "fire" = "Fogo"
+    | word == "nature" = "Natureza"
+    | word == "water" = "Água"
+    | word == "metal" = "Metal"
+    | otherwise = "Terra"

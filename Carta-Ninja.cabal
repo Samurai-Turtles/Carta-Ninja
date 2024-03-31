@@ -72,6 +72,7 @@ executable Carta-Ninja
         Card,
         Deck,
         Bot,
+        Tips,
         State,
         Ranking,
         Gameplay,

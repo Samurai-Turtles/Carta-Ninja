@@ -10,8 +10,6 @@
 
 module Render where
 
--- TODO lembrar de mudar os imports para que importem
--- somente as funções necessárias.
 import Card
 import State
 import SpritesBase
@@ -86,7 +84,7 @@ drawBatalha = do
             (fillNum (playerScore battle)) ++
             (usedElements (playerWinsByElement battle) ["FOGO","NATUREZA","ÁGUA","METAL","TERRA"]) ++
             (fillNum (cpuScore battle)) ++ (fillNum (lifes campaign)) ++ (simpleMerge $ (scBotFace !! ((beltLevel campaign) -1) )) ++
-            mergeControll 7 handRepresentation
+            mergeControll 7 handRepresentation ++ tipInfo battle
 
     putStrLn (forgeScreen (unlines scBatalha) contentChar)
 
@@ -183,6 +181,15 @@ getCardStyle idCard = scCardsKanji !! (idCard - 1)
 fillNum :: Int -> String
 fillNum number = if number <= 9 then "0" ++ (show number) else show number
 
+-- | Esta função prepara a representação da dica para ser impressa na tela de 
+-- batalha.
+tipInfo :: BattleState -> String
+tipInfo battle = do
+    let currentTip = tipAvailability battle
+    let complete = take (35 - length currentTip) (cycle " ")
+
+    currentTip ++ complete
+
 -- | Esta função prepara um array com a representação de qual das cartas especiais
 -- está disponível ou a que foi selecionada.
 specialArr :: Bool -> [String] -> [String]
@@ -200,6 +207,7 @@ specialCheckUse specials =
         if "nullifyElement" `elem` specials then "X" else ">", "",
         if "swapBetweenDecks" `elem` specials then "X" else ">", "", ""]
 
+-- | Faz uma simples concatenação entre elementos de um mesmo array.
 simpleMerge :: [String] -> String
 simpleMerge [] = ""
 simpleMerge (h:t) = h ++ simpleMerge t

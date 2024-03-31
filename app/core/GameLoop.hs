@@ -1,20 +1,25 @@
+{-
+    Módulo de execução do loop geral de jogo.
+-}
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 module GameLoop where
 
-import Render (action)
-import StateManager
-import State
 import Bot
-import Gameplay 
+import Tips
+import State
 import Ranking
+import Gameplay 
+import StateManager
 import Deck (playCard)
+import Render (action)
+import Helpers (organizeRankings)
 
 import System.Process
-import System.Exit
 import System.Info (os)
+import System.Exit (die)
 import Data.Char (toUpper)
 import CSVManager (getCards)
-import Helpers (organizeRankings)
+
 
 -- | Inicia o loop principal do jogo e estabelece os dados iniciais. Após 
 -- iniciado, chama a função que inicia o loop do menu.
@@ -57,7 +62,7 @@ rankingLoop = do
     let choice = validInput ["V"] input
     if choice /= "" then menuLoop else rankingLoop
 
--- | Esta função executa o loop sobre as possibilidades de escolha na tela de creditos.
+-- | Esta função executa o loop sobre as possibilidades de escolha na tela de créditos.
 -- O loop é repetido até o jogador digitar um valor possível para escolha.
 creditLoop :: IO()
 creditLoop = do
@@ -119,7 +124,7 @@ battleResolve :: BattleState -> String -> IO()
 battleResolve battle "6" = specialResolve battle 6
 battleResolve battle "7" = specialResolve battle 7
 battleResolve battle "8" = specialResolve battle 8
-battleResolve _ "D" = print ""
+battleResolve battle "D" = tipResolve battle
 battleResolve _ "" = battleLoop
 battleResolve battle choice = do
     campaign <- getCampaignState
@@ -143,11 +148,14 @@ battleResolve battle choice = do
                 cpuDeck = newBotDeck,
 
                 specialDeck = specialDeck battle,
-                specialCardInUse = specialCardInUse battle
+                specialCardInUse = specialCardInUse battle,
+                tipAvailability = tipAvailability battle
             }
 
+    writeBattleState modifiedData
 
-    writeBattleState modifiedData 
+    if tipAvailability battle == "PRESSIONE [D] PARA USAR A DICA" then updateTipOf $ tipAvailability battle
+    else updateTipOf "DICA USADA"
 
 -- | Esta função resolve a utilização de uma carta especial, quando disponível.
 specialResolve :: BattleState -> Int -> IO()
@@ -156,6 +164,15 @@ specialResolve battle specialNum =
             useSpecialCard specialNum
             battleLoop
         else battleLoop
+
+-- | Esta função resolve a utilização da funcionalidade de dicas.
+tipResolve :: BattleState -> IO()
+tipResolve battle = do
+    if tipAvailability battle == "PRESSIONE [D] PARA USAR A DICA" then do
+        updateTipOf $ giveTip battle
+        battleLoop
+    else do
+        battleLoop
 
 -- | Esta função executa o loop sobre o estágio de comparação das cartas.
 -- Caso haja definição na batalha, o próximo estágio declarado será o de rosolução
@@ -205,11 +222,10 @@ battleDefeatLoop = do
     campaign <- getCampaignState
     updatePlayerCampaignScore $ playerScore battle
 
-    localUpdateScreen "derrota"
-    action
-    _ <- getLine
-
     if lifes campaign > 0 then do
+        localUpdateScreen "derrota"
+        action
+        _ <- getLine
         initBattleData
         updatePlayerLife (-1)
         battleLoop
@@ -229,6 +245,8 @@ battleVictoryLoop = do
     campaign <- getCampaignState
     updatePlayerCampaignScore $ playerScore battle
 
+    if playerScore battle >= 25 then updatePlayerLife 1 else updatePlayerLife 0
+
     if beltLevel campaign >= 5 then do
         localUpdateScreen "gameClear"
         action
@@ -242,7 +260,6 @@ battleVictoryLoop = do
         levelUpPlayer
         initBattleData
         battleLoop
-
 
 ------------------------------ Funções Auxiliares ------------------------------
 
@@ -267,7 +284,8 @@ initBattleData = do
                 cpuDeck = cpuRandomDeck,
 
                 specialDeck = ["swapInDeck", "nullifyElement", "swapBetweenDecks"],
-                specialCardInUse = False
+                specialCardInUse = False,
+                tipAvailability = "PRESSIONE [D] PARA USAR A DICA"
             }
 
     writeBattleState modifiedData

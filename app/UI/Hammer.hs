@@ -1,5 +1,5 @@
 {-
-    Módulo que forja telas que contém placeholder.
+    Módulo que forja telas que possuem placeholder.
 -}
 module Hammer where
 

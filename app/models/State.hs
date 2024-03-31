@@ -40,7 +40,8 @@ data BattleState = BattleState {
     cpuDeck             :: [Card],   -- Deck de cartas do Bot
 
     specialDeck         :: [String], -- Deck de cartas especiais
-    specialCardInUse    :: Bool      -- Verifica se há uma carta especial em uso
+    specialCardInUse    :: Bool,     -- Verifica se há uma carta especial em uso
+    tipAvailability     :: String    -- Dica do sistema sobre a partida
 } deriving (Generic, Show)
 
 -- Define que os estados serão tratam de arquivos JSON
