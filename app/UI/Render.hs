@@ -46,6 +46,7 @@ selectDraw state
     | state == "vitoria" = drawVenceu
     | state == "derrota" = drawDerrota
     | state == "gameOver" = drawGameOver
+    | state == "gameClear" = drawGameClear
     | otherwise = putStrLn ("\ESC[31m(UI): State not identified: '" ++ state ++ "' doesn't exist\ESC[0m")
 
 -- | Esta função imprime a tela de menu.
@@ -134,6 +135,17 @@ drawDerrota = do
 -- | Esta função imprime a tela de gameOver.
 drawGameOver :: IO()
 drawGameOver = putStrLn (unlines scGameOver)
+
+--  Esta função imprime a tela de GameOver.
+drawGameClear :: IO()
+drawGameClear = do
+    campaign <- getCampaignState
+
+    let contentChar = 
+            take (3 - length (show $ totalScore campaign)) (cycle "0") ++
+            show (totalScore campaign)
+    
+    putStrLn (forgeScreen (unlines scGameClear) contentChar)
 
 ------------------------------ Funções Auxiliares ------------------------------
 

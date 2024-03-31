@@ -199,7 +199,7 @@ battleDefeatLoop = do
         updatePlayerLife (-1)
         battleLoop
     else do 
-        localUpdateScreen "endGame"
+        localUpdateScreen "gameOver"
         action
         _ <- getLine
         updateRanking
