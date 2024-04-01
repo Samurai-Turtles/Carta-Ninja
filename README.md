@@ -9,6 +9,7 @@ Repositório destinado ao projeto da disciplina de PLP.
 ## Conteúdo
 
 - [Descrição](#descrição)
+- [Como instalar e jogar?](#como-instalar-e-jogar)
 - [Regras do Jogo](#regras-do-jogo)
 - [Equipe](#equipe)
 
@@ -20,6 +21,22 @@ Essas batalhas têm como principal objetivo incrementar o nível de faixa do
 jogador, que inicia no nível de faixa branca, mas pode subir de nível 
 gradativamente ao vencer mais e mais batalhas, até alcançar o nível de faixa 
 preta.
+
+## Como instalar e jogar?
+
+Para jogar Carta Ninja, você precisa ter o `GHC` e o `Cabal` instalado em sua 
+máquina. Caso ainda não possua esses pacotes instalados, recomendamos a instalação
+via [GHCup](https://www.haskell.org/ghcup/install/).
+
+Tendo essas dependências instaladas, clone o repositório com o comando abaixo:
+```
+git clone https://github.com/Samurai-Turtles/Carta-Ninja.git
+```
+
+Na pasta em que você clonou o projeto, abra seu terminal e execute `cabal run`.
+Se tudo der certo, você deve ver a seguinte tela:
+
+![Tela Inicial](./public/imgs/tela-inicial.png)
 
 ## Regras do Jogo
 
