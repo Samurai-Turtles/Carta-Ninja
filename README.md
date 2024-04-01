@@ -10,6 +10,7 @@ Repositório destinado ao projeto da disciplina de PLP.
 
 - [Descrição](#descrição)
 - [Como instalar e jogar?](#como-instalar-e-jogar)
+- [Execução no Windows](#execucao-no-windows)
 - [Regras do Jogo](#regras-do-jogo)
 - [Equipe](#equipe)
 
@@ -37,6 +38,11 @@ Na pasta em que você clonou o projeto, abra seu terminal e execute `cabal run`.
 Se tudo der certo, você deve ver a seguinte tela:
 
 ![Tela Inicial](./public/imgs/tela-inicial.png)
+
+## Execução no Windows
+
+Caso você esteja no Windows, recomendamos que execute o jogo via WSL, dado que
+o ambiente Windows não suporta a codificação de caracteres usadas nos sprites.
 
 ## Regras do Jogo
 
@@ -69,6 +75,6 @@ A batalha acaba quando pelo menos uma das três condições abaixo for alcançad
 - [Lucas Khalil](https://github.com/LucasKhalil)
 - [José Willian](https://github.com/JWillianSl)
 - [Sérgio Gustavo](https://github.com/sergio-gustavo-andrade-grilo)
-- [Vinicius Ataíde](https://github.com/UltraNX)
+- [Vinicius Ataíde](https://github.com/ViniciusUltraAD)
 - [Douglas Domingos](https://github.com/dougdomingos)
 
