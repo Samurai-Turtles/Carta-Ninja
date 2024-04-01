@@ -1,6 +1,17 @@
--- Uncomment this section and run "cabal build && cabal run" to check if its working
+{-# OPTIONS_GHC -Wno-unused-imports #-}
 
--- module Main where
+module Main where
 
--- main :: IO ()
--- main = putStrLn "Hello, Haskell!"
+import Card
+import State
+import Helpers
+import Gameplay
+import CSVManager
+import StateManager
+import GameLoop
+
+
+main :: IO ()
+main = do
+    initLoop
+    

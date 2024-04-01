@@ -62,17 +62,46 @@ executable Carta-Ninja
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
-    -- other-modules:
+    other-modules:
+        -- UI related
+        Render,
+        SpritesBase,
+        Hammer,
+
+        -- Core related
+        Card,
+        Deck,
+        Bot,
+        Tips,
+        State,
+        Ranking,
+        Gameplay,
+        GameLoop,
+        CSVManager,
+        StateManager,
+        Helpers
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
     build-depends:
-        base ^>=4.17.2.1
+        base ^>=4.17.2.1,
+        aeson ^>=2.2.1.0,
+        directory,
+        bytestring,
+        csv,
+        filepath,
+        random,
+        process
 
     -- Directories containing source files.
-    hs-source-dirs:   app
+    hs-source-dirs:   
+        app
+        app/UI
+        app/core
+        app/util
+        app/models
 
     -- Base language which the package is written in.
     default-language: Haskell2010
