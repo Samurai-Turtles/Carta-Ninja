@@ -43,3 +43,6 @@ mergeLine([Hmatrix | Tmatrix], NLine, [Hresp | Tresp]) :-
 currentNumberLine([H | _], Line, Result) :-
     length(H, Len),
     Result is (Len - 1) - Line.
+
+% Predicado auxiliar para a unificação dos elementos de uma lista.
+unlines(Strings, Symbol, Result) :- atomic_list_concat(Strings, Symbol, Result).
