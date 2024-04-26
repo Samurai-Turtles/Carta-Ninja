@@ -1,4 +1,5 @@
-% Cada carta existente no jogo.
+% Cada carta existente no jogo em forma de fatos.
+
 card(id(1), elem("fire"), power(2)).
 card(id(2), elem("fire"), power(5)).
 card(id(3), elem("fire"), power(8)).
