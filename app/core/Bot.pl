@@ -48,19 +48,19 @@ createList(_, 0, []).
 %sorteados como escolha do bot
 
 %Não Funciona, está com algum erro na recursão que eu não consegui identificar ainda.
-weigthHand(_, [], []).
-weigthHand(WList, [H|Tail], Out):-
+weightHand(_, [], []).
+weightHand(WList, [H|Tail], Out):-
     getElem(H, E), %Funciona
     elemInd(E, I), %Funciona
     nth0(I, WList, W), %Funciona
     createList(H, W, List), %Funciona
-    weigthHand(WList, Tail, Partial), %Não Funciona
+    weightHand(WList, Tail, Partial), %Não Funciona
     append(List, Partial, Final).
 
 %Dada uma lista de pesos e a mão atual do bot, seleciona uma carta
 %A seleção é baseada na lista dos pesos das cartas
 makeChoice(Wlist, Hand, Card):-
-    %weigthHand(Wlist, Hand, Options), %Descomentar quando estiver funcionando
+    %weightHand(Wlist, Hand, Options), %Descomentar quando estiver funcionando
     length(Hand, L), %Substituir por Options quando weightHand estiver funcionando
     random(0, L, Index),
     nth0(Index, Hand, Card). %Substituir Hand por Options
