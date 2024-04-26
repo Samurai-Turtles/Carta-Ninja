@@ -57,6 +57,15 @@ weigthHand(WList, [H|Tail], Out):-
     weigthHand(WList, Tail, Partial), %Não Funciona
     append(List, Partial, Final).
 
+%Dada uma lista de pesos e a mão atual do bot, seleciona uma carta
+%A seleção é baseada na lista dos pesos das cartas
+makeChoice(Wlist, Hand, Card):-
+    %weigthHand(Wlist, Hand, Options), %Descomentar quando estiver funcionando
+    length(Hand, L), %Substituir por Options quando weightHand estiver funcionando
+    random(0, L, Index),
+    nth0(Index, Hand, Card). %Substituir Hand por Options
+
+
 %Função main para teste e debug
 main:-
     hand(H),
