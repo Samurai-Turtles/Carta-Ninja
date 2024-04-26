@@ -1,40 +1,104 @@
 % Este arquivo contém a lógica relativa ao gerenciamento de estados do jogo
 
 /*
- * Predicado para inicializar o GlobalState.
- *
- * O GlobalState armazena a tela exibida ao jogador no momento.
+ * Inicializa o ScreenState, contendo a tela inicial do jogo.
  */
-init_global_state:- nb_setval(screen, "menu").
+init_screen_state:- nb_setval(screen, "menu").
 
 /*
- * Predicado para inicializar o CampaignState.
+ * Inicializa o CampaignState, contendo os dados da campanha atual.
  *
- * O CampaignState armazena uma lista com os seguintes valores:
- *   - Nome da campanha
- *   - Pontuação total (inicia em 0)
- *   - Vidas do jogador (inicia em 2)
- *   - Nível de faixa (inicia em 1)
+ * Os dados da campanha estão dispostos nas seguintes posições da lista:
+ *
+ *   1º) Name: nome da campanha (passado como parâmetro)
+ *   2º) Pontuação total da campanha (inicia em 0)
+ *   3º) Vidas extras do jogador (inicia em 2)
+ *   4º) Nível de faixa (inicia em 1)
  */
-init_campaign_state:- nb_setval(campaign, ["", 0, 2, 1]).
+init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
 
 /*
- * Predicado para inicializar o BattleState.
+ * Inicializa o BattleState, contendo os dados da batalha em andamento.
  *
- * O BattleState armazena uma lista com os seguintes valores:
- *   - Round atual
- *   - Dados do jogador (pontuação, streak, vitórias por elemento e deck)
- *   - Dados do bot (pontuação, streak, vitórias por elemento e deck)
+ * Os decks do Jogador e do Bot são passados como parâmetro ao inicializar
+ * o BattleState.
+ *
+ * Os dados da batalha estão dispostos nas seguintes posições da lista:
+ *
+ *   1º) Número do Round (inicia em 1, máximo 10)
+ *   2º) Dados do Jogador: lista com pontuação, Streak, Deck e vitórias por elemento
+ *   3º) Dados do Bot: lista com pontuação, Streak, Deck e vitórias por elemento
  */
-init_battle_state:- nb_setval(battle, [1, [1, 0, [], []], [1, 0, [], []]]).
+init_battle_state(PlayerDeck, BotDeck):-
+    nb_setval(battle, [1, [0, 0, [PlayerDeck], []], [0, 0, [BotDeck], []]]).
 
-test_states:-
-    init_global_state, 
-    init_campaign_state, 
-    init_battle_state,
-    nb_getval(screen, X),
-    nb_getval(campaign, Y),
-    nb_getval(battle, Z),
-    write(X), nl,
-    write(Y), nl,
-    write(Z).
+/*
+ * Atualiza o ScreenState atual, guardando o ID da nova tela.
+ */
+update_screen_state(Screen):- nb_setval(screen, Screen).
+
+/*
+ * Atualiza o CampaignState, guardando a pontuação total, número de vidas e 
+ * nível de faixa.
+ */
+update_campaign_state(Pts, Lifes, Belt):- 
+    nb_getval(campaign, State),
+    nth0(0, State, Name),
+    nb_setval(campaign, [Name, Pts, Lifes, Belt]).
+
+/*
+ * Atualiza o Round no BattleState, guardando o novo valor do Round.
+ */
+update_round_state(NewRound):-
+    nb_getval(battle, State),
+    nth0(1, State, PlayerData),
+    nth0(2, State, BotData),
+    nb_setval(battle, [NewRound, PlayerData, BotData]).
+
+/*
+ * Atualiza os dados do Jogador no BattleState, guardando a nova lista de dados.
+ */
+update_player_state(NewPlayerData):-
+    nb_getval(battle, State),
+    nth0(0, State, Round),
+    nth0(2, State, BotData),
+    nb_setval(battle, [Round, NewPlayerData, BotData]).
+
+/*
+ * Atualiza os dados do Bot no BattleState, guardando a nova lista de dados.
+ */
+update_bot_state(NewBotState):-
+    nb_getval(battle, State),
+    nth0(0, State, Round),
+    nth0(1, State, PlayerData),
+    nb_setval(battle, [Round, PlayerData, NewBotState]).
+
+/*
+ * Retorna a lista de dados do Jogador.
+ *
+ * Os dados estão dispostos nas seguintes posições:
+ *
+ *   1º) Pontuação da partida
+ *   2º) Streak de vitórias
+ *   3º) Deck de cartas
+ *   4º) Vitórias por elemento
+ */
+get_player_state(PlayerData):-
+    nb_getval(battle, State),
+    nth0(1, State, Data),
+    PlayerData = Data.
+
+/*
+ * Retorna a lista de dados do Bot.
+ *
+ * Os dados estão dispostos nas seguintes posições:
+ *
+ *   1º) Pontuação da partida
+ *   2º) Streak de vitórias
+ *   3º) Deck de cartas
+ *   4º) Vitórias por elemento
+ */
+get_bot_state(BotData):-
+    nb_getval(battle, State),
+    nth0(2, State, Data),
+    BotData = Data.
