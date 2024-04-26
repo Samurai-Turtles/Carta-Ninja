@@ -1,5 +1,5 @@
 {
-  "files.autoSave": "afterDelay",
+  "files.autoSave": "off",
   "editor.tabSize": 4,
   "editor.rulers": [
     80,
