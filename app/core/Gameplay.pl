@@ -1,8 +1,10 @@
 :- consult('../models/Card.pl').
+:- consult('../util/Helpers.pl').
 
-/* Predicado que verifica qual carta dada ganhou a rodada a partir de uma comparação
- de seus elementos, retornando 1 para os casos que o jogador ganha, -1 quando o bot ganha
- e 0 para quando há empate.
+/* Predicado que verifica qual carta dada ganhou a rodada a 
+ partir de uma comparação de seus elementos, retornando 1 para os 
+ casos que o jogador ganha, -1 quando o bot ganha e 0 para quando 
+ há empate.
  */
 getWinner(card(id(IdP), elem(ElemP), power(PowerP)), card(id(IdC), elem(ElemC), power(PowerC)), R) :-
     (ElemP = ElemC),
@@ -32,9 +34,9 @@ getWinner(card(id(_), elem("water"), power(_)), card(id(_), elem(ElemC), power(_
 getWinner(card(id(_), elem(_), power(_)), card(id(_), elem(_), power(_)), -1).
 
 
-/* Predicado que verifica qual carta dada ganhou a rodada a partir de uma comparação
- do poder de ambas, retornando 1 para o caso em que o jogador ganha, -1 quando o bot ganha
- e 0 para quando há empate.
+/* Predicado que verifica qual carta dada ganhou a rodada a partir de uma
+ comparação do poder de ambas, retornando 1 para o caso em que o jogador
+ ganha, -1 quando o bot ganha e 0 para quando há empate.
  */
 getWinnerByPower(card(id(_), elem(_), power(PowerP)), card(id(_), elem(_), power(PowerC)), R) :-
     (PowerP > PowerC),
@@ -45,3 +47,14 @@ getWinnerByPower(card(id(_), elem(_), power(PowerP)), card(id(_), elem(_), power
     R is -1,
     !.
 getWinnerByPower(card(id(_), elem(_), power(_)), card(id(_), elem(_), power(_)), 0).
+
+/* Predicado que receb o índice da carta jogada e o deck, retornando
+ o deck após a jogada ser feita, com a carta jogada no final do deck.
+ */
+playCard(_, Idx, NewDeck) :-
+    (Idx < 0 ; Idx > 4),
+    NewDeck = [],
+    !.
+playCard(Deck, Idx, NewDeck) :-
+    pushCardToEnd(Idx, Deck, R),
+    NewDeck = R.
