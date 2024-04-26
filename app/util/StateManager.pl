@@ -74,6 +74,24 @@ update_bot_state(NewBotState):-
     nb_setval(battle, [Round, PlayerData, NewBotState]).
 
 /*
+ * Retorna o ScreenState atual.
+ */
+get_screen_state(State):- nb_getval(screen, R), State = R.
+
+/*
+ * Retorna o CampaignState atual.
+ */
+get_campaign_state(State):- nb_getval(campaign, R), State = R.
+
+/*
+ * Retorna o valor atual do Round.
+ */
+get_current_round(Value):-
+    nb_getval(battle, State),
+    nth0(0, State, Round),
+    Value = Round.
+
+/*
  * Retorna a lista de dados do Jogador.
  *
  * Os dados estão dispostos nas seguintes posições:
