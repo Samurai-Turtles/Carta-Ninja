@@ -505,7 +505,7 @@ screen("gameOver", R) :-
         ].
 
 % Face dos inimigos.
-faceBot(R) :-
+face_bot(R) :-
     R = [
         [
         "           ⢀⣀⣤⣤⣼⣿⣿⣿⣧⣤⣤⣀⡀      ⢀⣀   ",
@@ -609,7 +609,7 @@ faceBot(R) :-
         ].
 
 % Representação das Cartas.
-cardRep(R) :-
+card_rep(R) :-
     R = [
         [
         "┌─────────────────┐",
