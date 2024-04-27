@@ -5,8 +5,8 @@
 % Arquivo que trata das funcionalidades lógicas básicas de gameplay.
 
 /* 
- * Predicado que recebe o índice da carta jogada e o deck, retornando
- * o deck após a jogada ser feita, com a carta jogada no final do deck.
+ * Predicado que recebe o índice da carta jogada e o deck, retornando o deck após
+ * a jogada ser feita, com a carta jogada no final do deck.
  */
 play_card(_, Idx, NewDeck):-
     (Idx < 0 ; Idx > 4),
@@ -17,10 +17,9 @@ play_card(Deck, Idx, NewDeck):-
     NewDeck = R.
 
 /* 
- * Predicado que verifica qual carta dada ganhou a rodada a 
- * partir de uma comparação de seus elementos, retornando 1 para os 
- * casos que o jogador ganha, -1 quando o bot ganha e 0 para quando 
- * há empate.
+ * Predicado que verifica qual carta dada ganhou a rodada a partir de uma comparação 
+ * de seus elementos, retornando 1 para os casos que o jogador ganha, -1 quando o 
+ * bot ganha e 0 para quando há empate.
  */
 get_winner(card(id(IdP), elem(ElemP), power(PowerP)), card(id(IdC), elem(ElemC), power(PowerC)), R):-
     (ElemP = ElemC),
@@ -56,10 +55,11 @@ level_up_player:-
     get_campaign_state(State),
 
     nth0(1, State, Pts),
-    nth0(2, State, Lifes),
+    nth0(2, State, Lives),
     nth0(3, State, Belt),
 
-    update_campaign_state(Pts, Lifes, Belt + 1). 
+    NewBelt is Belt + 1,
+    update_campaign_state(Pts, Lives, NewBelt). 
 
 /*
  * Esta função recebe um valor a ser somado ao número total de vidas
@@ -69,10 +69,11 @@ update_player_life(LifeAmount):-
     get_campaign_state(State),
 
     nth0(1, State, Pts),
-    nth0(2, State, Lifes),
+    nth0(2, State, Lives),
     nth0(3, State, Belt),
 
-    update_campaign_state(Pts, Lifes + LifeAmount, Belt).
+    NewNumOfLives is Lives + LifeAmount,
+    update_campaign_state(Pts, NewNumOfLives, Belt).
 
 /*
  * Este predicado recebe a pontuação obtida pelo jogador na partida e soma à 
@@ -82,15 +83,15 @@ update_player_campaign_score(Points):-
     get_campaign_state(State),
 
     nth0(1, State, Pts),
-    nth0(2, State, Lifes),
+    nth0(2, State, Lives),
     nth0(3, State, Belt),
 
-    update_campaign_state(Pts + Points, Lifes, Belt).
+    update_campaign_state(Pts + Points, Lives, Belt).
 
 /*
  * Este predicado recebe um valor inteiro indicando o vencedor da rodada (1 indica
  * que o jogador venceu e -1 indica que o bot venceu), a carta vencedora e atualiza os
- * devidos dados no battle state.
+ * devidos dados no Battle State.
  */
 update_score_of(1, card(id(Id), elem(Elem), power(Power))):-
     get_current_round(Round),
@@ -98,20 +99,20 @@ update_score_of(1, card(id(Id), elem(Elem), power(Power))):-
     update_round_state(NewRound),
 
     get_player_state(PlayerData),
-    nth0(0, PlayerData, PlayerPoints),
+    nth0(0, PlayerData, PlayerScore),
     nth0(1, PlayerData, PlayerStreak),
     nth0(2, PlayerData, PlayerDeck),
     nth0(3, PlayerData, PlayerElemWinArray),    
-    NewPlayerPoints is PlayerPoints + Power,
+    NewPlayerScore is PlayerScore + Power,
     NewPlayerStreak is PlayerStreak + 1,
     modify_elem_win_array(card(id(Id), elem(Elem), power(Power)), PlayerElemWinArray, NewPlayerElemWinArray), 
-    update_player_state([NewPlayerPoints, NewPlayerStreak, PlayerDeck, NewPlayerElemWinArray]),
+    update_player_state([NewPlayerScore, NewPlayerStreak, PlayerDeck, NewPlayerElemWinArray]),
     
     get_bot_state(BotData),
-    nth0(0, BotData, BotPoints),
+    nth0(0, BotData, BotScore),
     nth0(2, BotData, BotDeck),
     nth0(3, BotData, BotElemWinArray),
-    update_bot_state([BotPoints, 0, BotDeck, BotElemWinArray]),
+    update_bot_state([BotScore, 0, BotDeck, BotElemWinArray]),
     
     get_extra_state(ExtraData),
     nth0(1, ExtraData, SpecialDeck),
@@ -123,20 +124,20 @@ update_score_of(1, card(id(Id), elem(Elem), power(Power))):-
     update_round_state(NewRound),
 
     get_player_state(PlayerData),
-    nth0(0, PlayerData, PlayerPoints),
+    nth0(0, PlayerData, PlayerScore),
     nth0(2, PlayerData, PlayerDeck),
     nth0(3, PlayerData, PlayerElemWinArray),
-    update_player_state([PlayerPoints, 0, PlayerDeck, PlayerElemWinArray]),
+    update_player_state([PlayerScore, 0, PlayerDeck, PlayerElemWinArray]),
 
     get_bot_state(BotData),
-    nth0(0, BotData, BotPoints),
+    nth0(0, BotData, BotScore),
     nth0(1, BotData, BotStreak),
     nth0(2, BotData, BotDeck),
     nth0(3, BotData, BotElemWinArray),    
-    NewBotPoints is BotPoints + Power,
+    NewBotScore is BotScore + Power,
     NewBotStreak is BotStreak + 1,
     modify_elem_win_array(card(id(Id), elem(Elem), power(Power)), BotElemWinArray, NewBotElemWinArray),
-    update_bot_state([NewBotPoints, NewBotStreak, BotDeck, NewBotElemWinArray]),
+    update_bot_state([NewBotScore, NewBotStreak, BotDeck, NewBotElemWinArray]),
 
     get_extra_state(ExtraData),
     nth0(1, ExtraData, SpecialDeck),
@@ -148,27 +149,66 @@ update_score_of(0, card(id(Id), elem(Elem), power(Power))):-
     update_round_state(NewRound),
 
     get_player_state(PlayerData),
-    nth0(0, PlayerData, PlayerPoints),
+    nth0(0, PlayerData, PlayerScore),
     nth0(1, PlayerData, PlayerStreak),
     nth0(2, PlayerData, PlayerDeck),
     nth0(3, PlayerData, PlayerElemWinArray),     
-    update_player_state([PlayerPoints, 0, PlayerDeck, PlayerElemWinArray]),
+    update_player_state([PlayerScore, 0, PlayerDeck, PlayerElemWinArray]),
     
     get_bot_state(BotData),
-    nth0(0, BotData, BotPoints),
+    nth0(0, BotData, BotScore),
     nth0(2, BotData, BotDeck),
     nth0(3, BotData, BotElemWinArray),
-    update_bot_state([BotPoints, 0, BotDeck, BotElemWinArray]),
+    update_bot_state([BotScore, 0, BotDeck, BotElemWinArray]),
     
     get_extra_state(ExtraData),
     nth0(1, ExtraData, SpecialDeck),
-    update_extra_state([false, SpecialDeck]),
+    update_extra_state([false, SpecialDeck]).
+
+/*
+ * Esta função verifica com os dados atuais do Battle State se algum combatente ganhou
+ * a luta, retornando 1 se o jogador assim o fez, -1 se o bot ganhou, -2 definindo o 
+ * empate geral e o valor 0 representando que a batalha ainda está em andamento, uma
+ * indefinição.
+ */
+verify_victory(ReturnedValue):-
+    get_player_state(PlayerData),
+    get_bot_state(BotState),
+    get_current_round(Round),
+    nth0(0, PlayerData, PlayerScore),
+    nth0(1, PlayerData, PlayerStreak),
+    nth0(3, PlayerData, PlayerElemWinArray),
+    nth0(0, BotState, BotScore),
+    (PlayerStreak =:= 3 ; PlayerElemWinArray == [true, true, true, true, true] ; (Round =:= 11, PlayerScore > BotScore)),
+    ReturnedValue is 1,
     !.
+verify_victory(ReturnedValue):-
+    get_player_state(PlayerData),
+    get_bot_state(BotState),
+    get_current_round(Round),
+    nth0(0, PlayerData, PlayerScore),
+    nth0(0, BotState, BotScore),
+    nth0(1, BotState, BotStreak),
+    nth0(3, BotState, BotElemWinArray),
+    (BotStreak =:= 3 ; BotElemWinArray == [true, true, true, true, true] ; (Round =:= 11, PlayerScore < BotScore)),
+    ReturnedValue is -1,
+    !.
+verify_victory(ReturnedValue):-
+    get_player_state(PlayerData),
+    get_bot_state(BotState),
+    get_current_round(Round),
+    nth0(0, PlayerData, PlayerScore),
+    nth0(0, BotState, BotScore),
+    (Round =:= 11, PlayerScore =:= BotScore),
+    ReturnedValue is -2,
+    !.
+verify_victory(ReturnedValue):-
+    ReturnedValue is 0.
 
 /*
  * Este predicado recebe uma Carta e um array de booleanos que significa as vitórias
- * de elementos na luta em questão e modifica esse array, atualizando esses valores booleanos
- * para o estado correto, retornando esse array atualizada.
+ * de elementos na luta em questão e modifica esse array, atualizando esses valores 
+ * booleanos para o estado correto, retornando esse array atualizada.
  */
 modify_elem_win_array(card(id(_), elem("fire"), power(_)), ElemWinArray, NewElemWinArray):-
     nth0(1, ElemWinArray, NatureWin),
@@ -207,9 +247,9 @@ modify_elem_win_array(card(id(_), elem("earth"), power(_)), ElemWinArray, NewEle
     !.
 
 /* 
- * Predicado que verifica qual carta dada ganhou a rodada a partir de uma
- * comparação do poder de ambas, retornando 1 para o caso em que o jogador
- * ganha, -1 quando o bot ganha e 0 para quando há empate.
+ * Predicado que verifica qual carta dada ganhou a rodada a partir de uma comparação
+ * do poder de ambas, retornando 1 para o caso em que o jogador ganha, -1 quando
+ * o bot ganha e 0 o caso de empate.
  */
 get_winner_by_power(card(id(_), elem(_), power(PowerP)), card(id(_), elem(_), power(PowerC)), R):-
     (PowerP > PowerC),

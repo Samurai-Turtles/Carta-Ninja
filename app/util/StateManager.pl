@@ -49,10 +49,10 @@ update_screen_state(Screen):- nb_setval(screen, Screen).
  * Atualiza o CampaignState, guardando a pontuação total, número de vidas e 
  * nível de faixa.
  */
-update_campaign_state(Pts, Lifes, Belt):- 
+update_campaign_state(Pts, Lives, Belt):- 
     nb_getval(campaign, State),
     nth0(0, State, Name),
-    nb_setval(campaign, [Name, Pts, Lifes, Belt]).
+    nb_setval(campaign, [Name, Pts, Lives, Belt]).
 
 /*
  * Atualiza o Round no BattleState, guardando o novo valor do Round.
