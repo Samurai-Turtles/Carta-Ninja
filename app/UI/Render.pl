@@ -22,8 +22,8 @@ select_draw(StateScreen) :-
     atom_string("empate", StateScreen) -> draw_empate;
     atom_string("gameOver", StateScreen) -> draw_game_over;
     atom_string("gameClear", StateScreen) -> draw_game_clear;
-    string_concat("StateScreen not identified: ", StateScreen, R),
-    write(R), writeln(" does not exist.").
+    string_concat("Tela de estado não identificada: ", StateScreen, R),
+    write(R), writeln(" não existe.").
 
 % Esta função imprime a tela de menu.
 draw_menu :- 
@@ -60,10 +60,10 @@ draw_ranking :-
     unlines(Screen, "\n", ScreenUnlines),
     string_chars(ScreenUnlines, ScreenUnlinesChars),
 
-    forgeScreen(ScreenUnlinesChars, ControllUnlinesChars, RankScr),
+    forgeScreen(ScreenUnlinesChars, ControllUnlinesChars, ScrRanking),
     */
-    anvil(Screen, Controll, RankScr),
-    print_list(RankScr).
+    anvil(Screen, Controll, ScrRanking),
+    print_list(ScrRanking).
     
 % Esta função imprime a tela de créditos.
 draw_creditos :- 
@@ -80,15 +80,17 @@ draw_desafiante :-
     unlines(Screen, "\n", Result),
     writeln(Result).
 
+% TODO testar se funciona
+
 % Esta função imprime a tela de batalha.
 draw_batalha :-
     % Tela de batalha
-    screen("desafiante", Screen),
+    screen("batalha", Screen),
 
     % Pegar o valor do estado de batalha
     get_player_state(PlayerData),
     get_bot_state(BotData),
-    get_extra_data(ExtraData),
+    get_extra_state(ExtraData),
 
     % Pegar o valor do estado da campanha
     get_campaign_state(CampaignState),
@@ -124,12 +126,9 @@ draw_batalha :-
     nth1(3, CampaignState, PlayerLives),
     fill_num(PlayerLives, PlayerLivesRep),
 
-    % Nível de faixa
-    nth1(4, CampaignState, BeltLevel),
-    fill_num(BeltLevel, BeltLevelRep),
-
     % Rosto do bot
     face_bot(Bosses),
+    nth1(4, CampaignState, BeltLevel),
     nth1(BeltLevel, Bosses, CurrentBoss),
     unlines(CurrentBoss, "", CurrentBossRep),
     
@@ -152,23 +151,164 @@ draw_batalha :-
     anvil(Screen, ContentChar, Result),
     writeln(Result).
 
+% TODO testar se funciona
 % Esta função imprime a tela de Comparação entre cartas.
-draw_comparacao :- !.
+draw_comparacao :- 
+    screen("coEmpate", ScrCoEmpate),
+    screen("coVitoria", ScrCoVitoria),
+    screen("coDerrota", ScrCoDerrota),
+
+    get_player_state(PlayerData),
+    get_bot_state(BotData),
+    get_extra_state(ExtraData),
+
+    nth1(3, PlayerData, PlayerDeck),
+    nth1(3, BotData, BotDeck),
+
+    % 15 é hard-coded. O tamanho do deck é fixo.
+    nth1(15, PlayerDeck, PlayerUsedCard),
+    nth1(15, BotDeck, BotUsedCard),
+
+    % Ver se tá em uso a carta especial
+    % Ver qual carta especial tá faltando
+    nth1(1, ExtraData, SpecialCardInUse),
+    nth1(2, ExtraData, SpecialCardDeck),
+
+    % Underline ou ElemP/PowerP, ElemC/PowerC?
+    PlayerUsedCard = card(id(IdP), elem(_), power(_)),
+    BotUsedCard = card(id(IdC), elem(_), power(_)),
+
+    (
+    check_null_special(SpecialCardInUse, SpecialCardDeck) ->
+    % Funciona se eu chamar as cartas assim? Ou tem que usar card(argumentos)?
+    get_winner_by_power(PlayerUsedCard, BotUsedCard, CardWinner);
+    get_winner(PlayerUsedCard, BotUsedCard, CardWinner)
+    ),
+
+    card_rep(CardRepresentations),
+    nth1(IdP, CardRepresentations, PlayerCardRep),
+    nth1(IdC, CardRepresentations, BotCardRep),
+
+    merge_controll([PlayerCardRep, BotCardRep], 7, MergedCards),
+
+    (
+    CardWinner = 1 -> anvil(ScrCoVitoria, MergedCards, Result);
+    CardWinner = -1 -> anvil(ScrCoDerrota, MergedCards, Result);
+    anvil(ScrCoEmpate, MergedCards, Result)
+    ),
+
+    print_list(Result).
 
 % Esta função imprime a tela de vitória.
-draw_vitoria :- !.
+draw_vitoria :- 
+    screen("vitoria", Screen),
+    /*
+    get_campaign_state(CampaignState),
+    
+    nth1(2, CampaignState, CampaignScore),
+
+    number_string(CampaignScore, CampaignScoreStr),
+    string_length(CampaignScoreStr, CampaignScoreLen),
+    Len is 3 - CampaignScoreLen,
+
+    repeat("0", Len, Zeroes),
+    string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
+    string_chars(CampaignScoreRep, CampaignScoreChars),
+    */
+
+    % TODO Tirar isso depois, quando integrar com o core. Substituir pelo código acima
+    ScorePlaceholder = "001",
+    string_chars(ScorePlaceholder, CampaignScoreChars),
+
+    anvil(Screen, CampaignScoreChars, ScrVitoria),
+    print_list(ScrVitoria).
 
 % Esta função imprime a tela de derrota.
-draw_derrota :- !.
+draw_derrota :- 
+    screen("derrota", Screen),
+
+    /*
+    get_campaign_state(CampaignState),
+    
+    nth1(2, CampaignState, CampaignScore),
+
+    number_string(CampaignScore, CampaignScoreStr),
+    string_length(CampaignScoreStr, CampaignScoreLen),
+    Len is 3 - CampaignScoreLen,
+
+    repeat("0", Len, Zeroes),
+    string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
+    string_chars(CampaignScoreRep, CampaignScoreChars),
+    
+    nth1(3, CampaignState, PrevPlayerLives),
+    CurrPlayerLives is PrevPlayerLives - 1,
+    fill_num(CurrPlayerLives, FormattedPlayerLives),
+    string_chars(FormattedPlayerLives, PlayerLivesRep),
+    */
+
+    % TODO Tirar isso depois, quando integrar com o core. Substituir pelo código acima
+    ScorePlaceholder = "001",
+    string_chars(ScorePlaceholder, CampaignScoreChars),
+    LivesPlaceholder = "05",
+    string_chars(LivesPlaceholder, PlayerLivesRep),
+    
+    append(CampaignScoreChars, PlayerLivesRep, ContentChar),
+    anvil(Screen, ContentChar, ScrDerrota),
+    print_list(ScrDerrota).
 
 % Esta função imprime a tela de empate.
-draw_empate :- !.
+draw_empate :- 
+    screen("empate", Screen),
+    /*
+    get_campaign_state(CampaignState),
+    
+    nth1(2, CampaignState, CampaignScore),
+
+    number_string(CampaignScore, CampaignScoreStr),
+    string_length(CampaignScoreStr, CampaignScoreLen),
+    Len is 3 - CampaignScoreLen,
+
+    repeat("0", Len, Zeroes),
+    string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
+    string_chars(CampaignScoreRep, CampaignScoreChars),
+    */
+
+    % TODO Tirar isso depois, quando integrar com o core. Substituir pelo código acima
+    ScorePlaceholder = "001",
+    string_chars(ScorePlaceholder, CampaignScoreChars),
+
+    anvil(Screen, CampaignScoreChars, ScrEmpate),
+    print_list(ScrEmpate).
 
 % Esta função imprime a tela de gameOver
-draw_game_over :- !.
+draw_game_over :- 
+    screen("gameOver", Screen), 
+    unlines(Screen, "\n", Result),
+    writeln(Result).
 
 % Esta função imprime a tela de GameClear.
-draw_game_clear :- !.
+draw_game_clear :- 
+    screen("gameClear", Screen),
+    /*
+    get_campaign_state(CampaignState),
+    
+    nth1(2, CampaignState, CampaignScore),
+
+    number_string(CampaignScore, CampaignScoreStr),
+    string_length(CampaignScoreStr, CampaignScoreLen),
+    Len is 3 - CampaignScoreLen,
+
+    repeat("0", Len, Zeroes),
+    string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
+    string_chars(CampaignScoreRep, CampaignScoreChars),
+    */
+
+    % TODO Tirar isso depois, quando integrar com o core. Substituir pelo código acima
+    ScorePlaceholder = "001",
+    string_chars(ScorePlaceholder, CampaignScoreChars),
+
+    anvil(Screen, CampaignScoreChars, ScrGameClear),
+    print_list(ScrGameClear).
 
 % Funções Auxiliares: mandar para um arquivo utils
 
@@ -199,8 +339,8 @@ current_cards(ListIndex, [HeadCardList | TailCardList], RepresentationList) :-
     HeadCardList = card(id(IdCard), elem(_), power(_)), 
 
     % Pega a representação da carta correspondente ao IdCard
-    card_rep(card_representations),
-    nth0(IdCard, card_representations, CurrCard),
+    card_rep(CardRepresentations),
+    nth1(IdCard, CardRepresentations, CurrCard),
 
     % Chamada recursiva.
     NewListIndex is ListIndex + 1,
@@ -226,7 +366,7 @@ fill_num(Number, NumberRep) :- number_string(Number, NumberRep).
 special_card_list(_, SpecialCardDeck, ["", "6", "", "7", "", "8", "", ""]) :- length(SpecialCardDeck, 3), !.
 special_card_list(SpecialCardInUse, SpecialCardDeck, SpecialCardRep) :-
     % Acho que para ver se é true é assim
-    SpecialCardInUse = true,
+    SpecialCardInUse,
     length(SpecialCardDeck, 2),
     special_card_check(SpecialCardDeck, SpecialCardRep),
     !.
@@ -256,10 +396,24 @@ special_card_check(Specials, SpecialCheck) :-
 used_elements([], _, "") :- !.
 used_elements(_, [], "") :- !.
 used_elements([WinsByElementHead | WinsByElementTail], [ElementNamesHead | ElementNamesTail], UsedElements) :-
+    WinsByElementHead,
+
+    % Pegar a representação vazia do elemento
+    % string_length(ElementNamesHead, ElemNamesHeadLength),
+    % repeat(" ", ElemNamesHeadLength, BlankElement),
+
+    used_elements(WinsByElementTail, ElementNamesTail, UsedRecursive),
+    string_concat(ElementNamesHead, UsedRecursive, UsedElements), !.
+used_elements([WinsByElementHead | WinsByElementTail], [ElementNamesHead | ElementNamesTail], UsedElements) :-
+    \+WinsByElementHead,
+
     % Pegar a representação vazia do elemento
     string_length(ElementNamesHead, ElemNamesHeadLength),
     repeat(" ", ElemNamesHeadLength, BlankElement),
 
     used_elements(WinsByElementTail, ElementNamesTail, UsedRecursive),
-    WinsByElementHead = true -> string_concat(ElementNamesHead, UsedRecursive, UsedElements); string_concat(BlankElement, UsedRecursive, UsedElements).
+    string_concat(BlankElement, UsedRecursive, UsedElements), !.
 
+check_null_special(SpecialCardInUse, SpecialCardDeck) :-
+    SpecialCardInUse,
+    \+member("nullifyElement", SpecialCardDeck).
