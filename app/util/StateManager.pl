@@ -29,6 +29,10 @@ init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
  *   2º) Dados do Jogador: lista com pontuação, Streak, Deck e vitórias por elemento
  *   3º) Dados do Bot: lista com pontuação, Streak, Deck e vitórias por elemento
  *   4°) Dados Extras: uso de carta especial na rodada e as cartas especiais
+ * 
+ *  Note que a lista de valores booleanos que tratam das vitórias por elemento está 
+ *  disposta da seguinte forma:
+ *      [fire, nature, water, metal, earth]
  */
 init_battle_state(PlayerDeck, BotDeck):-
     nb_setval(battle, [1, 
