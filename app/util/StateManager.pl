@@ -137,3 +137,16 @@ get_bot_state(BotData):-
     nb_getval(battle, State),
     nth0(2, State, Data),
     BotData = Data.
+
+/*
+ * Retorna a lista dos dados extra da batalha.
+ *
+ * Os dados estão dispostos nas seguintes posições:
+ *
+ *   1º) Uso de uma carta especial na rodada atual.
+ *   2º) Deck das cartas especiais.
+ */
+get_extra_state(ExtraData):-
+    nb_getval(battle, State),
+    nth0(3, State, Data),
+    ExtraData = Data.

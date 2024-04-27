@@ -1,4 +1,7 @@
-/* Esse predicado verifica casos de exceção quanto à
+% Arquivo que trata de funcionalidades auxiliadoras gerais.
+
+/*
+ * Esse predicado verifica casos de exceção quanto à
  * carta jogada antes de realmente colocá-la no final
  * do deck
  */
@@ -13,7 +16,8 @@ push_card_to_end(Idx, Deck, ReturnedDeck):-
     element_to_end(Idx, Deck, R),
     ReturnedDeck = R.
 
-/* Predicado que dado um índice válido e uma lista pega o 
+/* 
+ * Predicado que dado um índice válido e uma lista pega o 
  * elemento desse índice e move para o final, retornando 
  * essa lista com essa modificação.
  */
