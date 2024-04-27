@@ -10,19 +10,19 @@ action :-
     Esta função seleciona a função `draw` responsável pela impressão da tela, 
 tomado por base o estado atual.
 */
-selectDraw(State) :-
-    atom_string("menu", State) -> drawMenu;
-    atom_string("ranking", State) -> drawRanking;
-    atom_string("creditos", State) -> drawCreditos;
-    atom_string("desafiante", State) -> drawDesafiante;
-    atom_string("batalha", State) -> drawBatalha;
-    atom_string("comparacao", State) -> drawComparacao;
-    atom_string("vitoria", State) -> drawVitoria;
-    atom_string("derrota", State) -> drawDerrota;
-    atom_string("empate", State) -> drawEmpate;
-    atom_string("gameOver", State) -> drawGameOver;
-    atom_string("gameClear", State) -> drawGameClear;
-    string_concat("State not identified: ", State, R),
+selectDraw(StateScreen) :-
+    atom_string("menu", StateScreen) -> drawMenu;
+    atom_string("ranking", StateScreen) -> drawRanking;
+    atom_string("creditos", StateScreen) -> drawCreditos;
+    atom_string("desafiante", StateScreen) -> drawDesafiante;
+    atom_string("batalha", StateScreen) -> drawBatalha;
+    atom_string("comparacao", StateScreen) -> drawComparacao;
+    atom_string("vitoria", StateScreen) -> drawVitoria;
+    atom_string("derrota", StateScreen) -> drawDerrota;
+    atom_string("empate", StateScreen) -> drawEmpate;
+    atom_string("gameOver", StateScreen) -> drawGameOver;
+    atom_string("gameClear", StateScreen) -> drawGameClear;
+    string_concat("StateScreen not identified: ", StateScreen, R),
     write(R), writeln(" does not exist.").
 
 % Esta função imprime a tela de menu.
@@ -42,7 +42,10 @@ drawRank :-
     
     CompLength is 138 - (23 * RepLength),
     repeat("=", CompLength, Complete),
+    
+    /* [LEGADO]
     string_chars(Complete, ComplChars),
+    */
 
     append(X, [Complete], RepCompl),
     length(RepCompl, RepComplLength),
@@ -60,7 +63,7 @@ drawRank :-
     forgeScreen(ScreenUnlinesChars, ControllUnlinesChars, RankScr),
     */
     anvil(Screen, Controll, RankScr),
-    p(RankScr).
+    printList(RankScr).
     
 % Esta função imprime a tela de créditos.
 drawCreditos :- 
@@ -80,28 +83,37 @@ drawDesafiante :-
 % Esta função imprime a tela de batalha.
 drawBatalha :-
     % Pegar o valor do estado de batalha
+    get_player_state(PlayerData),
     % Pegar o valor do estado da campanha
 
+    % Pegar o deck do jogador
+    nth0(2, PlayerData, PlayerDeck),
+
+    % Pegar a representação das cartas do jogador
+    currentCards(0, PlayerDeck, PlayerHandRep),
+
+    % Pegar as cartas especiais
     
-    .
+    
+    !.
 
 % Esta função imprime a tela de Comparação entre cartas.
-drawCompare :-.
+drawCompare :- !.
 
 % Esta função imprime a tela de vitória.
-drawVenceu :-.
+drawVenceu :- !.
 
 % Esta função imprime a tela de derrota.
-drawDerrota :-.
+drawDerrota :- !.
 
 % Esta função imprime a tela de empate.
-drawEmpate :-.
+drawEmpate :- !.
 
 % Esta função imprime a tela de gameOver
-drawGameOver :-.
+drawGameOver :- !.
 
 % Esta função imprime a tela de GameClear.
-drawGameClear :-.
+drawGameClear :- !.
 
 % Funções Auxiliares: mandar para um arquivo utils
 
@@ -113,7 +125,51 @@ repeat(Str,Num,Res):-
     string_concat(Str, Res1, Res).
 
 % TODO Apagar depois
-p([]):-!.
-p([H | T]) :-
+printList([]):-!.
+printList([H | T]) :-
     write(H),
-    p(T).
+    printList(T).
+
+% Chamar com 0 quando for usar
+% Testar se funciona mesmo
+currentCards(ListIndex, _, []) :- ListIndex >= 6, !.
+currentCards(ListIndex, [HeadCardList | TailCardList], RepresentationList) :- 
+    % Pegar a carta do head (?)
+    HeadCardList = card(id(IdCard), elem(_), power(_)), 
+
+    % Pega a representação da carta correspondente ao IdCard
+    cardRep(CardRepresentations),
+    nth0(IdCard, CardRepresentations, CurrCard),
+
+    % Chamada recursiva.
+    NewListIndex is ListIndex + 1,
+    currentCards(NewListIndex, TailCardList, RecursiveList),
+    
+    % Juntando numa lista só
+    append([CurrCard], RecursiveList, RepresentationList). 
+
+specialArr(_, SpecialCardDeck, ["", "6", "", "7", "", "8", "", ""]) :- length(SpecialCardDeck, 3), !.
+specialArr(SpecialCardInUse, SpecialCardDeck, Output) :-
+    % Acho que para ver se é true é assim
+    SpecialCardInUse = true,
+    length(SpecialCardDeck, 2),
+    specialCheckUse(SpecialCardDeck, Output),
+    !.
+specialArr(_, _, ["", "X", "", "X", "", "X", "", ""]).
+
+specialCheckUse(Specials, SpecialCheck) :-
+    % Tenho certeza de que tem um jeito melhor de fazer isso
+    (member("swapInDeck", Specials) -> SwapInDeck = "X" ; SwapInDeck = ">"),
+    (member("nullifyElement", Specials) -> NullifyElement = "X" ; NullifyElement = ">"),
+    (member("swapBetweenDecks", Specials) -> SwapBetweenDecks = "X" ; SwapBetweenDecks = ">"),
+    
+    SpecialCheck = [
+        "",
+        SwapInDeck,
+        "",
+        NullifyElement,
+        "",
+        SwapBetweenDecks,
+        ""
+    ]
+.
