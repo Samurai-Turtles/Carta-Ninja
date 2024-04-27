@@ -28,9 +28,13 @@ init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
  *   1º) Número do Round (inicia em 1, máximo 10)
  *   2º) Dados do Jogador: lista com pontuação, Streak, Deck e vitórias por elemento
  *   3º) Dados do Bot: lista com pontuação, Streak, Deck e vitórias por elemento
+ *   4°) Dados Extras: uso de carta especial na rodada e as cartas especiais
  */
 init_battle_state(PlayerDeck, BotDeck):-
-    nb_setval(battle, [1, [0, 0, [PlayerDeck], []], [0, 0, [BotDeck], []]]).
+    nb_setval(battle, [1, 
+        [0, 0, [PlayerDeck], [false, false, false, false, false]], 
+        [0, 0, [BotDeck], [false, false, false, false, false]],
+        [false, ["swapInDeck","nullifyElement","swapBetweenHands"]]]).
 
 /*
  * Atualiza o ScreenState atual, guardando o ID da nova tela.
@@ -53,7 +57,8 @@ update_round_state(NewRound):-
     nb_getval(battle, State),
     nth0(1, State, PlayerData),
     nth0(2, State, BotData),
-    nb_setval(battle, [NewRound, PlayerData, BotData]).
+    nth0(3, State, ExtraData),
+    nb_setval(battle, [NewRound, PlayerData, BotData, ExtraData]).
 
 /*
  * Atualiza os dados do Jogador no BattleState, guardando a nova lista de dados.
@@ -62,16 +67,28 @@ update_player_state(NewPlayerData):-
     nb_getval(battle, State),
     nth0(0, State, Round),
     nth0(2, State, BotData),
-    nb_setval(battle, [Round, NewPlayerData, BotData]).
+    nth0(3, State, ExtraData),
+    nb_setval(battle, [Round, NewPlayerData, BotData, ExtraData]).
 
 /*
  * Atualiza os dados do Bot no BattleState, guardando a nova lista de dados.
  */
-update_bot_state(NewBotState):-
+update_bot_state(NewBotData):-
     nb_getval(battle, State),
     nth0(0, State, Round),
     nth0(1, State, PlayerData),
-    nb_setval(battle, [Round, PlayerData, NewBotState]).
+    nth0(3, State, ExtraData),
+    nb_setval(battle, [Round, PlayerData, NewBotData, ExtraData]).
+
+/*
+ * Atualiza os dados do extras no BattleState, guardando a nova lista de dados.
+ */
+update_extra_state(NewExtraData):-
+    nb_getval(battle, State),
+    nth0(0, State, Round),
+    nth0(1, State, PlayerData),
+    nth0(2, State, BotData),
+    nb_setval(battle, [Round, PlayerData, BotData, NewExtraData]).
 
 /*
  * Retorna o ScreenState atual.
