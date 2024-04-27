@@ -42,7 +42,8 @@ drawRank :-
     LengthWorkaround is RepComplLength - 1,
 
     mergeControll([RepCompl], LengthWorkaround, Controll),
-    
+    /*
+        [LEGADO] 
     unlines(Controll, "", ControllUnlines),
     string_chars(ControllUnlines, ControllUnlinesChars),
 
@@ -50,6 +51,8 @@ drawRank :-
     string_chars(ScreenUnlines, ScreenUnlinesChars),
 
     forgeScreen(ScreenUnlinesChars, ControllUnlinesChars, RankScr),
+    */
+    anvil(Screen, Controll, RankScr),
     p(RankScr).
     
 drawCreditos :- 
