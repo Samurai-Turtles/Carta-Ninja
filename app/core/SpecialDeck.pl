@@ -10,7 +10,7 @@
  * utilizada ainda, 0 denota que a carta já está em uso e -1 mostra que a carta 
  * especial já foi utilizada anteriormente.
  */
-verify_special_card_availability(ReturnedValue) :-
+verify_special_card_availability(ReturnedValue):-
     get_extra_state(ExtraData),
     nth0(0, ExtraData, SpecialCardInUse),
     nth0(1, ExtraData, SpecialDeck),
@@ -18,13 +18,13 @@ verify_special_card_availability(ReturnedValue) :-
     (SpecialCardInUse == false, Length =:= 3),
     ReturnedValue is 1,
     !.
-verify_special_card_availability(ReturnedValue) :-
+verify_special_card_availability(ReturnedValue):-
     get_extra_state(ExtraData),
     nth0(0, ExtraData, SpecialCardInUse),
     (SpecialCardInUse == true),
     ReturnedValue is 0,
     !.
-verify_special_card_availability(ReturnedValue) :-
+verify_special_card_availability(ReturnedValue):-
     get_extra_state(ExtraData),
     nth0(0, ExtraData, SpecialCardInUse),
     nth0(1, ExtraData, SpecialDeck),
