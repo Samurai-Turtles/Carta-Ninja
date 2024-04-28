@@ -32,5 +32,20 @@ element_to_end(Idx, [H|T], ReturnedList):-
     append([H], R1, R),
     ReturnedList = R.
 
-% Dado uma carta, retorne o elemento dela.
+/*
+ * Dado uma carta, retorne o elemento dela.
+ */
 get_elem(card(id(_), elem(Element), power(_)), Element).
+
+/*
+ * Predicado que remove um elemento de uma lista dado o índice.
+ */
+remove_at(Idx, [H|T], ReturnedList):-
+    Idx =:= 0,
+    ReturnedList = T,
+    !.
+remove_at(Idx, [H|T], ReturnedList):-
+    NewIdx is Idx - 1,
+    remove_at(NewIdx, T, R1),
+    append([H], R1, R),
+    ReturnedList = R.

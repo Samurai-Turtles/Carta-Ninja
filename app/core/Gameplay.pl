@@ -1,6 +1,7 @@
 :- consult('../models/Card.pl').
 :- consult('../util/Helpers.pl').
 :- consult('../util/StateManager.pl').
+:- consult('./SpecialDeck.pl').
 
 % Arquivo que trata das funcionalidades lógicas básicas de gameplay.
 
@@ -243,20 +244,4 @@ modify_elem_win_array(card(id(_), elem("earth"), power(_)), ElemWinArray, NewEle
     nth0(1, ElemWinArray, NatureWin),
     nth0(2, ElemWinArray, WaterWin),
     nth0(3, ElemWinArray, MetalWin),
-    NewElemWinArray = [FireWin, NatureWin, WaterWin, MetalWin, true],
-    !.
-
-/* 
- * Predicado que verifica qual carta dada ganhou a rodada a partir de uma comparação
- * do poder de ambas, retornando 1 para o caso em que o jogador ganha, -1 quando
- * o bot ganha e 0 o caso de empate.
- */
-get_winner_by_power(card(id(_), elem(_), power(PowerP)), card(id(_), elem(_), power(PowerC)), R):-
-    (PowerP > PowerC),
-    R is 1,
-    !.
-get_winner_by_power(card(id(_), elem(_), power(PowerP)), card(id(_), elem(_), power(PowerC)), R):-
-    (PowerP < PowerC),
-    R is -1,
-    !.
-get_winner_by_power(card(id(_), elem(_), power(_)), card(id(_), elem(_), power(_)), 0).
+    NewElemWinArray = [FireWin, NatureWin, WaterWin, MetalWin, true].
