@@ -38,7 +38,8 @@ element_to_end(Idx, [H|T], ReturnedList):-
 get_elem(card(id(_), elem(Element), power(_)), Element).
 
 /*
- * Predicado que remove um elemento de uma lista dado o índice.
+ * Predicado que remove um elemento de uma lista dado o índice, note que não há 
+ * verificação de índice válido.
  */
 remove_at(Idx, [H|T], ReturnedList):-
     Idx =:= 0,
