@@ -50,3 +50,18 @@ remove_at(Idx, [H|T], ReturnedList):-
     remove_at(NewIdx, T, R1),
     append([H], R1, R),
     ReturnedList = R.
+
+/*
+ * Dado um elemento, um índice válido e uma lista, substitui o elemento do dado índice 
+ * pelo elemento dado na lista passada como parâmetro e retorne ela com essa modificação.
+ */
+sub_at(Elem, Idx, [H|T], ReturnedList):-
+    (Idx =:= 0),
+    append([Elem], T, NewList),
+    ReturnedList = NewList,
+    !.
+sub_at(Elem, Idx, [H|T], ReturnedList):-
+    NewIdx is Idx - 1,
+    sub_at(Elem, NewIdx, T, R1),
+    append([H], R1, NewList),
+    ReturnedList = NewList.

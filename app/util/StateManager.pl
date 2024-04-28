@@ -36,8 +36,8 @@ init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
  */
 init_battle_state(PlayerDeck, BotDeck):-
     nb_setval(battle, [1, 
-        [0, 0, [PlayerDeck], [false, false, false, false, false]], 
-        [0, 0, [BotDeck], [false, false, false, false, false]],
+        [0, 0, PlayerDeck, [false, false, false, false, false]], 
+        [0, 0, BotDeck, [false, false, false, false, false]],
         [false, ["swapInDeck","nullifyElement","swapBetweenHands"]]]).
 
 /*
