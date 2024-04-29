@@ -31,31 +31,31 @@ getPower(card(id(_), elem(_), power(P)), P).
 
 %Fatos que contém as posições da lista de pesos
 elemInd(fire, 0).
-elemInd(natureza, 1).
-elemInd(agua, 2).
+elemInd(nature, 1).
+elemInd(water, 2).
 elemInd(metal, 3).
-elemInd(terra, 4).
+elemInd(earth, 4).
 
 %Cria uma lista de tamanho Times do elemento Element passado como parâmetro
+createList(_, 0, []):-!.
 createList(Element, Times, Out):-
     Times > 0,
     T is Times - 1,
     createList(Element, T, Partial),
-    append(Partial, [Element], Out), !.
-createList(_, 0, []).
+    append(Partial, [Element], Out).
 
 %A partir de uma lista de pesos, WList, recebida como parâmetro, cria uma lista com os elementos a serem
 %sorteados como escolha do bot
 
-%Não Funciona, está com algum erro na recursão que eu não consegui identificar ainda.
-weightHand(_, [], []).
+weightHand(_, [], []):-!.
 weightHand(WList, [H|Tail], Out):-
     getElem(H, E), %Funciona
     elemInd(E, I), %Funciona
-    nth0(I, WList, W), %Funciona
+    nth0(I,WList,W), %Funciona
     createList(H, W, List), %Funciona
-    weightHand(WList, Tail, Partial), %Não Funciona
-    append(List, Partial, Final).
+    weightHand(WList, Tail, Partial),
+    append(List, Partial, Final),
+    writeln(Final).
 
 %Dada uma lista de pesos e a mão atual do bot, seleciona uma carta
 %A seleção é baseada na lista dos pesos das cartas
@@ -73,7 +73,7 @@ main:-
     % elemInd(E, I),
     % nth0(I, [3, 2, 2, 2, 2], W),
     % createList(H, W, List), 
-    weigthHand([3, 2, 2, 2, 2], H, O),
+    weightHand([3, 2, 2, 2, 2], H, O),
     % getElem(A, El),
     % elemInd(El, In),
     % nth0(In, [3,2,2,2,2], Ww),
