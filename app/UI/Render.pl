@@ -221,7 +221,6 @@ draw_vitoria :-
     screen("vitoria", Screen),
 
     formatted_campaign_score(CampaignScoreRep),
-
     string_chars(CampaignScoreRep, CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrVitoria),
@@ -255,11 +254,8 @@ draw_derrota :-
  */
 draw_empate :- 
     screen("empate", Screen),
-    /*
-    % Pegar a pontuação da campanha do jogador.
+
     formatted_campaign_score(CampaignScoreRep),
-    */
-    CampaignScoreRep = "001", % Placeholder. Substituir pelo código acima.
     string_chars(CampaignScoreRep, CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrEmpate),
