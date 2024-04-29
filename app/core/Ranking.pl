@@ -15,8 +15,9 @@ read_ranking(Data) :-
 add_rank(RankName, RankPts) :-
     get_path("ranking.csv", Path),
     read_ranking(RankingCSV),
-    update_rank_list(RankName, RankPts, RankingCSV, TMP),
-    parse_rows(TMP, NewRankingCSV),
+    update_rank_list(RankName, RankPts, RankingCSV, TMP1),
+    sort_rankings(TMP1, TMP2),
+    parse_rows(TMP2, NewRankingCSV),
     csv_write_file(Path, NewRankingCSV).
 
 /*
@@ -29,6 +30,21 @@ update_rank_list(RankName, RankPts, [], [[RankName, RankPts]]).
 update_rank_list(RankName, RankPts, [[RankName | _] | Rows], [[RankName, RankPts] | Rows]) :- !.
 update_rank_list(RankName, RankPts, [[X, Y] | Rows], [[X, Y] | NextRows]) :-
     update_rank_list(RankName, RankPts, Rows, NextRows).
+
+/*
+ * Ordena a lista de rankings em ordem decrescente. 
+ */
+sort_rankings([], []).
+sort_rankings(List, Sorted) :-
+    predsort(compare_ranks, List, Sorted).
+
+/*
+ * Compara dois rankings e verifica o maior.
+ */
+compare_ranks(Order, [_, A], [_, B]) :-
+    ( A == B
+    ; compare(Order, B, A)
+    ).
 
 /*
  * Retorna o Path do arquivo de Rankings.
