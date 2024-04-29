@@ -230,9 +230,9 @@ draw_vitoria :-
 /*
  * Esta regra imprime a tela de derrota.
  */
- % ERRO
 draw_derrota :- 
     screen("derrota", Screen),
+    get_campaign_state(CampaignState),
 
     % Pegar a pontuação da campanha do jogador.
     formatted_campaign_score(CampaignScoreRep),
@@ -246,6 +246,7 @@ draw_derrota :-
     string_chars(FormattedPlayerLives, PlayerLivesRep),
     
     append(CampaignScoreChars, PlayerLivesRep, ContentChar),
+
     anvil(Screen, ContentChar, ScrDerrota),
     print_list(ScrDerrota).
 
