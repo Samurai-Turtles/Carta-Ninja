@@ -1,14 +1,11 @@
-:- consult('Hammer'), consult('SpritesBase').
+:- consult(['Hammer', 'SpritesBase', '../util/StateManager', '../core/Ranking']).
 
 /*
  * Esta regra analisa o estado do jogo e realiza o print da respectiva tela.
  */ 
 action :-
-    shell(clear), % Como usar clear no Windows?
-    /*
+    shell(clear),
     get_screen_state(ScreenState),
-    */
-    ScreenState = "menu", % Placeholder. Substituir pelo código acima.
     select_draw(ScreenState).
 
 /*
@@ -43,37 +40,27 @@ draw_menu :-
  */
 draw_ranking :-
     screen("ranking", Screen), 
-    % Pegar o valor do estado global
-    % Formatar os primeiros 6 rankings na tela
-    X = ["12345678901234567890123", "12345678901234567890123"], % Placeholder para os rankings. Remover depois
+    
+    % Pegar os rankings.
+    % TODO Lembrar de ordenar os rankings antes de pegar os 6 primeiros
+    read_ranking(Rankings),
+    take(6, Rankings, FirstSixRankings),
+    format_rankings(FirstSixRankings, RankingsFormat),
 
     % Pegar a quantidade total de rankings (de 0 a 6). 
-    length(X, RepLength),
+    length(RankingsFormat, RepLength),
     
     % Caracteres para complementar a representação dos rankings.
     CompLength is 138 - (23 * RepLength),
     repeat(CompLength, "=", Complete),
-    
-    /* [LEGADO]
-    string_chars(Complete, ComplChars),
-    */
 
     % Juntar tudo em uma String só.
-    append(X, [Complete], RepCompl),
+    append(RankingsFormat, [Complete], RepCompl),
     length(RepCompl, RepComplLength),
     LengthWorkaround is RepComplLength - 1,
 
     merge_controll([RepCompl], LengthWorkaround, Controll),
-    /*
-        [LEGADO] 
-    unlines(Controll, "", ControllUnlines),
-    string_chars(ControllUnlines, ControllUnlinesChars),
 
-    unlines(Screen, "\n", ScreenUnlines),
-    string_chars(ScreenUnlines, ScreenUnlinesChars),
-
-    forgeScreen(ScreenUnlinesChars, ControllUnlinesChars, ScrRanking),
-    */
     anvil(Screen, Controll, ScrRanking),
     print_list(ScrRanking).
     
@@ -94,10 +81,10 @@ draw_desafiante :-
     unlines(Screen, "\n", Result),
     writeln(Result).
 
-% TODO testar se funciona com as regras de state.
 /*
  * Esta regra imprime a tela de batalha.
  */
+ % ERRO
 draw_batalha :-
     % Tela de batalha
     screen("batalha", Screen),
@@ -167,10 +154,10 @@ draw_batalha :-
     anvil(Screen, ContentChar, Result),
     writeln(Result).
 
-% TODO testar se funciona
 /*
  * Esta regra imprime a tela de Comparação entre cartas.
  */
+ % ERRO
 draw_comparacao :-
     screen("coEmpate", ScrCoEmpate),
     screen("coVitoria", ScrCoVitoria),
@@ -232,13 +219,9 @@ draw_comparacao :-
  */
 draw_vitoria :- 
     screen("vitoria", Screen),
-    /*
-    % Pegar a pontuação da campanha do jogador.
-    formatted_campaign_score(CampaignScoreRep),
-    */
 
-    % TODO Tirar isso depois, quando integrar com o core. Substituir pelo código acima
-    CampaignScoreRep = "001",
+    formatted_campaign_score(CampaignScoreRep),
+
     string_chars(CampaignScoreRep, CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrVitoria),
@@ -247,10 +230,10 @@ draw_vitoria :-
 /*
  * Esta regra imprime a tela de derrota.
  */
+ % ERRO
 draw_derrota :- 
     screen("derrota", Screen),
 
-    /*
     % Pegar a pontuação da campanha do jogador.
     formatted_campaign_score(CampaignScoreRep),
     string_chars(CampaignScoreRep, CampaignScoreChars),
@@ -261,13 +244,6 @@ draw_derrota :-
     CurrPlayerLives is PrevPlayerLives - 1,
     fill_num(CurrPlayerLives, FormattedPlayerLives),
     string_chars(FormattedPlayerLives, PlayerLivesRep),
-    */
-
-    % TODO Tirar esse bloco depois, quando integrar com o core. Substituir pelo código acima
-    ScorePlaceholder = "001",
-    string_chars(ScorePlaceholder, CampaignScoreChars),
-    LivesPlaceholder = "05",
-    string_chars(LivesPlaceholder, PlayerLivesRep),
     
     append(CampaignScoreChars, PlayerLivesRep, ContentChar),
     anvil(Screen, ContentChar, ScrDerrota),
@@ -301,11 +277,10 @@ draw_game_over :-
  */
 draw_game_clear :- 
     screen("gameClear", Screen),
-    /*
+
     % Pegar a pontuação da campanha do jogador.
     formatted_campaign_score(CampaignScoreRep),
-    */
-    CampaignScoreRep = "001", % Placeholder. Substituir pelo código acima.
+    
     string_chars(CampaignScoreRep, CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrGameClear),
@@ -451,3 +426,52 @@ formatted_campaign_score(CampaignScoreRep) :-
 
     % Concatenar os zeros e a pontuação numa String só.
     string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep).
+
+/*
+ * Pega os primeiros `Num` elementos de uma lista.
+ */
+take(_, [], []) :- !.
+take(0, _, []) :- !.
+take(Number, [H | T], [H | T2]) :-
+    NewNumber is Number - 1,
+    take(NewNumber, T, T2), !.
+
+/*
+ * Esta regra formata os rankings para exibição na tela.
+ */
+format_rankings([], []).
+format_rankings([H|T], [H2|T2]) :-
+    H = [Name, Points],
+
+    format_name(Name, FormattedName),
+
+    number_string(Points, PointsStr),
+    string_length(PointsStr, PointsStrLen),
+
+    Len is 3 - PointsStrLen,
+    repeat(Len, "0", Zeroes),
+    string_concat(Zeroes, PointsStr, PointsStrRep),
+
+    string_concat(FormattedName, PointsStrRep, H2),
+
+    format_rankings(T, T2).
+
+/*
+ * Esta regra formata o nome de um ranking para ocupar
+ * exatamente 20 caracteres.
+ */
+format_name(Name, FormattedName) :-
+    string_length(Name, NameLen),
+    (
+    NameLen < 20 -> 
+        (
+        ComplementLen is 20 - NameLen,
+        repeat(ComplementLen, " ", BlankSpaces),
+        string_concat(BlankSpaces, Name, FormattedName)
+        ) ;
+        (
+        string_chars(Name, NameChars),
+        take(20, NameChars, NameCharsTrunc),
+        string_chars(FormattedName, NameCharsTrunc)
+        )
+    ).
