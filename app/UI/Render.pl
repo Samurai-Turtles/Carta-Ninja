@@ -1,5 +1,4 @@
 :- consult(['Hammer', 'SpritesBase', '../util/StateManager', '../core/Ranking', '../core/Gameplay']).
-:- consult('../util/Helpers'). % Para testar
 
 /*
  * Esta regra analisa o estado do jogo e realiza o print da respectiva tela.
