@@ -1,3 +1,5 @@
+:- consult('../util/StateManager.pl').
+
 %O fato deck apenas serve para teste, será excluido na versão final.
 deck([card(id(5), elem('metal'), power(5)), 
     card(id(4), elem('metal'), power(2)), 
@@ -57,27 +59,88 @@ weightHand(WList, [H|Tail], Out):-
     append(List, Partial, Final),
     writeln(Final).
 
-%Dada uma lista de pesos e a mão atual do bot, seleciona uma carta
+%Cria a lista de pesos se baseando num valor I que define a dificuldade do bot
+createWeightList(_,X,[6,6,6,6,6]):-
+    X =< 1,
+    !.
+createWeightList(Deck,I,Return):-
+    InitialV is 6 * I,
+    repeat(InitialV, 5, StWL),
+    %get_player_state(D),
+    %nth0(2,D,Deck),
+    countElem(Deck,[0,0,0,0,0],Count),
+    fixWeightList(I,StWL,0,Count,Return).
+
+% Monta a lista de pesos, removendo valores de uma elemento desfavorável e aumentando de um elemento favorável
+fixWeightList(_,CurrentList, 5, _, CurrentList):-!.
+fixWeightList(Multiplier,CurrentList, I, Count, Return):-
+    nth0(I,CurrentList,CI),
+    FL is ((I + 1) mod 5), % define o primeiro elemento que perde para o da posicao I (First Loser)
+    nth0(FL,Count,NFL),
+    SL is ((I + 3) mod 5), % define o segundo elemento que perde para o da posicao I  (Second Loser)
+    nth0(SL,Count,NSL),
+    NL is CI + (NFL + NSL)*Multiplier,
+    FW is ((I+2) mod 5), % First Winner
+    nth0(FW,Count,NFW),
+    SW is ((I+4) mod 5),
+    nth0(SW,Count,NSW),
+    NW is NL - (NFW + NSW)*Multiplier,
+    replace(I,NW,CurrentList,NewCurrent1),
+    NI is I + 1,
+    fixWeightList(Multiplier,NewCurrent1,NI,Count,Return).
+
+% Cria uma lista com um valor V repetido N vezes
+repeat(_, 0, []). % Caso base: quando N é 0, a lista está vazia.
+repeat(V, N, [V|Resto]) :-
+    N > 0, % Garante que N seja maior que 0 para continuar a recursão.
+    N1 is N - 1, % Decrementa N para a próxima chamada recursiva.
+    repeat(V, N1, Resto). % Chama recursivamente para o restante da lista.
+
+% Retorna uma lista com o número de vezes que cada elemento aparece
+countElem([],Count,Count):-!.
+countElem([Card|T],Count,Return):-
+    getElem(C,E),
+    elemInd(E,I),
+    nth0(I,Count,R),
+    NR is R + 1,
+    replace(I,NR,Count,NewCount),
+    countElem(T,NewCount,Return).
+
+% Troca o elemento na posição I pelo elemento E da lista passada
+replace(0,E,[H|T],[E|T]):-!.
+replace(I,E,[H|T],[H|NR]):-
+    NI is I-1,
+    replace(NI,E,T,NR).
+
+%Dado um valor I e a mão atual do bot, seleciona uma carta
 %A seleção é baseada na lista dos pesos das cartas
-makeChoice(Wlist, Hand, Card):-
-    %weightHand(Wlist, Hand, Options), %Descomentar quando estiver funcionando
+makeChoice(Deck,I,Hand, Card):-
+    createWeightList(Deck,I,WList),
+    min_list(WList,Min),
+    abs(Min,M),
+    V is M + 1,
+    sumToAll(WList,V,NWList),
+    writeln(NWList),
+    weightHand(NWlist, Hand, Options),
     length(Hand, L), %Substituir por Options quando weightHand estiver funcionando
     random(0, L, Index),
-    nth0(Index, Hand, Card). %Substituir Hand por Options
+    nth0(Index, Options, Card).
 
+sumToAll([],_,[]).
+sumToAll([H|T],V,[NH|R]):-
+    NH is H + V,
+    sumToAll(T,V,R).
+
+abs(N,N):-
+    N >= 0,
+    !.
+abs(N,R):-
+    R is N * (-1).
 
 %Função main para teste e debug
 main:-
     hand(H),
-    % getElem(H, E),
-    % elemInd(E, I),
-    % nth0(I, [3, 2, 2, 2, 2], W),
-    % createList(H, W, List), 
-    weightHand([3, 2, 2, 2, 2], H, O),
-    % getElem(A, El),
-    % elemInd(El, In),
-    % nth0(In, [3,2,2,2,2], Ww),
-    % createList(A, Ww, Partial), 
-    % append(List, Partial, O),
-    write(O),
+    deck(D),
+    makeChoice(D,2,H,Card),
+    writeln(Card),
     halt.
