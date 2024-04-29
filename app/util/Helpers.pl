@@ -16,6 +16,18 @@ push_card_to_end(Idx, Deck, ReturnedDeck):-
     element_to_end(Idx, Deck, R),
     ReturnedDeck = R.
 
+/*
+ * Predicado que preenche uma lista com cartas.
+ * A lista de saída representa um deck de cartas que está ordenado por meio
+ * do padrão estabelecido em `data`.
+ */
+fill_deck(15, [card(id(15), elem("water"), power(8))]) :- !.
+fill_deck(Idx, [H | T]) :-
+  card(id(Idx), elem(Element), power(Power)),
+  H = card(id(Idx), elem(Element), power(Power)),
+  NextIdx is Idx + 1,
+  fill_deck(NextIdx, T).
+
 /* 
  * Predicado que dado um índice válido e uma lista pega o 
  * elemento desse índice e move para o final, retornando 
