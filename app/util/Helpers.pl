@@ -1,4 +1,5 @@
 % Arquivo que trata de funcionalidades auxiliadoras gerais.
+:- consult('../models/Cards.hs')
 
 /*
  * Esse predicado verifica casos de exceção quanto à
