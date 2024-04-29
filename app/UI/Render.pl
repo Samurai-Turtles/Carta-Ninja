@@ -47,7 +47,7 @@ draw_ranking :-
 
     length(RankingsFormat, RepLength),
     CompLength is 138 - (23 * RepLength),
-    repeat(CompLength, "=", Complete),
+    repeat_string(CompLength, "=", Complete),
 
     append(RankingsFormat, [Complete], RepCompl),
     length(RepCompl, RepComplLength),
@@ -116,7 +116,7 @@ draw_batalha :-
     unlines(PlayerHandMergeControll, "", PlayerHandScreen),
 
     % ----------[ Placeholder: dica não existe ainda. ]----------
-    repeat(35, " ", TipPlaceHolder),
+    repeat_string(35, " ", TipPlaceHolder),
 
     unlines([PlayerScoreRep, UsedElementsRep, BotScoreRep, PlayerLivesRep, 
              CurrentBossRep, PlayerHandScreen, TipPlaceHolder], "", ContentChar),
@@ -241,11 +241,11 @@ draw_game_clear :-
  * Esta regra repete um caractere `Num` vezes e retorna 
  * uma string com essa repetição.
  */
-repeat(Num, _, "") :- Num =< 0, !.
-repeat(1, Str, Str) :- !.
-repeat(Num, Str, Res):-
+repeat_string(Num, _, "") :- Num =< 0, !.
+repeat_string(1, Str, Str) :- !.
+repeat_string(Num, Str, Res):-
     Num1 is Num-1,
-    repeat(Num1, Str, Res1),
+    repeat_string(Num1, Str, Res1),
     string_concat(Str, Res1, Res).
 
 /*
@@ -333,7 +333,7 @@ used_elements([WinsByElementHead | WinsByElementTail], [ElementNamesHead | Eleme
     \+WinsByElementHead,
 
     string_length(ElementNamesHead, ElemNamesHeadLength),
-    repeat(ElemNamesHeadLength, " ", BlankElement),
+    repeat_string(ElemNamesHeadLength, " ", BlankElement),
 
     used_elements(WinsByElementTail, ElementNamesTail, UsedRecursive),
     string_concat(BlankElement, UsedRecursive, UsedElements), !.
@@ -363,7 +363,7 @@ formatted_campaign_score_chars(CampaignScoreChars) :-
     % Gerar um complemento da pontuação com zeros.
     string_length(CampaignScoreStr, CampaignScoreLen),
     Len is 3 - CampaignScoreLen,
-    repeat(Len, "0", Zeroes),
+    repeat_string(Len, "0", Zeroes),
 
     % Concatenar os zeros e a pontuação numa String só.
     string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
@@ -391,7 +391,7 @@ format_rankings([H|T], [H2|T2]) :-
     string_length(PointsStr, PointsStrLen),
 
     Len is 3 - PointsStrLen,
-    repeat(Len, "0", Zeroes),
+    repeat_string(Len, "0", Zeroes),
     string_concat(Zeroes, PointsStr, PointsStrRep),
 
     string_concat(FormattedName, PointsStrRep, H2),
@@ -408,7 +408,7 @@ format_name(Name, FormattedName) :-
     NameLen < 20 -> 
         (
         ComplementLen is 20 - NameLen,
-        repeat(ComplementLen, " ", BlankSpaces),
+        repeat_string(ComplementLen, " ", BlankSpaces),
         string_concat(BlankSpaces, Name, FormattedName)
         ) ;
         (
