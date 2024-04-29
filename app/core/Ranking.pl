@@ -5,20 +5,20 @@
  * Retorna os dados do Ranking.
  */
 read_ranking(Data) :-
-    get_path("ranking.csv", Path),
+    get_path('ranking.csv', Path),
     csv_read_file(Path, Rows, [functor(row)]),
-    parse_rows(Rows, Data).
+    parse_rows(Rows, Data), !.
 
 /*
  * Adiciona um novo registro de Rank ao arquivo.
  */
 add_rank(RankName, RankPts) :-
-    get_path("ranking.csv", Path),
+    get_path('ranking.csv', Path),
     read_ranking(RankingCSV),
     update_rank_list(RankName, RankPts, RankingCSV, TMP1),
     sort_rankings(TMP1, TMP2),
     parse_rows(TMP2, NewRankingCSV),
-    csv_write_file(Path, NewRankingCSV).
+    csv_write_file(Path, NewRankingCSV), !.
 
 /*
  * Atualiza a lista de Rankings com um novo registro.
@@ -26,7 +26,7 @@ add_rank(RankName, RankPts) :-
  * Se o nome do novo registro está presente na lista, sua pontuação será atualizada.
  * Caso contrário, o registro será adicionado como uma nova lista.
  */
-update_rank_list(RankName, RankPts, [], [[RankName, RankPts]]).
+update_rank_list(RankName, RankPts, [], [[RankName, RankPts]]) :- !.
 update_rank_list(RankName, RankPts, [[RankName | _] | Rows], [[RankName, RankPts] | Rows]) :- !.
 update_rank_list(RankName, RankPts, [[X, Y] | Rows], [[X, Y] | NextRows]) :-
     update_rank_list(RankName, RankPts, Rows, NextRows).
@@ -34,7 +34,7 @@ update_rank_list(RankName, RankPts, [[X, Y] | Rows], [[X, Y] | NextRows]) :-
 /*
  * Ordena a lista de rankings em ordem decrescente. 
  */
-sort_rankings([], []).
+sort_rankings([], []) :- !.
 sort_rankings(List, Sorted) :-
     predsort(compare_ranks, List, Sorted).
 
