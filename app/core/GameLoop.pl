@@ -39,17 +39,18 @@ ranking_loop :-
     action,
     read_line(Out),
     validation_input(["V"], Out, ValidationOut),
-    ranking_resolve(ValidationOut).
+    (atom_string(ValidationOut, "V") -> menu_loop; ranking_loop).
+    %ranking_resolve(ValidationOut).
 
 /*
-    Resolve o seguimento do loop para cada entrada dada pelo player.
+    Define o loop da tela de créditos.
+ Executa o loop da tela de créditos até uma entrada válida do player.
 */
-ranking_resolve("V") :-
-    menu_loop, !.
-ranking_resolve(_) :-
-    ranking_loop.
-
-
+creditos_loop :-
+    action, 
+    read_line(Out),
+    validation_input(["V"], Out, ValidationOut),
+    (atom_string(ValidationOut, "V") -> menu_loop; creditos_loop).
 
 % ==================== AUXILIARES ==================== %
 
