@@ -56,7 +56,8 @@ draw_ranking :-
     merge_controll([RepCompl], LengthWorkaround, Controll),
 
     anvil(Screen, Controll, ScrRanking),
-    print_list(ScrRanking).
+    print_list(ScrRanking),
+    nl.
     
 /*
  * Esta regra imprime a tela de créditos.
@@ -123,7 +124,8 @@ draw_batalha :-
     string_chars(ContentChar, ContentCharChars),
 
     anvil(Screen, ContentCharChars, Result),
-    print_list(Result).
+    print_list(Result),
+    nl.
 
 /*
  * Esta regra imprime a tela de Comparação entre cartas.
@@ -170,7 +172,8 @@ draw_comparacao :-
         anvil(ScrCoEmpate, MergedCards, Result)
     ),
 
-    print_list(Result).
+    print_list(Result),
+    nl.
 
 /*
  * Esta regra imprime a tela de vitória.
@@ -181,7 +184,8 @@ draw_vitoria :-
     formatted_campaign_score_chars(CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrVitoria),
-    print_list(ScrVitoria).
+    print_list(ScrVitoria),
+    nl.
 
 /*
  * Esta regra imprime a tela de derrota.
@@ -203,7 +207,8 @@ draw_derrota :-
     append(CampaignScoreChars, PlayerLivesRep, ContentChar),
 
     anvil(Screen, ContentChar, ScrDerrota),
-    print_list(ScrDerrota).
+    print_list(ScrDerrota),
+    nl.
 
 /*
  * Esta regra imprime a tela de empate.
@@ -214,7 +219,8 @@ draw_empate :-
     formatted_campaign_score_chars(CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrEmpate),
-    print_list(ScrEmpate).
+    print_list(ScrEmpate),
+    nl.
 
 /*
  * Esta regra imprime a tela de gameOver
@@ -233,7 +239,8 @@ draw_game_clear :-
     formatted_campaign_score_chars(CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrGameClear),
-    print_list(ScrGameClear).
+    print_list(ScrGameClear),
+    nl.
 
 % ========<[ Regras Auxiliares: talvez mandar todas para um arquivo utils ]>========
 
