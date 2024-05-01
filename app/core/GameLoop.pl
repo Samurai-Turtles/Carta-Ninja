@@ -1,4 +1,4 @@
-:- consult(['../UI/Render.pl', '../util/Helpers.pl']).
+:- consult(['./Gameplay.pl','../UI/Render.pl', '../util/Helpers.pl']).
 
 /*
     Define o loop principal do Menu.
@@ -128,9 +128,44 @@ campaign_loop :-
     build_battle,
     campaign_loop.
 
-
+/*
+    Define o loop da batalha atual.
+*/
 battle_loop :-
-    pass.
+    update_screen_state("batalha"),
+    action,
+    read_line(Out),
+    validation_input(["1", "2", "3", "4", "5", "6", "7", "8", "D"], Out,  ValidationOut),
+
+    battle_resolve(ValidationOut).
+
+/*
+    Resolve para as entradas válidas na seleção de uma carta na tela de batalha.
+*/
+battle_resolve(Input) :-
+    member(Input, ["1", "2", "3", "4", "5"]),
+
+    get_player_state(PlayerData),
+    nth0(2, PlayerData, PlayerDeck),
+    number_string(PlayerChoiceTemp, Input),
+    PlayerChoice is PlayerChoiceTemp - 1,
+
+    % bot_choice:
+    get_bot_state(BotData),
+    nth0(2, BotData, BotDeck),
+    BotChoice = 0, % placeholder, cadê o Bot?
+
+    play_card(PlayerDeck, PlayerChoice, NewPlayerDeck),
+    play_card(BotDeck, BotChoice, NewBotDeck),
+
+    sub_at(NewPlayerDeck, 2, PlayerData, NewPlayerData),
+    sub_at(NewBotDeck, 2, BotData, NewBotData),
+
+    update_player_state(NewPlayerData),
+    update_bot_state(NewBotData), !.
+
+
+
 
 % ==================== AUXILIARES ==================== %
 
