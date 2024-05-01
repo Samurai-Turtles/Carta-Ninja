@@ -1,4 +1,4 @@
-:- consult('../UI/Render.pl').
+:- consult(['../UI/Render.pl', '../util/Helpers.pl']).
 
 /*
     Define o loop principal do Menu.
@@ -14,8 +14,7 @@ menu_loop :-
 /*
     Resolve o seguimento do loop para cada entrada dada pelo player.
 */
-menu_resolve("I") :-
-    halt.
+menu_resolve("I") :- !.
 
 menu_resolve("R") :-
     update_screen_state("ranking"),
@@ -52,7 +51,118 @@ creditos_loop :-
     validation_input(["V"], Out, ValidationOut),
     (atom_string(ValidationOut, "V") -> menu_loop; creditos_loop).
 
+/*
+    Define o loop que espera as informações do player para a campanha.
+*/
+desafiante_loop :-
+    update_screen_state("desafiante"),
+    action,
+    read_line(Out),
+    (atom_string(Out, "") -> desafiante_loop; init_campaign_state(Out)).
+
+/*
+    Define o loop da campanha do jogo.
+ Define o loop para os casos de campanha em andamento, vitória do player, derrota
+ do player para o bot, resolvendo os casos. 
+*/
+campaign_loop :-
+    verify_victory(Out),
+    (Out =:= 0),
+
+    battle_loop,
+    cards_comparation, % a atualização do score vem aqui, baseada na função comparationLoop em haskell.
+    campaign_loop, !. 
+
+campaign_loop :-
+    verify_victory(Out),
+    (Out =:= 1),
+
+    get_player_state(PlayerData),
+    get_campaign_state(CampaingData),
+
+    nth0(0, PlayerData, PlayerScore),
+    nth0(1, CampaignData, CampaignScore),
+    nth0(2, CampaignData, CampaignLife),
+    nth0(3, CampaignData, CampaignBelt),
+
+    campaign_life_situation(Life),
+    NextScore is PlayerScore + CampaignScore,
+    NextBelt is CampaingBelt + 1,
+
+    update_campaign_state(NextScore, Life, NextBelt),
+    build_battle,
+    (NextBelt =:= 6 -> campaign_win; campaign_loop), !.
+
+campaign_loop :-
+    verify_victory(Out),
+    (Out =:= -1),
+
+    get_player_state(PlayerData),
+    get_campaign_state(CampaingData),
+
+    nth0(0, PlayerData, PlayerScore),
+    nth0(1, CampaignData, CampaignScore),
+    nth0(2, CampaignData, CampaignLife),
+    nth0(3, CampaignData, CampaignBelt),
+
+    NextScore is PlayerScore + CampaignScore,
+    Life is CampaignLife - 1,
+
+    update_campaign_state(NextScore, Life, CampaignBelt),
+    build_battle,
+    (Life =< 0 -> campaign_loser; campaign_loop), !.
+
+campaign_loop :-
+    get_player_state(PlayerData),
+    get_campaign_state(CampaignData),
+
+    nth0(0, PlayerData, PlayerScore),
+    nth0(1, CampaignData, CampaignScore),
+    nth0(2, CampaignData, CampaignLife),
+    nth0(3, CampaignData, CampaignBelt),
+
+    campaign_life_situation(Life),
+    NextScore is PlayerScore + CampaignScore,
+
+    update_campaign_state(NextScore, Life, CampaignBelt),
+    build_battle,
+    campaign_loop.
+
+
+battle_loop :-
+    pass.
+
 % ==================== AUXILIARES ==================== %
+
+/*
+    Inicia os parâmetros iniciais de uma batalha.
+*/
+build_battle :-
+    update_screen_state("batalha"),
+    build_deck(PlayerDeck),
+    build_deck(BotDeck),
+    init_battle_state(PlayerDeck, BotDeck).
+    
+/*
+    Constrói um deck de cartas permutada.
+*/
+build_deck(Deck) :-
+    fill_deck(1, PureDeck),
+    random_permutation(PureDeck, Deck).
+
+/*
+    Atualiza, se necessário, a vida do Player quando a pontuação for de 25.
+*/
+campaign_life_situation(Result) :-
+    get_player_state(PlayerData),
+    get_campaign_state(CampaingData),
+
+    nth0(0, PlayerData, PlayerScore),
+    nth0(2, CampaignData, CampaignLife),
+    PossibleNewLife is CampaignLife + 1,
+
+    (PlayerScore >= 25 -> Result = PossibleNewLife; Result = CampaignLife).
+
 
 /*
     Lê a entrada do usuário de modo que não precise de um ponto no final da entrada.

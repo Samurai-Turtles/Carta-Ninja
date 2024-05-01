@@ -5,5 +5,9 @@
 
 main :-
     init_screen_state,
+
     menu_loop,
+    desafiante_loop,
+    build_battle,
+    campaign_loop,
     halt.
