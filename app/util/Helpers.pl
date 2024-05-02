@@ -91,7 +91,7 @@ sub_at(Elem, Idx, [H|T], ReturnedList):-
     ReturnedList = NewList.
 
 /*
- *Traduz o nome do elemento para português
+ * Traduz o nome do elemento para português
  */
 translate_elem(fire, "Fogo").
 translate_elem(metal, "Metal").
