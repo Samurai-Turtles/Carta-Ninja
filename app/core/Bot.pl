@@ -19,7 +19,8 @@ makeChoice(Level,Index):-
     get_bot_state(D),
     nth0(2,D,Deck),
     slice(0, 5, Deck, Hand),
-    wDeck(Level,Weight),
+    get_player_state(PlayerState),
+    wDeck(Level,PlayerState,Weight),
     wHand(Hand,Weight, W_cpu_hand),
     length(W_cpu_hand, L),
     random(0,L,Choice),
@@ -29,9 +30,8 @@ makeChoice(Level,Index):-
 /*
 Retorna os pesos de cada elemento na ordem FNAMT
 */
-wDeck(Level,Weight):-
-    get_player_state(D),
-    nth0(2,D,Deck),
+wDeck(Level,PlayerState,Weight):-
+    nth0(2,PlayerState,Deck),
     V is 1+(6*Level),
     createList(V,5,CurrentWeight),
     wDeckRecursive(Deck, Level, CurrentWeight, Weight).
