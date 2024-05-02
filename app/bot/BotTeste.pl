@@ -1,37 +1,62 @@
 :- consult('../util/StateManager.pl').
 
+% Deletar esse arquivo somente após rodar o jogo pela primeira vez e ver que funcionou
+
 /* 
 Pegar o deck do jogador:
 get_player_state(D),
 nth0(2,D,Deck).
 */
+deck([card(id(5), elem('metal'), power(5)), 
+    card(id(4), elem('metal'), power(2)), 
+    card(id(3), elem('fire'), power(8)), 
+    card(id(2), elem('fire'), power(5)), 
+    card(id(1), elem('fire'), power(2)),
+    card(id(6), elem('metal'), power(8)),
+    card(id(7), elem('nature'), power(2)), 
+    card(id(8), elem('nature'), power(5)),
+    card(id(9), elem('nature'), power(8)),
+    card(id(10), elem('earth'), power(2))]).
 
 /*
 Pegar a mao do bot:
 get_bot_state(D)
 nth0(2,D,Deck)
 */
+hand([card(id(5), elem('metal'), power(5)),
+    card(id(3), elem('fire'), power(8)),
+    card(id(7), elem('nature'), power(2)),
+    card(id(10), elem('earth'), power(2)),
+    card(id(13), elem('water'), power(2))]).
 
 /* 
 Função que seleciona o index de uma das cartas da mão do bot
 */
-makeChoice(I,Index):-
-    get_bot_state(D),
-    nth0(2,D,Deck),
-    slice(0, 5, Deck, Hand),
-    wDeck(I,Weight),
-    wHand(Hand,Weight, W_cpu_hand),
+makeChoice(BotDeck,PlayerDeck,I,Index):-
+    wDeck(PlayerDeck,I,Weight),
+    %writeln('Weight:'),
+    %writeln(Weight),
+    wHand(BotDeck,Weight, W_cpu_hand),
+    %writeln('WHand:'),
+    %writeln(W_cpu_hand),
     length(W_cpu_hand, L),
+    %writeln('L:'),
+    %writeln(L),
     random(0,L,Choice),
+    %writeln('Choice:'),
+    %writeln(Choice),
     nth0(Choice,W_cpu_hand,Id),
-    nth0(Id,Hand,card(id(Index),elem(_),power(_))),
+    nth0(Id,BotDeck,Card),
+    %writeln('Card:'),
+    %writeln(Card),
+    getIdx(Card,Index).    
+
+getIdx(card(id(Index),elem(_),power(_)), Index).
 
 /*
 Retorna os pesos de cada elemento na ordem FNAMT
 */
-wDeck(I,Weight):-
-    get_player_state(D),
-    nth0(2,D,Deck),
+wDeck(Deck,I,Weight):-
     V is 1+(6*I),
     repeat(V,5,CurrentWeight),
     wDeckRecursive(Deck, I, CurrentWeight, Weight).
@@ -84,6 +109,7 @@ updateArray([H|T],Idx, NV, [H|Return]):-
     NIdx is Idx - 1,
     updateArray(T,NIdx, NV, Return).
 
+
 /*
 Cria uma lista com um valor V repetido N vezes
 */
@@ -116,13 +142,13 @@ wHandRecursive(I, [card(id(_),elem('nature'),power(_))|T], WeightList, Return):-
 wHandRecursive(I, [card(id(_),elem('water'),power(_))|T], WeightList, Return):-
     nth0(2, WeightList, N),
     repeat(I, N, List),
-    Ni is I + 1 ,
+    Ni is I + 1,
     wHandRecursive(Ni, T, WeightList, WeightHand),
     append(List,WeightHand,Return).
 wHandRecursive(I, [card(id(_),elem('metal'),power(_))|T], WeightList, Return):-
     nth0(3, WeightList, N),
     repeat(I, N, List),
-    Ni is I + 1,
+    Ni is I + 1 ,
     wHandRecursive(Ni, T, WeightList, WeightHand),
     append(List,WeightHand,Return).
 wHandRecursive(I, [card(id(_),elem('earth'),power(_))|T], WeightList, Return):-
@@ -145,4 +171,15 @@ slice(Start,End,[_|T],Return):-
     NewStart is Start - 1,
     slice(NewStart,End,T,Return).
 
+main:-
+    hand(H),
+    %writeln('H:'),
+    %writeln(H),
+    deck(D),
+    %writeln('D:'),
+    %writeln(D),
+    makeChoice(H,D,1,Index),
+    %writeln('Index:'),
+    %writeln(Index),
+    halt.
 
