@@ -17,13 +17,26 @@ selectTip(Score, Tip):-
     tipToPlay(),
     !.
 selectTip(_, Tip):-
-    tipNotToPlay(),
+    tipNotToPlay(Card, Tip),
     !.
 
 tipBotWillPlay(Card, Tip):-
     get_elem(Card, Element),
     translate_elem(Element, TElement)
     string_concat("O bot talvez jogue ", TElement, Tip).
+
+tipNotToPlay(Card, Tip):-
+    get_elem(Card, Element),
+    notPlay(Element, ElementTip),
+    translate_elem(ElementTip, TElement),
+    string_concat("Você não deveria jogar ", TElement, Tip).
+
+notPlay(fire, nature).
+notPlay(nature, water).
+notPlay(water, metal).
+notPlay(metal, earth).
+notPlay(earth, fire).
+
 
 botSelection(Card):-
     get_bot_state(BotState),
