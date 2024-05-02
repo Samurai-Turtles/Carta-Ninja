@@ -33,9 +33,33 @@ element_to_end(Idx, [H|T], ReturnedList):-
     ReturnedList = R.
 
 /*
+ * Dado uma carta, retorne o índice dela.
+ */
+getIndex(card(id(Index), elem(_), power(_)), Index).
+
+/*
  * Dado uma carta, retorne o elemento dela.
  */
 get_elem(card(id(_), elem(Element), power(_)), Element).
+
+/*
+ * Dado uma carta, retorne o poder dela.
+ */
+getPower(card(id(_), elem(_), power(Power)), Power).
+
+/*
+ * Dado um índice e uma lista de cartas, retorne a carta correspondente ao índice.
+ */
+getCard(Index, [Head|Tail], Card):-
+    getIndex(Head, CardIndex),
+    CardIndex =:= Index,
+    Card = Head,
+    !.
+getCard(Index, [Head|Tail], Card):-
+    getIndex(Head, CardIndex),
+    Index =\= CardIndex,
+    getCard(Index, Tail, Card).
+
 
 /*
  * Predicado que remove um elemento de uma lista dado o índice, note que não há 
