@@ -34,7 +34,7 @@ selectTip(_, Tip):-
  */
 tipBotWillPlay(Card, Tip):-
     get_elem(Card, Element),
-    translate_elem(Element, TElement)
+    translate_elem(Element, TElement),
     string_concat("O bot talvez jogue: ", TElement, Tip).
 
 /*
