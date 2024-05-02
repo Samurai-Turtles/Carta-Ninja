@@ -5,7 +5,8 @@
  * Retorna os dados do Ranking.
  */
 read_ranking(Data) :-
-    get_path('ranking.csv', Path),
+    get_ranking_filepath(Path),
+    write(Path),
     csv_read_file(Path, Rows, [functor(row)]),
     parse_rows(Rows, Data), !.
 
@@ -13,12 +14,14 @@ read_ranking(Data) :-
  * Adiciona um novo registro de Rank ao arquivo.
  */
 add_rank(RankName, RankPts) :-
-    get_path('ranking.csv', Path),
+    get_ranking_filepath(Path),
     read_ranking(RankingCSV),
     update_rank_list(RankName, RankPts, RankingCSV, TMP1),
     sort_rankings(TMP1, TMP2),
     parse_rows(TMP2, NewRankingCSV),
     csv_write_file(Path, NewRankingCSV), !.
+
+% ============================== Auxiliares ============================== %
 
 /*
  * Atualiza a lista de Rankings com um novo registro.
@@ -49,9 +52,23 @@ compare_ranks(Order, [_, A], [_, B]) :-
 /*
  * Retorna o Path do arquivo de Rankings.
  */
-get_path(Filename, Path) :-
-    working_directory(CWD, CWD),
-    atomic_list_concat([CWD, 'app/data/', Filename], Path).
+get_ranking_filepath(Path) :-
+    working_directory(WorkDir, WorkDir),
+    split_string(WorkDir, "/", "/", TMP1),
+    get_project_path("app", TMP1, ProjectDir),
+    atomic_list_concat(["/", ProjectDir, "app/data/ranking.csv"], TMP2),
+    atom_string(TMP2, Path),
+    !.
+
+/*
+ * Retorna o Path absoluto do projeto.
+ */
+get_project_path(_, [], "").
+get_project_path(DirName, [DirName | _], "") :- !.
+get_project_path(DirName, [H | T], Path) :-
+    get_project_path(DirName, T, TMP1),
+    atomic_list_concat([H, TMP1], "/", TMP2),
+    atom_string(TMP2, Path).
 
 /*
  * Converte os dados CSV em uma lista de listas e vice-versa.
