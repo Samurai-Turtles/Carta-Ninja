@@ -1,4 +1,4 @@
-:- consult(['Hammer', 'SpritesBase', '../util/StateManager', '../core/Ranking']).
+:- consult(['Hammer', 'SpritesBase', '../util/StateManager', '../core/Ranking', '../core/Gameplay']).
 
 /*
  * Esta regra analisa o estado do jogo e realiza o print da respectiva tela.
@@ -41,20 +41,14 @@ draw_menu :-
 draw_ranking :-
     screen("ranking", Screen), 
     
-    % Pegar os rankings.
-    % TODO Lembrar de ordenar os rankings antes de pegar os 6 primeiros
     read_ranking(Rankings),
     take(6, Rankings, FirstSixRankings),
     format_rankings(FirstSixRankings, RankingsFormat),
 
-    % Pegar a quantidade total de rankings (de 0 a 6). 
     length(RankingsFormat, RepLength),
-    
-    % Caracteres para complementar a representação dos rankings.
     CompLength is 138 - (23 * RepLength),
-    repeat(CompLength, "=", Complete),
+    repeat_string(CompLength, "=", Complete),
 
-    % Juntar tudo em uma String só.
     append(RankingsFormat, [Complete], RepCompl),
     length(RepCompl, RepComplLength),
     LengthWorkaround is RepComplLength - 1,
@@ -62,7 +56,8 @@ draw_ranking :-
     merge_controll([RepCompl], LengthWorkaround, Controll),
 
     anvil(Screen, Controll, ScrRanking),
-    print_list(ScrRanking).
+    print_list(ScrRanking),
+    nl.
     
 /*
  * Esta regra imprime a tela de créditos.
@@ -84,95 +79,69 @@ draw_desafiante :-
 /*
  * Esta regra imprime a tela de batalha.
  */
- % ERRO
 draw_batalha :-
-    % Tela de batalha
     screen("batalha", Screen),
 
-    % Pegar o valor do estado de batalha
     get_player_state(PlayerData),
     get_bot_state(BotData),
     get_extra_state(ExtraData),
-
-    % Pegar o valor do estado da campanha
     get_campaign_state(CampaignState),
 
-    % Pegar o deck do jogador
-    nth1(1, PlayerData, PlayerDeck),
-
-    % Pegar a representação das cartas do jogador
+    nth1(3, PlayerData, PlayerDeck),
     current_cards(0, PlayerDeck, PlayerCardRep),
 
-    % Pegar os dados das cartas especiais
     nth1(1, ExtraData, SpecialCardInUse),
-    nth2(2, ExtraData, SpecialCardDeck),
+    nth1(2, ExtraData, SpecialCardDeck),
 
     special_card_list(SpecialCardInUse, SpecialCardDeck, SpecialCardRep),
+    append(PlayerCardRep, [SpecialCardRep], PlayerHandRep),
 
-    % TODO Testar se alguma coisa precisa vir como matriz
-    append(PlayerCardRep, SpecialCardRep, PlayerHandRep),
-
-    % Pegar a pontuação do jogador.
     nth1(1, PlayerData, PlayerScore),
     fill_num(PlayerScore, PlayerScoreRep),
 
-    % Pegar os elementos vitoriosos
     nth1(4, PlayerData, PlayerWinsByElement),
     used_elements(PlayerWinsByElement, ["FOGO","NATUREZA","ÁGUA","METAL","TERRA"], UsedElementsRep),
 
-    % Pegar a pontuação do bot
     nth1(1, BotData, BotScore),
     fill_num(BotScore, BotScoreRep),
 
-    % Pegar a quantidade de vidas do jogador
     nth1(3, CampaignState, PlayerLives),
     fill_num(PlayerLives, PlayerLivesRep),
 
-    % Pegar a representação do rosto do bot
     face_bot(Bosses),
     nth1(4, CampaignState, BeltLevel),
     nth1(BeltLevel, Bosses, CurrentBoss),
     unlines(CurrentBoss, "", CurrentBossRep),
     
     merge_controll(PlayerHandRep, 7, PlayerHandMergeControll),
+    unlines(PlayerHandMergeControll, "", PlayerHandScreen),
 
-    % TODO Placeholder: dica não existe ainda.
-    repeat(35, " ", TipPlaceHolder),
+    % ----------[ Placeholder: dica não existe ainda. ]----------
+    repeat_string(35, " ", TipPlaceHolder),
 
-    % Juntar tudo numa string só.
-    unlines([PlayerScoreRep, UsedElementsRep, BotScoreRep, PlayerLivesRep, CurrentBossRep, PlayerHandMergeControll, TipPlaceHolder], "", ContentChar),
+    unlines([PlayerScoreRep, UsedElementsRep, BotScoreRep, PlayerLivesRep, 
+             CurrentBossRep, PlayerHandScreen, TipPlaceHolder], "", ContentChar),
+    string_chars(ContentChar, ContentCharChars),
 
-    /* [LEGADO]
-    string_concat(PlayerScoreRep, UsedElementsRep, ContentCharPart1),
-    string_concat(ContentCharPart1, BotScoreRep, ContentCharPart2),
-    string_concat(ContentCharPart2, PlayerLivesRep, ContentCharPart3),
-    string_concat(ContentCharPart3, CurrentBossRep, ContentCharPart4),
-    string_concat(ContentCharPart4, PlayerHandMergeControll, ContentCharPart5),
-    string_concat(ContentCharPart5, TipPlaceHolder, ContentChar),
-    */
-
-    anvil(Screen, ContentChar, Result),
-    writeln(Result).
+    anvil(Screen, ContentCharChars, Result),
+    print_list(Result),
+    nl.
 
 /*
  * Esta regra imprime a tela de Comparação entre cartas.
  */
- % ERRO
 draw_comparacao :-
     screen("coEmpate", ScrCoEmpate),
     screen("coVitoria", ScrCoVitoria),
     screen("coDerrota", ScrCoDerrota),
 
-    % Pegar o estado da batalha.
     get_player_state(PlayerData),
     get_bot_state(BotData),
     get_extra_state(ExtraData),
 
-    % Pegar os decks do jogador e do bot.
     nth1(3, PlayerData, PlayerDeck),
     nth1(3, BotData, BotDeck),
 
-    % Pegar a última carta de ambos os decks.
     % 15 (tamanho fixo do deck) é hard-coded.
     nth1(15, PlayerDeck, PlayerUsedCard),
     nth1(15, BotDeck, BotUsedCard),
@@ -182,37 +151,29 @@ draw_comparacao :-
     nth1(1, ExtraData, SpecialCardInUse),
     nth1(2, ExtraData, SpecialCardDeck),
 
-    % Pegar o ID de ambas as cartas selecionadas.
-    % Preciso utilizar `_` ou `ElemP/PowerP/ElemC/PowerC`?
     PlayerUsedCard = card(id(IdP), elem(_), power(_)),
     BotUsedCard = card(id(IdC), elem(_), power(_)),
 
-    % Pegar o vencedor da comparação atual. A comparação
-    % entre cartas é diferente caso a carta especial
-    % `nullifyElement` esteja em uso.
     (
         check_null_special(SpecialCardInUse, SpecialCardDeck) ->
-        % TODO Testar se funciona caso eu chame as cartas assim ou se tem que usar card({argumentos das cartas})
         get_winner_by_power(PlayerUsedCard, BotUsedCard, CardWinner);
         get_winner(PlayerUsedCard, BotUsedCard, CardWinner)
     ),
 
-    % Pegar a representação de ambas as cartas.
     card_rep(CardRepresentations),
     nth1(IdP, CardRepresentations, PlayerCardRep),
     nth1(IdC, CardRepresentations, BotCardRep),
 
     merge_controll([PlayerCardRep, BotCardRep], 7, MergedCards),
 
-    % Selecionar qual tela exibir dependendo do vencedor da
-    % comparação.
     (
         CardWinner = 1 -> anvil(ScrCoVitoria, MergedCards, Result);
         CardWinner = -1 -> anvil(ScrCoDerrota, MergedCards, Result);
         anvil(ScrCoEmpate, MergedCards, Result)
     ),
 
-    print_list(Result).
+    print_list(Result),
+    nl.
 
 /*
  * Esta regra imprime a tela de vitória.
@@ -220,11 +181,11 @@ draw_comparacao :-
 draw_vitoria :- 
     screen("vitoria", Screen),
 
-    formatted_campaign_score(CampaignScoreRep),
-    string_chars(CampaignScoreRep, CampaignScoreChars),
+    formatted_campaign_score_chars(CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrVitoria),
-    print_list(ScrVitoria).
+    print_list(ScrVitoria),
+    nl.
 
 /*
  * Esta regra imprime a tela de derrota.
@@ -233,12 +194,11 @@ draw_derrota :-
     screen("derrota", Screen),
     get_campaign_state(CampaignState),
 
-    % Pegar a pontuação da campanha do jogador.
-    formatted_campaign_score(CampaignScoreRep),
-    string_chars(CampaignScoreRep, CampaignScoreChars),
+    formatted_campaign_score_chars(CampaignScoreChars),
     
-    % Pegar a quantidade de vidas do jogador e decrementá-la
-    % apenas para imprimir na tela.
+    % A quantidade de vidas do jogador é decrementada
+    % apenas na impressão da tela. Ela vai ter que
+    % ser decrementada de novo no Game Loop.
     nth1(3, CampaignState, PrevPlayerLives),
     CurrPlayerLives is PrevPlayerLives - 1,
     fill_num(CurrPlayerLives, FormattedPlayerLives),
@@ -247,7 +207,8 @@ draw_derrota :-
     append(CampaignScoreChars, PlayerLivesRep, ContentChar),
 
     anvil(Screen, ContentChar, ScrDerrota),
-    print_list(ScrDerrota).
+    print_list(ScrDerrota),
+    nl.
 
 /*
  * Esta regra imprime a tela de empate.
@@ -255,11 +216,11 @@ draw_derrota :-
 draw_empate :- 
     screen("empate", Screen),
 
-    formatted_campaign_score(CampaignScoreRep),
-    string_chars(CampaignScoreRep, CampaignScoreChars),
+    formatted_campaign_score_chars(CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrEmpate),
-    print_list(ScrEmpate).
+    print_list(ScrEmpate),
+    nl.
 
 /*
  * Esta regra imprime a tela de gameOver
@@ -275,13 +236,11 @@ draw_game_over :-
 draw_game_clear :- 
     screen("gameClear", Screen),
 
-    % Pegar a pontuação da campanha do jogador.
-    formatted_campaign_score(CampaignScoreRep),
-    
-    string_chars(CampaignScoreRep, CampaignScoreChars),
+    formatted_campaign_score_chars(CampaignScoreChars),
 
     anvil(Screen, CampaignScoreChars, ScrGameClear),
-    print_list(ScrGameClear).
+    print_list(ScrGameClear),
+    nl.
 
 % ========<[ Regras Auxiliares: talvez mandar todas para um arquivo utils ]>========
 
@@ -289,11 +248,11 @@ draw_game_clear :-
  * Esta regra repete um caractere `Num` vezes e retorna 
  * uma string com essa repetição.
  */
-repeat(Num, _, "") :- Num =< 0, !.
-repeat(1, Str, Str) :- !.
-repeat(Num, Str, Res):-
+repeat_string(Num, _, "") :- Num =< 0, !.
+repeat_string(1, Str, Str) :- !.
+repeat_string(Num, Str, Res):-
     Num1 is Num-1,
-    repeat(Num1, Str, Res1),
+    repeat_string(Num1, Str, Res1),
     string_concat(Str, Res1, Res).
 
 /*
@@ -309,20 +268,16 @@ print_list([H | T]) :-
  * Esta regra dá a representação das cartas da mão do jogador.
  * É preciso chamar com um `ListIndex` 0 quando utilizá-la.
  */
-current_cards(ListIndex, _, []) :- ListIndex >= 6, !.
+current_cards(ListIndex, _, []) :- ListIndex >= 5, !.
 current_cards(ListIndex, [HeadCardList | TailCardList], RepresentationList) :- 
-    % Pegar o ID da carta do head (Funciona?)
     HeadCardList = card(id(IdCard), elem(_), power(_)), 
 
-    % Pega a representação da carta correspondente ao IdCard
     card_rep(CardRepresentations),
     nth1(IdCard, CardRepresentations, CurrCard),
 
-    % Chamada recursiva.
     NewListIndex is ListIndex + 1,
     current_cards(NewListIndex, TailCardList, RecursiveList),
     
-    % Juntando numa lista só
     append([CurrCard], RecursiveList, RepresentationList). 
 
 /*
@@ -345,7 +300,6 @@ fill_num(Number, NumberRep) :- number_string(Number, NumberRep).
  */
 special_card_list(_, SpecialCardDeck, ["", "6", "", "7", "", "8", "", ""]) :- length(SpecialCardDeck, 3), !.
 special_card_list(SpecialCardInUse, SpecialCardDeck, SpecialCardRep) :-
-    % Acho que para ver se é true é assim
     SpecialCardInUse,
     length(SpecialCardDeck, 2),
     special_card_check(SpecialCardDeck, SpecialCardRep),
@@ -357,7 +311,6 @@ special_card_list(_, _, ["", "X", "", "X", "", "X", "", ""]).
  * utilizadas, retornando uma lista de caracteres correspondentes a isso.
  */
 special_card_check(Specials, SpecialCheck) :-
-    % Tenho certeza de que tem um jeito melhor de fazer isso
     (member("swapInDeck", Specials) -> SwapInDeck = "X" ; SwapInDeck = ">"),
     (member("nullifyElement", Specials) -> NullifyElement = "X" ; NullifyElement = ">"),
     (member("swapBetweenDecks", Specials) -> SwapBetweenDecks = "X" ; SwapBetweenDecks = ">"),
@@ -386,9 +339,8 @@ used_elements([WinsByElementHead | WinsByElementTail], [ElementNamesHead | Eleme
 used_elements([WinsByElementHead | WinsByElementTail], [ElementNamesHead | ElementNamesTail], UsedElements) :-
     \+WinsByElementHead,
 
-    % Pegar a representação vazia do elemento
     string_length(ElementNamesHead, ElemNamesHeadLength),
-    repeat(ElemNamesHeadLength, " ", BlankElement),
+    repeat_string(ElemNamesHeadLength, " ", BlankElement),
 
     used_elements(WinsByElementTail, ElementNamesTail, UsedRecursive),
     string_concat(BlankElement, UsedRecursive, UsedElements), !.
@@ -401,12 +353,11 @@ check_null_special(SpecialCardInUse, SpecialCardDeck) :-
     SpecialCardInUse,
     \+member("nullifyElement", SpecialCardDeck).
 
-% TODO adicionar conversão para chars quando integrar com o core e remover os placeholders.
 /*
  * Esta regra retorna a pontuação da campanha do jogador formatada como
  * uma String com zeros à esquerda para ocupar 3 caracteres.
  */
-formatted_campaign_score(CampaignScoreRep) :-
+formatted_campaign_score_chars(CampaignScoreChars) :-
     % Pegar o estado atual da campanha.
     get_campaign_state(CampaignState),
     
@@ -419,13 +370,14 @@ formatted_campaign_score(CampaignScoreRep) :-
     % Gerar um complemento da pontuação com zeros.
     string_length(CampaignScoreStr, CampaignScoreLen),
     Len is 3 - CampaignScoreLen,
-    repeat(Len, "0", Zeroes),
+    repeat_string(Len, "0", Zeroes),
 
     % Concatenar os zeros e a pontuação numa String só.
-    string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep).
+    string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
+    string_chars(CampaignScoreRep, CampaignScoreChars).
 
 /*
- * Pega os primeiros `Num` elementos de uma lista.
+ * Esta regra retorna os primeiros `Number` elementos de uma lista.
  */
 take(_, [], []) :- !.
 take(0, _, []) :- !.
@@ -446,7 +398,7 @@ format_rankings([H|T], [H2|T2]) :-
     string_length(PointsStr, PointsStrLen),
 
     Len is 3 - PointsStrLen,
-    repeat(Len, "0", Zeroes),
+    repeat_string(Len, "0", Zeroes),
     string_concat(Zeroes, PointsStr, PointsStrRep),
 
     string_concat(FormattedName, PointsStrRep, H2),
@@ -463,7 +415,7 @@ format_name(Name, FormattedName) :-
     NameLen < 20 -> 
         (
         ComplementLen is 20 - NameLen,
-        repeat(ComplementLen, " ", BlankSpaces),
+        repeat_string(ComplementLen, " ", BlankSpaces),
         string_concat(BlankSpaces, Name, FormattedName)
         ) ;
         (
