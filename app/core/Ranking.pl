@@ -6,7 +6,6 @@
  */
 read_ranking(Data) :-
     get_ranking_filepath(Path),
-    write(Path),
     csv_read_file(Path, Rows, [functor(row)]),
     parse_rows(Rows, Data), !.
 

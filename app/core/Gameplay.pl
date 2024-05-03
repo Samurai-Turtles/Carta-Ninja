@@ -22,32 +22,21 @@ play_card(Deck, Idx, NewDeck):-
  * de seus elementos, retornando 1 para os casos que o jogador ganha, -1 quando o 
  * bot ganha e 0 para quando há empate.
  */
-get_winner(card(id(IdP), elem(ElemP), power(PowerP)), card(id(IdC), elem(ElemC), power(PowerC)), R):-
-    (ElemP = ElemC),
-    get_winner_by_power(card(id(IdP), elem(ElemP), power(PowerP)), card(id(IdC), elem(ElemC), power(PowerC)), O),
-    R is O,
-    !.
-get_winner(card(id(_), elem("fire"), power(_)), card(id(_), elem(ElemC), power(_)), R):-
-    (ElemC = "nature" ; ElemC = "metal"),
-    R is 1,
-    !.
-get_winner(card(id(_), elem("metal"), power(_)), card(id(_), elem(ElemC), power(_)), R):-
-    (ElemC = "nature" ; ElemC = "earth"),
-    R is 1,
-    !.
-get_winner(card(id(_), elem("nature"), power(_)), card(id(_), elem(ElemC), power(_)), R):-
-    (ElemC = "earth" ; ElemC = "water"),
-    R is 1,
-    !.
-get_winner(card(id(_), elem("earth"), power(_)), card(id(_), elem(ElemC), power(_)), R):-
-    (ElemC = "fire" ; ElemC = "water"),
-    R is 1,
-    !.
-get_winner(card(id(_), elem("water"), power(_)), card(id(_), elem(ElemC), power(_)), R):-
-    (ElemC = "fire" ; ElemC = "metal"),
-    R is 1,
-    !.
-get_winner(card(id(_), elem(_), power(_)), card(id(_), elem(_), power(_)), -1).
+get_winner(card(id(_), elem(SameElem), power(PowerPlayer)),
+                card(id(_), elem(SameElem), power(PowerBot)), R) :-
+    get_winner_by_power(card(id(_), elem(SameElem), power(PowerPlayer)),
+                card(id(_), elem(SameElem), power(PowerBot)), R), !.
+
+get_winner(card(id(_), elem(ElemPlayer), power(_)),
+                card(id(_), elem(ElemBot), power(_)), 1) :-
+    (
+    (ElemPlayer = "fire",   (ElemBot = "metal"  ; ElemBot = "nature")) ;
+    (ElemPlayer = "metal",  (ElemBot = "nature" ; ElemBot = "earth"))  ;
+    (ElemPlayer = "nature", (ElemBot = "earth"  ; ElemBot = "water"))  ;
+    (ElemPlayer = "earth",  (ElemBot = "water"  ; ElemBot = "fire"))   ;
+    (ElemPlayer = "water",  (ElemBot = "fire"   ; ElemBot = "metal"))
+    ), !.
+get_winner(_, _, -1) :- !.
 
 /*
  * Este predicado aumenta o nível de faixa do jogador em +1.
@@ -86,8 +75,9 @@ update_player_campaign_score(Points):-
     nth0(1, State, Pts),
     nth0(2, State, Lives),
     nth0(3, State, Belt),
+    NewPts is Pts + Points,
 
-    update_campaign_state(Pts + Points, Lives, Belt).
+    update_campaign_state(NewPts, Lives, Belt).
 
 /*
  * Este predicado recebe um valor inteiro indicando o vencedor da rodada (1 indica
@@ -119,7 +109,7 @@ update_score_of(1, card(id(Id), elem(Elem), power(Power))):-
     nth0(1, ExtraData, SpecialDeck),
     update_extra_state([false, SpecialDeck]),
     !.
-update_score_of(1, card(id(Id), elem(Elem), power(Power))):-
+update_score_of(-1, card(id(Id), elem(Elem), power(Power))):-
     get_current_round(Round),
     NewRound is Round + 1,
     update_round_state(NewRound),
@@ -151,7 +141,6 @@ update_score_of(0, card(id(Id), elem(Elem), power(Power))):-
 
     get_player_state(PlayerData),
     nth0(0, PlayerData, PlayerScore),
-    nth0(1, PlayerData, PlayerStreak),
     nth0(2, PlayerData, PlayerDeck),
     nth0(3, PlayerData, PlayerElemWinArray),     
     update_player_state([PlayerScore, 0, PlayerDeck, PlayerElemWinArray]),

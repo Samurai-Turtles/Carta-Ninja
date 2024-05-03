@@ -69,15 +69,11 @@ use_special_card(8):-
  * se a carta não estiver em uso na rodada (esse predicado deve ser usado depois do jogador
  * jogar a carta, para utilizar a carta especial diretamente).
  */
-verify_nullify_elem_card_use(ReturnedValue):-
+verify_nullify_elem_card_use:-
     get_extra_state(ExtraData),
     nth0(0, ExtraData, SpecialCardInUse),
     nth0(1, ExtraData, SpecialDeck),
-    ((\+member("nullifyElement", SpecialDeck)), SpecialCardInUse == true),
-    ReturnedValue = true,
-    !.
-verify_nullify_elem_card_use(ReturnedValue):-
-    ReturnedValue = false.
+    ((\+member("nullifyElement", SpecialDeck)), SpecialCardInUse).
 
 /*
  * Predicado que representa a primeira carta especial (carta número 6), em que uma carta

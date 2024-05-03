@@ -1,4 +1,17 @@
-:- consult(['./Gameplay.pl','../UI/Render.pl', '../util/Helpers.pl']).
+:- consult(['./Gameplay.pl','../UI/Render.pl', './Ranking.pl' '../util/Helpers.pl']).
+
+/*
+    Define o predicado que mantém o loop central do Carta Ninja.
+*/
+init_loop :-
+    init_screen_state,
+
+    menu_loop,
+    desafiante_loop,
+    build_battle,
+    campaign_stage,
+    call_screen("creditos"),
+    init_loop.
 
 /*
     Define o loop principal do Menu.
@@ -39,7 +52,6 @@ ranking_loop :-
     read_line(Out),
     validation_input(["V"], Out, ValidationOut),
     (atom_string(ValidationOut, "V") -> menu_loop; ranking_loop).
-    %ranking_resolve(ValidationOut).
 
 /*
     Define o loop da tela de créditos.
@@ -61,77 +73,66 @@ desafiante_loop :-
     (atom_string(Out, "") -> desafiante_loop; init_campaign_state(Out)).
 
 /*
+    Define o predicado que controla o estágio da campanha.
+*/
+campaign_stage :-
+    verify_victory(Out),
+    campaign_loop(Out).
+
+/*
     Define o loop da campanha do jogo.
  Define o loop para os casos de campanha em andamento, vitória do player, derrota
  do player para o bot, resolvendo os casos. 
 */
-campaign_loop :-
-    verify_victory(Out),
-    (Out =:= 0),
+campaign_loop(0) :-
+    battle_stage,
+    comparation_stage,
+    campaign_stage, !. 
 
-    battle_loop,
-    cards_comparation, % a atualização do score vem aqui, baseada na função comparationLoop em haskell.
-    campaign_loop, !. 
-
-campaign_loop :-
-    verify_victory(Out),
-    (Out =:= 1),
-
+campaign_loop(1) :-
     get_player_state(PlayerData),
     get_campaign_state(CampaingData),
 
     nth0(0, PlayerData, PlayerScore),
-    nth0(1, CampaignData, CampaignScore),
-    nth0(2, CampaignData, CampaignLife),
-    nth0(3, CampaignData, CampaignBelt),
 
-    campaign_life_situation(Life),
-    NextScore is PlayerScore + CampaignScore,
-    NextBelt is CampaingBelt + 1,
+    campaign_life_situation(PlayerData),
+    update_player_campaign_score(PlayerScore),
 
-    update_campaign_state(NextScore, Life, NextBelt),
+    level_up_player,
     build_battle,
-    (NextBelt =:= 6 -> campaign_win; campaign_loop), !.
+    get_campaign_state(NewCampaignData),
+    nth0(3, NewCampaignData, NextBelt),
+    (NextBelt >= 6 -> campaign_clear; battle_win), !.
 
-campaign_loop :-
-    verify_victory(Out),
-    (Out =:= -1),
-
+campaign_loop(-1) :-
     get_player_state(PlayerData),
-    get_campaign_state(CampaingData),
-
     nth0(0, PlayerData, PlayerScore),
-    nth0(1, CampaignData, CampaignScore),
-    nth0(2, CampaignData, CampaignLife),
-    nth0(3, CampaignData, CampaignBelt),
 
-    NextScore is PlayerScore + CampaignScore,
-    Life is CampaignLife - 1,
+    update_player_life(-1),
+    update_player_campaign_score(PlayerScore),
 
-    update_campaign_state(NextScore, Life, CampaignBelt),
     build_battle,
-    (Life =< 0 -> campaign_loser; campaign_loop), !.
+    get_campaign_state(CampaignData),
+    nth0(2, CampaignData, PlayerLife),
 
-campaign_loop :-
+    (PlayerLife =< 0 -> campaign_end; battle_defeat), !.
+
+campaign_loop(_) :-
     get_player_state(PlayerData),
     get_campaign_state(CampaignData),
 
     nth0(0, PlayerData, PlayerScore),
-    nth0(1, CampaignData, CampaignScore),
-    nth0(2, CampaignData, CampaignLife),
-    nth0(3, CampaignData, CampaignBelt),
 
-    campaign_life_situation(Life),
-    NextScore is PlayerScore + CampaignScore,
+    campaign_life_situation,
+    update_player_campaign_score(PlayerScore),
 
-    update_campaign_state(NextScore, Life, CampaignBelt),
     build_battle,
-    campaign_loop.
+    battle_draw.
 
 /*
-    Define o loop da batalha atual.
+    Define o estágio da batalha atual.
 */
-battle_loop :-
+battle_stage :-
     update_screen_state("batalha"),
     action,
     read_line(Out),
@@ -164,8 +165,51 @@ battle_resolve(Input) :-
     update_player_state(NewPlayerData),
     update_bot_state(NewBotData), !.
 
+battle_resolve(_) :-
+    battle_stage.
+/*
+    Define o estágio de comparação entre cartas durante uma batalha.
+*/
+comparation_stage :-
+    verify_nullify_elem_card_use, !.
 
+comparation_stage :-
+    update_screen_state("comparacao"),
+    action,
+    sleep(1),
+    read_line(_),
 
+    get_last_cards(PlayerCard, BotCard),
+    get_winner(PlayerCard, BotCard, ResultWinner),
+
+    (ResultWinner =:= -1 -> WinnerCard = BotCard; WinnerCard = PlayerCard),
+    update_score_of(ResultWinner, WinnerCard).
+
+battle_win :-
+    call_screen("vitoria"),
+    campaign_stage.
+
+battle_defeat :-
+    call_screen("derrota"),
+    campaign_stage.
+
+battle_draw :-
+    call_screen("empate"),
+    campaign_stage.
+
+/*
+    Define o estágio de finalização de uma campanha, isso por game clear.
+*/
+campaign_clear :-
+    save_campaign_data,
+    call_screen("gameClear").
+
+/*
+    Define o estágio de finalização de uma campanha, isso por game end.
+*/
+campaign_end :-
+    save_campaign_data,
+    call_screen("gameOver").
 
 % ==================== AUXILIARES ==================== %
 
@@ -177,7 +221,7 @@ build_battle :-
     build_deck(PlayerDeck),
     build_deck(BotDeck),
     init_battle_state(PlayerDeck, BotDeck).
-    
+
 /*
     Constrói um deck de cartas permutada.
 */
@@ -186,18 +230,43 @@ build_deck(Deck) :-
     random_permutation(PureDeck, Deck).
 
 /*
+    Predicado que simplifica a chamada da tela para o estágio atual.
+*/
+call_screen(NextScreen) :-
+    update_screen_state(NextScreen),
+    action,
+    sleep(1),
+    read_line(_).
+
+/*
+    Predicado que simplifica a adição de uma nova campanha ao ranking.
+ Armazena, ao final de uma campanha, o nome e os pontos de um desafiante.
+*/
+save_campaign_data :-
+    get_campaign_state(CampaignData),
+
+    nth0(0, CampaignData, PlayerName),
+    nth0(1, CampaignData, PlayerFinalScore),
+    add_rank(PlayerName, PlayerFinalScore).
+
+/*
     Atualiza, se necessário, a vida do Player quando a pontuação for de 25.
 */
-campaign_life_situation(Result) :-
-    get_player_state(PlayerData),
-    get_campaign_state(CampaingData),
-
+campaign_life_situation(PlayerData):-
     nth0(0, PlayerData, PlayerScore),
-    nth0(2, CampaignData, CampaignLife),
-    PossibleNewLife is CampaignLife + 1,
+    (PlayerScore >= 25 -> update_player_life(1); update_player_life(0)).
 
-    (PlayerScore >= 25 -> Result = PossibleNewLife; Result = CampaignLife).
+/*
+    Pega a última carta jogada pelo jogador e a última carta jogada pelo bot.
+*/
+get_last_cards(PlayerLastCard, BotLastCard) :-
+    get_player_state(PlayerData),
+    get_bot_state(BotData),
 
+    nth0(2, PlayerData, PlayerDeck),
+    nth0(2, BotData, BotDeck),
+    nth0(14, PlayerDeck, PlayerLastCard),
+    nth0(14, BotDeck, BotLastCard).
 
 /*
     Lê a entrada do usuário de modo que não precise de um ponto no final da entrada.

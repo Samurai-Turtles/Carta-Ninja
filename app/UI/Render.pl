@@ -199,8 +199,7 @@ draw_derrota :-
     % A quantidade de vidas do jogador é decrementada
     % apenas na impressão da tela. Ela vai ter que
     % ser decrementada de novo no Game Loop.
-    nth1(3, CampaignState, PrevPlayerLives),
-    CurrPlayerLives is PrevPlayerLives - 1,
+    nth1(3, CampaignState, CurrPlayerLives),
     fill_num(CurrPlayerLives, FormattedPlayerLives),
     string_chars(FormattedPlayerLives, PlayerLivesRep),
     
