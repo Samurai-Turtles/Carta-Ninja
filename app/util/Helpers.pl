@@ -46,9 +46,33 @@ element_to_end(Idx, [H|T], ReturnedList):-
     ReturnedList = R.
 
 /*
+ * Dado uma carta, retorne o índice dela.
+ */
+get_index(card(id(Index), elem(_), power(_)), Index).
+
+/*
  * Dado uma carta, retorne o elemento dela.
  */
 get_elem(card(id(_), elem(Element), power(_)), Element).
+
+/*
+ * Dado uma carta, retorne o poder dela.
+ */
+get_power(card(id(_), elem(_), power(Power)), Power).
+
+/*
+ * Dado um índice e uma lista de cartas, retorne a carta correspondente ao índice.
+ */
+get_card(Index, [Head|Tail], Card):-
+    get_index(Head, CardIndex),
+    CardIndex =:= Index,
+    Card = Head,
+    !.
+get_card(Index, [Head|Tail], Card):-
+    get_index(Head, CardIndex),
+    Index =\= CardIndex,
+    get_card(Index, Tail, Card).
+
 
 /*
  * Predicado que remove um elemento de uma lista dado o índice, note que não há 
@@ -76,3 +100,12 @@ sub_at(Elem, Idx, [H|T], ReturnedList):-
     sub_at(Elem, NewIdx, T, R1),
     append([H], R1, NewList),
     ReturnedList = NewList.
+
+/*
+ * Traduz o nome do elemento para português
+ */
+translate_elem(fire, "Fogo").
+translate_elem(metal, "Metal").
+translate_elem(nature, "Natureza").
+translate_elem(earth, "Terra").
+translate_elem(water, "Água").
