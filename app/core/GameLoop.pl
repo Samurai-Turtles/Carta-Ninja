@@ -10,7 +10,7 @@ init_loop :-
     desafiante_loop,
     build_battle,
     campaign_stage,
-    call_screen("creditos"),
+    ranking_final,
     init_loop.
 
 /*
@@ -52,6 +52,18 @@ ranking_loop :-
     read_line(Out),
     validation_input(["V"], Out, ValidationOut),
     (atom_string(ValidationOut, "V") -> menu_loop; ranking_loop).
+
+/*
+    Define o loop da tela final de ranking.
+ Executa o loop da tela de ranking até uma entrada válida do player.
+*/
+ranking_final :-
+    update_screen_state("ranking"),
+    action,
+    read_line(Out),
+    validation_input(["V"], Out, ValidationOut),
+    (atom_string(ValidationOut, "V") -> true; ranking_final).
+
 
 /*
     Define o loop da tela de créditos.
@@ -138,12 +150,14 @@ battle_stage :-
     read_line(Out),
 
     validation_input(["1", "2", "3", "4", "5", "6", "7", "8", "D"], Out,  ValidationOut),
-    battle_resolve(ValidationOut).
+    
+    verify_special_card_availability(SpecialSituation),
+    battle_resolve(ValidationOut, SpecialSituation).
 
 /*
     Resolve para as entradas válidas na seleção de uma carta na tela de batalha.
 */
-battle_resolve(Input) :-
+battle_resolve(Input, _) :-
     member(Input, ["1", "2", "3", "4", "5"]),
 
     get_player_state(PlayerData),
@@ -166,7 +180,8 @@ battle_resolve(Input) :-
     update_player_state(NewPlayerData),
     update_bot_state(NewBotData), !.
 
-battle_resolve(_) :-
+battle_resolve("6", 1) :-
+
     battle_stage.
 /*
     Define o estágio de comparação entre cartas durante uma batalha.
@@ -177,7 +192,6 @@ comparation_stage :-
 comparation_stage :-
     update_screen_state("comparacao"),
     action,
-    sleep(1),
     read_line(_),
 
     get_last_cards(PlayerCard, BotCard),
@@ -239,7 +253,6 @@ build_deck(Deck) :-
 call_screen(NextScreen) :-
     update_screen_state(NextScreen),
     action,
-    sleep(1),
     read_line(_).
 
 /*
