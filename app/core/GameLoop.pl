@@ -153,8 +153,10 @@ battle_resolve(Input) :-
 
     % bot_choice:
     get_bot_state(BotData),
+    get_campaign_state(CampaignData),
     nth0(2, BotData, BotDeck),
-    %makeChoice(2, BotChoice),
+    nth0(3, CampaignData, BeltLevel),
+    %makeChoice(BeltLevel, BotChoice),
     random(0, 4, BotChoice),
 
     play_card(PlayerDeck, PlayerChoice, NewPlayerDeck),
@@ -166,8 +168,7 @@ battle_resolve(Input) :-
     update_player_state(NewPlayerData),
     update_bot_state(NewBotData), !.
 
-battle_resolve(Input) :-
-    member(Input, ["6", "7", "8"]),
+battle_resolve(_) :-
     battle_stage.
 /*
     Define o estágio de comparação entre cartas durante uma batalha.
@@ -187,6 +188,9 @@ comparation_stage :-
     (ResultWinner =:= -1 -> WinnerCard = BotCard; WinnerCard = PlayerCard),
     update_score_of(ResultWinner, WinnerCard).
 
+/*
+    Predicados que resolvem o loop após o fim de uma batalha.
+*/
 battle_win :-
     call_screen("vitoria"),
     campaign_stage.
