@@ -5,7 +5,7 @@
  * Retorna os dados do Ranking.
  */
 read_ranking(Data) :-
-    get_path('ranking.csv', Path),
+    get_ranking_filepath(Path),
     csv_read_file(Path, Rows, [functor(row)]),
     parse_rows(Rows, Data), !.
 
@@ -13,7 +13,7 @@ read_ranking(Data) :-
  * Adiciona um novo registro de Rank ao arquivo.
  */
 add_rank(RankName, RankPts) :-
-    get_path('ranking.csv', Path),
+    get_ranking_filepath(Path),
     read_ranking(RankingCSV),
     update_rank_list(RankName, RankPts, RankingCSV, TMP1),
     sort_rankings(TMP1, TMP2),

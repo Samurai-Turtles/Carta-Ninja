@@ -1,4 +1,4 @@
-:- consult(['./Gameplay.pl','../UI/Render.pl', './Ranking.pl' '../util/Helpers.pl']).
+:- consult(['./Gameplay.pl', './Bot.pl', '../UI/Render.pl', './Ranking.pl', '../util/Helpers.pl']).
 
 /*
     Define o predicado que mantém o loop central do Carta Ninja.
