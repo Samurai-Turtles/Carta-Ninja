@@ -15,7 +15,8 @@ read_ranking(Data) :-
 add_rank(RankName, RankPts) :-
     get_ranking_filepath(Path),
     read_ranking(RankingCSV),
-    update_rank_list(RankName, RankPts, RankingCSV, TMP1),
+    atom_string(RankNameAtom, RankName),
+    update_rank_list(RankNameAtom, RankPts, RankingCSV, TMP1),
     sort_rankings(TMP1, TMP2),
     parse_rows(TMP2, NewRankingCSV),
     csv_write_file(Path, NewRankingCSV), !.
