@@ -27,7 +27,7 @@ arrayElem('earth', [1,3,0,2]).
 /* 
 Função que seleciona o index de uma das cartas da mão do bot
 */
-makeChoice(Level,Index):-
+makeChoice(Level,Id):-
     get_bot_state(D),
     nth0(2,D,Deck),
     slice(0, 5, Deck, Hand),
@@ -36,8 +36,7 @@ makeChoice(Level,Index):-
     wHand(Hand,Weight, W_cpu_hand),
     length(W_cpu_hand, L),
     random(0,L,Choice),
-    nth0(Choice,W_cpu_hand,Id),
-    nth0(Id,Hand,card(id(Index),elem(_),power(_))).
+    nth0(Choice,W_cpu_hand,Id).
 
 /*
 Retorna os pesos de cada elemento na ordem FNAMT
@@ -53,7 +52,7 @@ Varre todo o deck, modificando os pesos de acordo com as cartas encontradas
 */
 wDeckRecursive([],_,CurrentWeight,CurrentWeight):-!.
 wDeckRecursive([card(id(_), elem(E), power(_))|T], Level, CurrentWeight, Weight):-
-    arrayElem(E,Arr)
+    arrayElem(E,Arr),
     updateWeight(I, Arr, CurrentWeight,NCW),
     wDeckRecursive(T,I,NCW,Weight),
     !.

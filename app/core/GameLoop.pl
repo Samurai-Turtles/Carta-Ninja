@@ -123,7 +123,7 @@ campaign_loop(_) :-
 
     nth0(0, PlayerData, PlayerScore),
 
-    campaign_life_situation,
+    campaign_life_situation(PlayerData),
     update_player_campaign_score(PlayerScore),
 
     build_battle,
@@ -136,8 +136,8 @@ battle_stage :-
     update_screen_state("batalha"),
     action,
     read_line(Out),
-    validation_input(["1", "2", "3", "4", "5", "6", "7", "8", "D"], Out,  ValidationOut),
 
+    validation_input(["1", "2", "3", "4", "5", "6", "7", "8", "D"], Out,  ValidationOut),
     battle_resolve(ValidationOut).
 
 /*
@@ -154,7 +154,8 @@ battle_resolve(Input) :-
     % bot_choice:
     get_bot_state(BotData),
     nth0(2, BotData, BotDeck),
-    BotChoice = 0, % placeholder, cadê o Bot?
+    %makeChoice(2, BotChoice),
+    random(0, 4, BotChoice),
 
     play_card(PlayerDeck, PlayerChoice, NewPlayerDeck),
     play_card(BotDeck, BotChoice, NewBotDeck),
@@ -165,7 +166,8 @@ battle_resolve(Input) :-
     update_player_state(NewPlayerData),
     update_bot_state(NewBotData), !.
 
-battle_resolve(_) :-
+battle_resolve(Input) :-
+    member(Input, ["6", "7", "8"]),
     battle_stage.
 /*
     Define o estágio de comparação entre cartas durante uma batalha.
