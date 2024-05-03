@@ -12,6 +12,18 @@ get_bot_state(D)
 nth0(2,D,Deck)
 */
 
+indexElem('fire', 0).
+indexElem('nature', 1).
+indexElem('water', 2).
+indexElem('metal', 3).
+indexElem('earth', 4).
+
+arrayElem('fire', [2,4,1,3]).
+arrayElem('nature', [0,3,2,4]).
+arrayElem('water', [1,4,0,3]).
+arrayElem('metal', [0,2,1,4]).
+arrayElem('earth', [1,3,0,2]).
+
 /* 
 Função que seleciona o index de uma das cartas da mão do bot
 */
@@ -25,7 +37,7 @@ makeChoice(Level,Index):-
     length(W_cpu_hand, L),
     random(0,L,Choice),
     nth0(Choice,W_cpu_hand,Id),
-    nth0(Id,Hand,card(id(Index),elem(_),power(_))),
+    nth0(Id,Hand,card(id(Index),elem(_),power(_))).
 
 /*
 Retorna os pesos de cada elemento na ordem FNAMT
@@ -40,24 +52,9 @@ wDeck(Level,PlayerState,Weight):-
 Varre todo o deck, modificando os pesos de acordo com as cartas encontradas
 */
 wDeckRecursive([],_,CurrentWeight,CurrentWeight):-!.
-wDeckRecursive([card(id(_), elem('fire'), power(_))|T], Level, CurrentWeight, Weight):-
-    updateWeight(I, [2,4,1,3], CurrentWeight,NCW),
-    wDeckRecursive(T,I,NCW,Weight),
-    !.
-wDeckRecursive([card(id(_), elem('nature'), power(_))|T], Level, CurrentWeight, Weight):-
-    updateWeight(I, [0,3,2,4], CurrentWeight,NCW),
-    wDeckRecursive(T,I,NCW,Weight),
-    !.
-wDeckRecursive([card(id(_), elem('water'), power(_))|T], Level, CurrentWeight, Weight):-
-    updateWeight(I, [1,4,0,3], CurrentWeight,NCW),
-    wDeckRecursive(T,I,NCW,Weight),
-    !.
-wDeckRecursive([card(id(_), elem('metal'), power(_))|T], Level, CurrentWeight, Weight):-
-    updateWeight(I, [0,2,1,4], CurrentWeight,NCW),
-    wDeckRecursive(T,I,NCW,Weight),
-    !.
-wDeckRecursive([card(id(_), elem('earth'), power(_))|T], Level, CurrentWeight, Weight):-
-    updateWeight(I, [1,3,0,2], CurrentWeight,NCW),
+wDeckRecursive([card(id(_), elem(E), power(_))|T], Level, CurrentWeight, Weight):-
+    arrayElem(E,Arr)
+    updateWeight(I, Arr, CurrentWeight,NCW),
     wDeckRecursive(T,I,NCW,Weight),
     !.
 
@@ -101,32 +98,9 @@ wHand(Hand,WeightList,WeightHand):-
     wHandRecursive(0,Hand, WeightList, WeightHand).
 
 wHandRecursive(5, _, _, []):-!.
-wHandRecursive(I, [card(id(_),elem('fire'),power(_))|T], WeightList, Return):-
-    nth0(0, WeightList, N),
-    createList(I, N, List),
-    Ni is I + 1 ,
-    wHandRecursive(Ni, T, WeightList, WeightHand),
-    append(List,WeightHand,Return).
-wHandRecursive(I, [card(id(_),elem('nature'),power(_))|T], WeightList, Return):-
-    nth0(1, WeightList, N),
-    createList(I, N, List),
-    Ni is I + 1 ,
-    wHandRecursive(Ni, T, WeightList, WeightHand),
-    append(List,WeightHand,Return).
-wHandRecursive(I, [card(id(_),elem('water'),power(_))|T], WeightList, Return):-
-    nth0(2, WeightList, N),
-    createList(I, N, List),
-    Ni is I + 1 ,
-    wHandRecursive(Ni, T, WeightList, WeightHand),
-    append(List,WeightHand,Return).
-wHandRecursive(I, [card(id(_),elem('metal'),power(_))|T], WeightList, Return):-
-    nth0(3, WeightList, N),
-    createList(I, N, List),
-    Ni is I + 1,
-    wHandRecursive(Ni, T, WeightList, WeightHand),
-    append(List,WeightHand,Return).
-wHandRecursive(I, [card(id(_),elem('earth'),power(_))|T], WeightList, Return):-
-    nth0(4, WeightList, N),
+wHandRecursive(I, [card(id(_),elem(E),power(_))|T], WeightList, Return):-
+    indexElem(E,Index),
+    nth0(Index, WeightList, N),
     createList(I, N, List),
     Ni is I + 1 ,
     wHandRecursive(Ni, T, WeightList, WeightHand),
