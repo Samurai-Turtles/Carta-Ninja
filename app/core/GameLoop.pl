@@ -151,13 +151,11 @@ battle_resolve(Input) :-
     number_string(PlayerChoiceTemp, Input),
     PlayerChoice is PlayerChoiceTemp - 1,
 
-    % bot_choice:
     get_bot_state(BotData),
     get_campaign_state(CampaignData),
     nth0(2, BotData, BotDeck),
     nth0(3, CampaignData, BeltLevel),
-    %makeChoice(BeltLevel, BotChoice),
-    random(0, 4, BotChoice),
+    makeChoice(BeltLevel, BotChoice),
 
     play_card(PlayerDeck, PlayerChoice, NewPlayerDeck),
     play_card(BotDeck, BotChoice, NewBotDeck),

@@ -12,17 +12,17 @@ get_bot_state(D)
 nth0(2,D,Deck)
 */
 
-indexElem('fire', 0).
-indexElem('nature', 1).
-indexElem('water', 2).
-indexElem('metal', 3).
-indexElem('earth', 4).
+indexElem("fire", 0).
+indexElem("nature", 1).
+indexElem("water", 2).
+indexElem("metal", 3).
+indexElem("earth", 4).
 
-arrayElem('fire', [2,4,1,3]).
-arrayElem('nature', [0,3,2,4]).
-arrayElem('water', [1,4,0,3]).
-arrayElem('metal', [0,2,1,4]).
-arrayElem('earth', [1,3,0,2]).
+arrayElem("fire", [2,4,1,3]).
+arrayElem("nature", [0,3,2,4]).
+arrayElem("water", [1,4,0,3]).
+arrayElem("metal", [0,2,1,4]).
+arrayElem("earth", [1,3,0,2]).
 
 /* 
 Função que seleciona o index de uma das cartas da mão do bot
@@ -30,7 +30,7 @@ Função que seleciona o index de uma das cartas da mão do bot
 makeChoice(Belt,Id):-
     get_bot_state(D),
     nth0(2,D,Deck),
-    slice(0, 5, Deck, Hand),
+    slice(0, 4, Deck, Hand),
     get_player_state(PlayerState),
     wDeck(Belt,PlayerState,Weight),
     wHand(Hand,Weight, W_cpu_hand),
