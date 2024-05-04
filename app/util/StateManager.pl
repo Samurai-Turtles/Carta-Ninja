@@ -40,7 +40,7 @@ init_battle_state(PlayerDeck, BotDeck) :-
         [0, 0, PlayerDeck, [false, false, false, false, false]], 
         [0, 0, BotDeck, [false, false, false, false, false]],
         [false, ["swapInDeck","nullifyElement","swapBetweenHands"]],
-        true]).
+        "PRESSIONE [D] PARA USAR A DICA"]).
 
 /*
  * Atualiza o ScreenState atual, guardando o ID da nova tela.

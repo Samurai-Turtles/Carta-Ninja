@@ -193,8 +193,8 @@ battle_resolve("8", 1) :-
     battle_stage, !.
 
 battle_resolve("D", _) :-
-    get_tip_avaliable(true),
-    update_tip_avaliable(false),
+    get_tip_avaliable("PRESSIONE [D] PARA USAR A DICA"),
+    update_tip_avaliable("DICA EM USO"),
     battle_stage, !.
 
 battle_resolve(_, _) :-

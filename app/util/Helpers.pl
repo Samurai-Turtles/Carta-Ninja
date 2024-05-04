@@ -104,8 +104,8 @@ sub_at(Elem, Idx, [H|T], ReturnedList):-
 /*
  * Traduz o nome do elemento para português
  */
-translate_elem(fire, "Fogo").
-translate_elem(metal, "Metal").
-translate_elem(nature, "Natureza").
-translate_elem(earth, "Terra").
-translate_elem(water, "Água").
+translate_elem("fire", "Fogo").
+translate_elem("metal", "Metal").
+translate_elem("nature", "Natureza").
+translate_elem("earth", "Terra").
+translate_elem("water", "Água").

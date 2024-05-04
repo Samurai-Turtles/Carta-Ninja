@@ -1,4 +1,4 @@
-:- consult(['Hammer', 'SpritesBase', '../util/StateManager', '../core/Ranking', '../core/Gameplay']).
+:- consult(['Hammer', 'SpritesBase', '../util/StateManager', '../core/Ranking', '../core/Gameplay', '../core/Tips']).
 
 /*
  * Esta regra analisa o estado do jogo e realiza o print da respectiva tela.
@@ -86,6 +86,7 @@ draw_batalha :-
     get_bot_state(BotData),
     get_extra_state(ExtraData),
     get_campaign_state(CampaignState),
+    get_tip_avaliable(TipState),
 
     nth1(3, PlayerData, PlayerDeck),
     current_cards(0, PlayerDeck, PlayerCardRep),
@@ -117,10 +118,28 @@ draw_batalha :-
     unlines(PlayerHandMergeControll, "", PlayerHandScreen),
 
     % ----------[ Placeholder: dica não existe ainda. ]----------
-    repeat_string(35, " ", TipPlaceHolder),
+    (
+        atom_string(TipState, "DICA EM USO") ->
+            (
+                giveTip(GivenTip), 
+                format_tip(GivenTip, TipRep), 
+                update_tip_avaliable("DICA USADA")
+            )
+            ; 
+            (
+                format_tip(TipState, TipRep)
+            )
+    ),
+
+    /*
+    (
+        TipState -> repeat_string(35, " ", TipRep);
+        (giveTip(Tip), format_tip(Tip, TipRep)) 
+    ),
+    */
 
     unlines([PlayerScoreRep, UsedElementsRep, BotScoreRep, PlayerLivesRep, 
-             CurrentBossRep, PlayerHandScreen, TipPlaceHolder], "", ContentChar),
+             CurrentBossRep, PlayerHandScreen, TipRep], "", ContentChar),
     string_chars(ContentChar, ContentCharChars),
 
     anvil(Screen, ContentCharChars, Result),
@@ -424,3 +443,13 @@ format_name(Name, FormattedName) :-
         string_chars(FormattedName, NameCharsTrunc)
         )
     ).
+
+/*
+ * Esta regra formata uma dica para ocupar
+ * exatamente 35 caracteres.
+ */
+format_tip(Tip, FormattedTip) :-
+    string_length(Tip, TipLen),
+    ComplementLen is 35 - TipLen, % O tamanho da dica não formatada sempre será menor que 35.
+    repeat_string(ComplementLen, " ", BlankSpaces),
+    string_concat(Tip, BlankSpaces, FormattedTip).

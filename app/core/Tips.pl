@@ -60,11 +60,11 @@ tipNotToPlay(Card, Tip):-
 /*
  * Fatos auxiliares a regra tipNotToPlay
  */
-notPlay(fire, nature).
-notPlay(nature, water).
-notPlay(water, metal).
-notPlay(metal, earth).
-notPlay(earth, fire).
+notPlay("fire", "nature").
+notPlay("nature", "water").
+notPlay("water", "metal").
+notPlay("metal", "earth").
+notPlay("earth", "fire").
 
 /*
  * Chama o mecanismo de escolha do bot para selecionar uma carta
