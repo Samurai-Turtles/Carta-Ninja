@@ -49,13 +49,18 @@ run_haskell_version() {
 
 # Executa a versão Prolog do jogo
 run_prolog_version() {
-    if ! command -v swi-prolog.swipl > /dev/null 2>&1; then
-        echo "[ERRO] Comando \"swi-prolog.swipl\" não encontrado!"
+    cd prolog/
+    
+    if command -v swipl > /dev/null 2>&1; then
+        swipl main.pl # Instalação via APT ou alias
+    elif command -v swi-prolog.swipl > /dev/null 2>&1; then
+        swi-prolog.swipl main.pl # Instalação via Snap
+    else
+        echo "[ERRO] Comandos Prolog não encontrados!"
+        cd ../
         exit 2
     fi
 
-    cd prolog/
-    swi-prolog.swipl main.pl
     cd ../
 }
 
