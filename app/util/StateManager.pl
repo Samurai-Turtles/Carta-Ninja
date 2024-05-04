@@ -29,6 +29,7 @@ init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
  *   2º) Dados do Jogador: lista com pontuação, Streak, Deck e vitórias por elemento
  *   3º) Dados do Bot: lista com pontuação, Streak, Deck e vitórias por elemento
  *   4°) Dados Extras: uso de carta especial na rodada e as cartas especiais
+ *   5º) Disponibilidade da dica: booleano indicando se as dicas estão disponíveis
  * 
  *  Note que a lista de valores booleanos que tratam das vitórias por elemento está 
  *  disposta da seguinte forma:
@@ -38,7 +39,8 @@ init_battle_state(PlayerDeck, BotDeck):-
     nb_setval(battle, [1, 
         [0, 0, PlayerDeck, [false, false, false, false, false]], 
         [0, 0, BotDeck, [false, false, false, false, false]],
-        [false, ["swapInDeck","nullifyElement","swapBetweenHands"]]]).
+        [false, ["swapInDeck","nullifyElement","swapBetweenHands"]],
+        true]).
 
 /*
  * Atualiza o ScreenState atual, guardando o ID da nova tela.
@@ -62,7 +64,8 @@ update_round_state(NewRound):-
     nth0(1, State, PlayerData),
     nth0(2, State, BotData),
     nth0(3, State, ExtraData),
-    nb_setval(battle, [NewRound, PlayerData, BotData, ExtraData]).
+    nth0(4, State, TipAvaliable),
+    nb_setval(battle, [NewRound, PlayerData, BotData, ExtraData, TipAvaliable]).
 
 /*
  * Atualiza os dados do Jogador no BattleState, guardando a nova lista de dados.
@@ -72,7 +75,8 @@ update_player_state(NewPlayerData):-
     nth0(0, State, Round),
     nth0(2, State, BotData),
     nth0(3, State, ExtraData),
-    nb_setval(battle, [Round, NewPlayerData, BotData, ExtraData]).
+    nth0(4, State, TipAvaliable),
+    nb_setval(battle, [Round, NewPlayerData, BotData, ExtraData, TipAvaliable]).
 
 /*
  * Atualiza os dados do Bot no BattleState, guardando a nova lista de dados.
@@ -82,7 +86,8 @@ update_bot_state(NewBotData):-
     nth0(0, State, Round),
     nth0(1, State, PlayerData),
     nth0(3, State, ExtraData),
-    nb_setval(battle, [Round, PlayerData, NewBotData, ExtraData]).
+    nth0(4, State, TipAvaliable),
+    nb_setval(battle, [Round, PlayerData, NewBotData, ExtraData, TipAvaliable]).
 
 /*
  * Atualiza os dados do extras no BattleState, guardando a nova lista de dados.
@@ -92,7 +97,19 @@ update_extra_state(NewExtraData):-
     nth0(0, State, Round),
     nth0(1, State, PlayerData),
     nth0(2, State, BotData),
-    nb_setval(battle, [Round, PlayerData, BotData, NewExtraData]).
+    nth0(4, State, TipAvaliable),
+    nb_setval(battle, [Round, PlayerData, BotData, NewExtraData, TipAvaliable]).
+
+/*
+ * Atualiza a disponibilidade das dicas.
+ */
+update_tip_avaliable(NewTipAvaliable) :-
+    nb_getval(battle, State),
+    nth0(0, State, Round),
+    nth0(1, State, PlayerData),
+    nth0(2, State, BotData),
+    nth0(3, State, ExtraData),
+    nb_setval(battle, [Round, PlayerData, BotData, ExtraData, NewTipAvaliable]).
 
 /*
  * Retorna o ScreenState atual.
@@ -154,3 +171,11 @@ get_extra_state(ExtraData):-
     nb_getval(battle, State),
     nth0(3, State, Data),
     ExtraData = Data.
+
+/*
+ * Retorna a disponibilidade das dicas.
+ */
+get_tip_avaliable(TipAvaliable) :-
+    nb_getval(battle, State),
+    nth0(4, State, TipAvaliable).
+
