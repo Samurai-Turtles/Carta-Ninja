@@ -2,25 +2,59 @@
 
 # Script de execução das versões do Carta Ninja.
 
+BANNER="
+ ██████╗ █████╗ ██████╗ ████████╗ █████╗     ███╗   ██╗██╗███╗   ██╗     ██╗ █████╗ 
+██╔════╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗    ████╗  ██║██║████╗  ██║     ██║██╔══██╗
+██║     ███████║██████╔╝   ██║   ███████║    ██╔██╗ ██║██║██╔██╗ ██║     ██║███████║
+██║     ██╔══██║██╔══██╗   ██║   ██╔══██║    ██║╚██╗██║██║██║╚██╗██║██   ██║██╔══██║
+╚██████╗██║  ██║██║  ██║   ██║   ██║  ██║    ██║ ╚████║██║██║ ╚████║╚█████╔╝██║  ██║
+ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝    ╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚════╝ ╚═╝  ╚═╝
+                                                                                    
+██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗                                
+██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗                               
+██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝                               
+██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗                               
+██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║                               
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝                               
+"
+
+print_colored() {
+    echo -en "$1"
+    echo -n "$2"
+    echo -en "\e[0m"
+}
+
 # Exibe a mensagem de seleção da versão
 print_selection_msg() {
     clear
-    echo "===== Carta Ninja Runner ====="
-    echo "Selecione a versão do jogo a ser executada:"
-    echo "(1) Haskell (requer Cabal instalado)"
-    echo "(2) Prolog  (requer SWI-Prolog instalado)"
+    print_colored "\e[33m" "$BANNER"
+    print_colored "\e[96m" "Selecione a versão do jogo a ser executada:"
+    echo ""
+    echo "  [1] Haskell (requer Cabal instalado)"
+    echo "  [2] Prolog  (requer SWI-Prolog instalado)"
+    echo "  [Q] Encerrar programa"
 }
 
 # Executa a versão Haskell do jogo
 run_haskell_version() {
-    cd haskell/ || return
+    if ! command -v cabal > /dev/null 2>&1; then
+        echo "[ERRO] Comando \"cabal\" não encontrado!"
+        exit 1
+    fi
+
+    cd haskell/
     cabal run
     cd ../
 }
 
 # Executa a versão Prolog do jogo
 run_prolog_version() {
-    cd prolog/ || return
+    if ! command -v swi-prolog.swipl > /dev/null 2>&1; then
+        echo "[ERRO] Comando \"swi-prolog.swipl\" não encontrado!"
+        exit 2
+    fi
+
+    cd prolog/
     swi-prolog.swipl app/main.pl
     cd ../
 }
@@ -28,15 +62,21 @@ run_prolog_version() {
 # Rotina principal, executa a lógica de escolha da versão
 main() {
     print_selection_msg
-    echo -n ">> "
+    print_colored "\e[92m" ">> "
     read -r version
 
     if [[ version -eq 1 ]]; then
         run_haskell_version
     elif [[ version -eq 2 ]]; then
         run_prolog_version
+    elif [[ "${version^^}" == "Q" ]]; then
+        print_colored "\e[92m" "Obrigado por jogar CartaNinja :)"
+        echo ""
+        exit 0
     else
-        echo "Opção indisponível"
+        print_colored "\e[31m" "Opção indisponível"
+        echo ""
+        exit 3
     fi
 }
 
