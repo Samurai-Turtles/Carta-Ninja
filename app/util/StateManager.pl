@@ -3,7 +3,7 @@
 /*
  * Inicializa o ScreenState, contendo a tela inicial do jogo.
  */
-init_screen_state:- nb_setval(screen, "menu").
+init_screen_state :- nb_setval(screen, "menu").
 
 /*
  * Inicializa o CampaignState, contendo os dados da campanha atual.
@@ -15,7 +15,7 @@ init_screen_state:- nb_setval(screen, "menu").
  *   3º) Vidas extras do jogador (inicia em 2)
  *   4º) Nível de faixa (inicia em 1)
  */
-init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
+init_campaign_state(Name) :- nb_setval(campaign, [Name, 0, 2, 1]).
 
 /*
  * Inicializa o BattleState, contendo os dados da batalha em andamento.
@@ -35,7 +35,7 @@ init_campaign_state(Name):- nb_setval(campaign, [Name, 0, 2, 1]).
  *  disposta da seguinte forma:
  *      [fire, nature, water, metal, earth]
  */
-init_battle_state(PlayerDeck, BotDeck):-
+init_battle_state(PlayerDeck, BotDeck) :-
     nb_setval(battle, [1, 
         [0, 0, PlayerDeck, [false, false, false, false, false]], 
         [0, 0, BotDeck, [false, false, false, false, false]],
@@ -45,13 +45,13 @@ init_battle_state(PlayerDeck, BotDeck):-
 /*
  * Atualiza o ScreenState atual, guardando o ID da nova tela.
  */
-update_screen_state(Screen):- nb_setval(screen, Screen).
+update_screen_state(Screen) :- nb_setval(screen, Screen).
 
 /*
  * Atualiza o CampaignState, guardando a pontuação total, número de vidas e 
  * nível de faixa.
  */
-update_campaign_state(Pts, Lives, Belt):- 
+update_campaign_state(Pts, Lives, Belt) :- 
     nb_getval(campaign, State),
     nth0(0, State, Name),
     nb_setval(campaign, [Name, Pts, Lives, Belt]).
@@ -59,7 +59,7 @@ update_campaign_state(Pts, Lives, Belt):-
 /*
  * Atualiza o Round no BattleState, guardando o novo valor do Round.
  */
-update_round_state(NewRound):-
+update_round_state(NewRound) :-
     nb_getval(battle, State),
     nth0(1, State, PlayerData),
     nth0(2, State, BotData),
@@ -70,7 +70,7 @@ update_round_state(NewRound):-
 /*
  * Atualiza os dados do Jogador no BattleState, guardando a nova lista de dados.
  */
-update_player_state(NewPlayerData):-
+update_player_state(NewPlayerData) :-
     nb_getval(battle, State),
     nth0(0, State, Round),
     nth0(2, State, BotData),
@@ -81,7 +81,7 @@ update_player_state(NewPlayerData):-
 /*
  * Atualiza os dados do Bot no BattleState, guardando a nova lista de dados.
  */
-update_bot_state(NewBotData):-
+update_bot_state(NewBotData) :-
     nb_getval(battle, State),
     nth0(0, State, Round),
     nth0(1, State, PlayerData),
@@ -92,7 +92,7 @@ update_bot_state(NewBotData):-
 /*
  * Atualiza os dados do extras no BattleState, guardando a nova lista de dados.
  */
-update_extra_state(NewExtraData):-
+update_extra_state(NewExtraData) :-
     nb_getval(battle, State),
     nth0(0, State, Round),
     nth0(1, State, PlayerData),
@@ -103,7 +103,7 @@ update_extra_state(NewExtraData):-
 /*
  * Atualiza a disponibilidade das dicas.
  */
-update_tip_avaliable(NewTipAvaliable) :-
+update_tip_avaliable(NewTipAvaliable)  :-
     nb_getval(battle, State),
     nth0(0, State, Round),
     nth0(1, State, PlayerData),
@@ -114,20 +114,19 @@ update_tip_avaliable(NewTipAvaliable) :-
 /*
  * Retorna o ScreenState atual.
  */
-get_screen_state(State):- nb_getval(screen, R), State = R.
+get_screen_state(State) :- nb_getval(screen, State).
 
 /*
  * Retorna o CampaignState atual.
  */
-get_campaign_state(State):- nb_getval(campaign, R), State = R.
+get_campaign_state(State) :- nb_getval(campaign, State).
 
 /*
  * Retorna o valor atual do Round.
  */
-get_current_round(Value):-
+get_current_round(Round) :-
     nb_getval(battle, State),
-    nth0(0, State, Round),
-    Value = Round.
+    nth0(0, State, Round).
 
 /*
  * Retorna a lista de dados do Jogador.
@@ -139,10 +138,9 @@ get_current_round(Value):-
  *   3º) Deck de cartas
  *   4º) Vitórias por elemento
  */
-get_player_state(PlayerData):-
+get_player_state(PlayerData) :-
     nb_getval(battle, State),
-    nth0(1, State, Data),
-    PlayerData = Data.
+    nth0(1, State, PlayerData).
 
 /*
  * Retorna a lista de dados do Bot.
@@ -154,10 +152,9 @@ get_player_state(PlayerData):-
  *   3º) Deck de cartas
  *   4º) Vitórias por elemento
  */
-get_bot_state(BotData):-
+get_bot_state(BotData) :-
     nb_getval(battle, State),
-    nth0(2, State, Data),
-    BotData = Data.
+    nth0(2, State, BotData).
 
 /*
  * Retorna a lista dos dados extra da batalha.
@@ -167,10 +164,9 @@ get_bot_state(BotData):-
  *   1º) Uso de uma carta especial na rodada atual.
  *   2º) Deck das cartas especiais.
  */
-get_extra_state(ExtraData):-
+get_extra_state(ExtraData) :-
     nb_getval(battle, State),
-    nth0(3, State, Data),
-    ExtraData = Data.
+    nth0(3, State, ExtraData).
 
 /*
  * Retorna a disponibilidade das dicas.
