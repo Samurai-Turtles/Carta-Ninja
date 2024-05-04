@@ -192,6 +192,11 @@ battle_resolve("8", 1) :-
     use_special_card(8),
     battle_stage, !.
 
+battle_resolve("D", _) :-
+    get_tip_avaliable(true),
+    update_tip_avaliable(false),
+    battle_stage, !.
+
 battle_resolve(_, _) :-
     battle_stage.
 
