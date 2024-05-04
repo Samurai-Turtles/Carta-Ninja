@@ -112,7 +112,7 @@ draw_batalha :-
     nth1(4, CampaignState, BeltLevel),
     nth1(BeltLevel, Bosses, CurrentBoss),
     unlines(CurrentBoss, "", CurrentBossRep),
-    
+
     merge_controll(PlayerHandRep, 7, PlayerHandMergeControll),
     unlines(PlayerHandMergeControll, "", PlayerHandScreen),
 
@@ -321,6 +321,7 @@ special_card_check(Specials, SpecialCheck) :-
         NullifyElement,
         "",
         SwapBetweenDecks,
+        "",
         ""
     ].
 

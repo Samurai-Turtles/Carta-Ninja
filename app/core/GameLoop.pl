@@ -129,7 +129,7 @@ campaign_loop(-1) :-
 
     (PlayerLife =< 0 -> campaign_end; battle_defeat), !.
 
-campaign_loop(_) :-
+campaign_loop(2) :-
     get_player_state(PlayerData),
     get_campaign_state(CampaignData),
 
@@ -147,8 +147,8 @@ campaign_loop(_) :-
 battle_stage :-
     update_screen_state("batalha"),
     action,
-    read_line(Out),
 
+    read_line(Out),
     validation_input(["1", "2", "3", "4", "5", "6", "7", "8", "D"], Out,  ValidationOut),
     
     verify_special_card_availability(SpecialSituation),
@@ -181,8 +181,20 @@ battle_resolve(Input, _) :-
     update_bot_state(NewBotData), !.
 
 battle_resolve("6", 1) :-
+    use_special_card(6),
+    battle_stage, !.
 
+battle_resolve("7", 1) :-
+    use_special_card(7),
+    battle_stage, !.
+
+battle_resolve("8", 1) :-
+    use_special_card(8),
+    battle_stage, !.
+
+battle_resolve(_, _) :-
     battle_stage.
+
 /*
     Define o estágio de comparação entre cartas durante uma batalha.
 */
