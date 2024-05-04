@@ -55,7 +55,7 @@ run_prolog_version() {
     fi
 
     cd prolog/
-    swi-prolog.swipl app/main.pl
+    swi-prolog.swipl main.pl
     cd ../
 }
 

@@ -79,8 +79,8 @@ get_ranking_filepath(Path) :-
     split_string(WorkDir, "/", "/", TMP1),
 
     % Concatena o caminho do arquivo CSV ao caminho do diretório raíz do projeto
-    get_project_path("app", TMP1, ProjectDir),
-    atomic_list_concat(["/", ProjectDir, "app/data/ranking.csv"], TMP2),
+    get_project_path("prolog", TMP1, ProjectDir),
+    atomic_list_concat(["/", ProjectDir, "prolog/data/ranking.csv"], TMP2),
     atom_string(TMP2, Path),
 	!.
 
