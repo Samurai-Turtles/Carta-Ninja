@@ -39,7 +39,6 @@ verify_special_card_availability(ReturnedValue):-
  */
 use_special_card(6):-
     get_extra_state(ExtraData),
-    nth0(0, ExtraData, SpecialCardInUse),
     nth0(1, ExtraData, SpecialDeck),
 
     remove_at(0, SpecialDeck, NewSpecialDeck),
@@ -48,7 +47,6 @@ use_special_card(6):-
     !.
 use_special_card(7):-
     get_extra_state(ExtraData),
-    nth0(0, ExtraData, SpecialCardInUse),
     nth0(1, ExtraData, SpecialDeck),
 
     remove_at(1, SpecialDeck, NewSpecialDeck),
@@ -56,7 +54,6 @@ use_special_card(7):-
     !.
 use_special_card(8):-
     get_extra_state(ExtraData),
-    nth0(0, ExtraData, SpecialCardInUse),
     nth0(1, ExtraData, SpecialDeck),
 
     remove_at(2, SpecialDeck, NewSpecialDeck),

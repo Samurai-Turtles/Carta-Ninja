@@ -63,7 +63,7 @@ get_power(card(id(_), elem(_), power(Power)), Power).
 /*
  * Dado um índice e uma lista de cartas, retorne a carta correspondente ao índice.
  */
-get_card(Index, [Head|Tail], Card):-
+get_card(Index, [Head|_], Card):-
     get_index(Head, CardIndex),
     CardIndex =:= Index,
     Card = Head,

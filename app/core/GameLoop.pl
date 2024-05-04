@@ -103,7 +103,6 @@ campaign_loop(0) :-
 
 campaign_loop(1) :-
     get_player_state(PlayerData),
-    get_campaign_state(CampaingData),
 
     nth0(0, PlayerData, PlayerScore),
 
@@ -131,7 +130,6 @@ campaign_loop(-1) :-
 
 campaign_loop(-2) :-
     get_player_state(PlayerData),
-    get_campaign_state(CampaignData),
 
     nth0(0, PlayerData, PlayerScore),
 

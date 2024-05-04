@@ -134,7 +134,7 @@ update_score_of(-1, card(id(Id), elem(Elem), power(Power))):-
     nth0(1, ExtraData, SpecialDeck),
     update_extra_state([false, SpecialDeck]),
     !.
-update_score_of(0, card(id(Id), elem(Elem), power(Power))):-
+update_score_of(0, _):-
     get_current_round(Round),
     NewRound is Round + 1,
     update_round_state(NewRound),
