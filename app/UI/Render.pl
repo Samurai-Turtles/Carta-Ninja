@@ -312,7 +312,7 @@ special_card_list(_, _, ["", "X", "", "X", "", "X", "", ""]).
 special_card_check(Specials, SpecialCheck) :-
     (member("swapInDeck", Specials) -> SwapInDeck = "X" ; SwapInDeck = ">"),
     (member("nullifyElement", Specials) -> NullifyElement = "X" ; NullifyElement = ">"),
-    (member("swapBetweenDecks", Specials) -> SwapBetweenDecks = "X" ; SwapBetweenDecks = ">"),
+    (member("swapBetweenHands", Specials) -> SwapBetweenDecks = "X" ; SwapBetweenDecks = ">"),
     
     SpecialCheck = [
         "",
