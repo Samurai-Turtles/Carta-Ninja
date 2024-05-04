@@ -129,7 +129,7 @@ campaign_loop(-1) :-
 
     (PlayerLife =< 0 -> campaign_end; battle_defeat), !.
 
-campaign_loop(2) :-
+campaign_loop(-2) :-
     get_player_state(PlayerData),
     get_campaign_state(CampaignData),
 
@@ -199,12 +199,17 @@ battle_resolve(_, _) :-
     Define o estágio de comparação entre cartas durante uma batalha.
 */
 comparation_stage :-
-    verify_nullify_elem_card_use, !.
+    verify_nullify_elem_card_use, 
+    call_screen("comparacao"),
+    
+    get_last_cards(PlayerCard, BotCard),
+    get_winner_by_power(PlayerCard, BotCard, ResultWinner),
+
+    (ResultWinner =:= -1 -> WinnerCard = BotCard; WinnerCard = PlayerCard),
+    update_score_of(ResultWinner, WinnerCard), !.
 
 comparation_stage :-
-    update_screen_state("comparacao"),
-    action,
-    read_line(_),
+    call_screen("comparacao"),
 
     get_last_cards(PlayerCard, BotCard),
     get_winner(PlayerCard, BotCard, ResultWinner),
