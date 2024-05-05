@@ -10,8 +10,8 @@ Repositório destinado ao projeto da disciplina de PLP.
 
 - [Descrição](#descrição)
 - [Guia de Instalação](#guia-de-instalação)
-  - [Instalação no Windows](#instalação-no-windows)
 - [Regras do Jogo](#regras-do-jogo)
+- [Troubleshooting](#troubleshooting)
 - [Equipe](#equipe)
 
 ## Descrição
@@ -82,6 +82,32 @@ A batalha acaba quando pelo menos uma das condições abaixo for alcançada:
   - **Ganha aquele que obteve mais pontos durante a partida**
   - Se houver empate nos pontos, **a partida será repetida sem perda de vidas** 
     para o jogador
+
+## Troubleshooting
+
+### "O script de inicialização não funciona"
+
+Caso o Runner `run.sh` falhe em iniciar o jogo, você pode executar qualquer
+uma das versões conforme o procedimento abaixo:
+
+1. Abra uma janela do terminal no diretório do projeto
+2. Entre no diretório da versão que deseja executar (`cd haskell` ou `cd prolog`)
+3. Execute o comando de inicialização do projeto
+   - Para a versão Haskell, use `cabal run`
+   - Para a versão Prolog, use `swipl main.pl` (APT) ou `swi-prolog.swipl main.pl` (Snap)
+
+### "Não consigo executar o jogo no Windows"
+
+A falha presente na execução do jogo no Windows se deve à **codificação do CMD**,
+que **não aceita alguns caracteres especiais do padrão UTF-8** usados nos Sprites 
+do jogo. Para executar o jogo no Windows, recomendamos fortemente que o faça via 
+**WSL2**.
+
+Também é possível que o jogo **apresente erros nos Sprites** (como caracteres não
+reconhecidos). Isso se deve à **fonte do CMD do Windows não conter representações
+para caracteres Braille** (usados em alguns Sprites). Se isto ocorrer, **tente
+trocar a fonte do CMD** para alguma fonte que suporte estes caracteres,
+(por exemplo, [Cascadia Code](https://github.com/microsoft/cascadia-code)).
 
 ## Equipe
 
