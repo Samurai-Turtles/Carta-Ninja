@@ -89,5 +89,5 @@ A batalha acaba quando pelo menos uma das condições abaixo for alcançada:
 - [Lucas Khalil](https://github.com/LucasKhalil)
 - [José Willian](https://github.com/JWillianSl)
 - [Sérgio Gustavo](https://github.com/sergio-gustavo-andrade-grilo)
-- [Vinicius Ataíde](https://github.com/ViniciusUltraAD)
+- [Vinicius Ataide](https://github.com/ViniciusUltraAD)
 - [Douglas Domingos](https://github.com/dougdomingos)
