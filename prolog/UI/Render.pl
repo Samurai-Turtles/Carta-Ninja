@@ -117,7 +117,6 @@ draw_batalha :-
     merge_controll(PlayerHandRep, 7, PlayerHandMergeControll),
     unlines(PlayerHandMergeControll, "", PlayerHandScreen),
 
-    % ----------[ Placeholder: dica não existe ainda. ]----------
     (
         atom_string(TipState, "DICA EM USO") ->
             (
@@ -130,13 +129,6 @@ draw_batalha :-
                 format_tip(TipState, TipRep)
             )
     ),
-
-    /*
-    (
-        TipState -> repeat_string(35, " ", TipRep);
-        (give_tip(Tip), format_tip(Tip, TipRep)) 
-    ),
-    */
 
     unlines([PlayerScoreRep, UsedElementsRep, BotScoreRep, PlayerLivesRep, 
              CurrentBossRep, PlayerHandScreen, TipRep], "", ContentChar),
@@ -161,7 +153,7 @@ draw_comparacao :-
     nth1(3, PlayerData, PlayerDeck),
     nth1(3, BotData, BotDeck),
 
-    % 15 (tamanho fixo do deck) é hard-coded.
+    % 15 representa o tamanho fixo do deck.
     nth1(15, PlayerDeck, PlayerUsedCard),
     nth1(15, BotDeck, BotUsedCard),
 
@@ -216,8 +208,8 @@ draw_derrota :-
     formatted_campaign_score_chars(CampaignScoreChars),
     
     % A quantidade de vidas do jogador é decrementada
-    % apenas na impressão da tela. Ela vai ter que
-    % ser decrementada de novo no Game Loop.
+    % apenas na impressão da tela. Ela é decrementada
+    % de novo no Game Loop.
     nth1(3, CampaignState, CurrPlayerLives),
     fill_num(CurrPlayerLives, FormattedPlayerLives),
     string_chars(FormattedPlayerLives, PlayerLivesRep),
@@ -260,7 +252,7 @@ draw_game_clear :-
     print_list(ScrGameClear),
     nl.
 
-% ========<[ Regras Auxiliares: talvez mandar todas para um arquivo utils ]>========
+% ========<[ Regras Auxiliares ]>========
 
 /*
  * Esta regra repete um caractere `Num` vezes e retorna 
@@ -281,7 +273,6 @@ print_list([H | T]) :-
     write(H),
     print_list(T).
 
-% TODO Testar se funciona mesmo
 /*
  * Esta regra dá a representação das cartas da mão do jogador.
  * É preciso chamar com um `ListIndex` 0 quando utilizá-la.
@@ -377,21 +368,16 @@ check_null_special(SpecialCardInUse, SpecialCardDeck) :-
  * uma String com zeros à esquerda para ocupar 3 caracteres.
  */
 formatted_campaign_score_chars(CampaignScoreChars) :-
-    % Pegar o estado atual da campanha.
     get_campaign_state(CampaignState),
     
-    % Pegar a pontuação total da campanha do jogador.
     nth1(2, CampaignState, CampaignScore),
 
-    % Converter a pontuação em uma String.
     number_string(CampaignScore, CampaignScoreStr),
 
-    % Gerar um complemento da pontuação com zeros.
     string_length(CampaignScoreStr, CampaignScoreLen),
     Len is 3 - CampaignScoreLen,
     repeat_string(Len, "0", Zeroes),
 
-    % Concatenar os zeros e a pontuação numa String só.
     string_concat(Zeroes, CampaignScoreStr, CampaignScoreRep),
     string_chars(CampaignScoreRep, CampaignScoreChars).
 
