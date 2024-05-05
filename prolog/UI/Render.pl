@@ -121,7 +121,7 @@ draw_batalha :-
     (
         atom_string(TipState, "DICA EM USO") ->
             (
-                giveTip(GivenTip), 
+                give_tip(GivenTip), 
                 format_tip(GivenTip, TipRep), 
                 update_tip_avaliable("DICA USADA")
             )
@@ -134,7 +134,7 @@ draw_batalha :-
     /*
     (
         TipState -> repeat_string(35, " ", TipRep);
-        (giveTip(Tip), format_tip(Tip, TipRep)) 
+        (give_tip(Tip), format_tip(Tip, TipRep)) 
     ),
     */
 
